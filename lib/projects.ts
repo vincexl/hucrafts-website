@@ -53,7 +53,7 @@ export const PROJECTS: Project[] = [
         category: 'Events',
         tags: ['Creativity', 'Experiential Design'],
         image: '/images/mini-bake-off.jpg',
-        link: '/projects/mini-bake-off-summer-2025'
+        link: '/projects/mini-bake-off-summer-2025/poll'
     },
     // {
     // id: 'des-2',
