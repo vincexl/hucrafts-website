@@ -1,9 +1,13 @@
-// lib/redis.ts
-import { Redis } from "@upstash/redis";
+import { Redis } from '@upstash/redis';
+import { NextResponse } from 'next/server';
 
-// If env vars are present, the client can read them implicitly,
-// but we pass explicitly for clarity.
-export const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+// Initialize Redis
+const redis = Redis.fromEnv();
+
+export const POST = async () => {
+  // Fetch data from Redis
+  const result = await redis.get("item");
+  
+  // Return the result in the response
+  return new NextResponse(JSON.stringify({ result }), { status: 200 });
+};
