@@ -11,7 +11,7 @@ export const BAKEOFF_KEYSPACE = 'bakeoff:2025';
 export const SUBMISSIONS: Submission[] = [
     { id: 'pea-tarts', title: 'Pea Tarts', author: '啊！ 慢哒！', image: '/images/bakeoff/pea-tarts.jpg' },
     { id: 'hojicha-macaron', title: 'Hojicha Macaron', author: '喵～', image: '/images/bakeoff/hojicha-macaron.jpg' },
-    { id: 'dacquoise', title: 'Dacquoise', author: 'Tina', image: '/images/bakeoff/dacquoise.jpg' },
+    { id: 'dacquoise', title: 'Dacquoise', author: 'Tina', image: '/images/bakeoff/dacquoise.jpeg' },
     { id: 'canelé', title: 'Canelé', author: 'Ryan', image: '/images/bakeoff/canele.jpg' },
     { id: 'basque-cake', title: 'Basque Cake', author: 'Mandy', image: '/images/bakeoff/basque-cake.jpg' },
 ];
