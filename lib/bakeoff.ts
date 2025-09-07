@@ -9,8 +9,8 @@ export type Submission = {
 
 export const BAKEOFF_KEYSPACE = 'bakeoff:2025';
 export const SUBMISSIONS: Submission[] = [
-    { id: 'pea-tarts', title: 'Pea Tarts', author: 'Ava', image: '/images/bakeoff/pea-tarts.jpg' },
-    { id: 'hojicha-macaron', title: 'Hojicha Macaron', author: 'Ken', image: '/images/bakeoff/hojicha-macaron.jpg' },
+    { id: 'pea-tarts', title: 'Pea Tarts', author: '啊！ 慢哒！', image: '/images/bakeoff/pea-tarts.jpg' },
+    { id: 'hojicha-macaron', title: 'Hojicha Macaron', author: '喵～', image: '/images/bakeoff/hojicha-macaron.jpg' },
     { id: 'miso-caramel-brownie', title: 'Miso Caramel Brownie', author: 'Mei', image: '/images/bakeoff/miso-brownie.jpg' },
     { id: 'black-sesame-macaron', title: 'Black Sesame Macaron', author: 'Ray', image: '/images/bakeoff/sesame-macaron.jpg' },
 ];
