@@ -1,13 +1,5 @@
-import { Redis } from '@upstash/redis';
-import { NextResponse } from 'next/server';
+import { Redis } from "@upstash/redis";
 
-// Initialize Redis
-const redis = Redis.fromEnv();
-
-export const POST = async () => {
-  // Fetch data from Redis
-  const result = await redis.get("item");
-  
-  // Return the result in the response
-  return new NextResponse(JSON.stringify({ result }), { status: 200 });
-};
+// The SDK can read the two env vars automatically if named correctly.
+// Using fromEnv() adds a clear error if they’re missing.
+export const redis = Redis.fromEnv();
