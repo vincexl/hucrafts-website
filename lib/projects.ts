@@ -7,13 +7,13 @@ export type Category = typeof CATEGORIES[number];
 export const PROJECTS: Project[] = [
 {
 id: 'eng-1',
-slug: 'skyslide-automated-plate-transfer',
-title: 'SkySlide — Automated Plate Transfer',
+slug: 'skyslide-automated-dna-sample-shuttle',
+title: 'SkySlide — Automated DNA Sample Shuttle',
 blurb: 'Vertical lift + overhead shuttle system integrating PLC and Mechanical Design.',
 category: 'Engineering',
-tags: ['PLC', 'TwinCAT', 'Motion Control', 'GD&T'],
+tags: ['PLC', 'TwinCAT', 'Motion Control', 'GD&T', 'Facility Integration'],
 image: '/images/proj-skyslide.jpg',
-link: '/projects/skyslide-automated-plate-transfer'
+link: '/projects/skyslide-automated-dna-sample-shuttle'
 },
 {
 id: 'eng-2',
