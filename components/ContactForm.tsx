@@ -11,8 +11,18 @@ return (
 <ul className="mt-6 space-y-2 text-sm text-zinc-700">
 <li className="flex items-center gap-2"><Mail className="h-4 w-4"/> vincent.hu@hucrafts.com</li>
 <li className="flex items-center gap-2"><MapPin className="h-4 w-4"/> Bay Area, CA</li>
-<li className="flex items-center gap-2"><Github className="h-4 w-4"/> github.com/vincexl</li>
-<li className="flex items-center gap-2"><Linkedin className="h-4 w-4"/> linkedin.com/in/xiaoleih</li>
+<li className="flex items-center gap-2">
+    <Github className="h-4 w-4"/>
+    <a href="https://github.com/vincexl" target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 transition-colors">
+        github.com/vincexl
+    </a>
+</li>
+<li className="flex items-center gap-2">
+    <Linkedin className="h-4 w-4"/>
+    <a href="https://linkedin.com/in/xiaoleih" target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 transition-colors">
+        linkedin.com/in/xiaoleih
+    </a>
+</li>
 </ul>
 </div>
 <form onSubmit={(e)=>e.preventDefault()} className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
