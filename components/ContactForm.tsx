@@ -6,7 +6,7 @@ export default function ContactForm() {
 return (
 <div className="grid lg:grid-cols-2 gap-10 items-center">
 <div>
-<h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Let’s make something delightful</h2>
+<h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Let’s craft something meaningful</h2>
 <p className="mt-3 text-zinc-700">Tell me about your idea—engineering build, identity design, or an unforgettable event.</p>
 <ul className="mt-6 space-y-2 text-sm text-zinc-700">
 <li className="flex items-center gap-2"><Mail className="h-4 w-4"/> vincent.hu@hucrafts.com</li>
