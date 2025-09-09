@@ -14,7 +14,7 @@ export const SUBMISSIONS: Submission[] = [
     { id: 'dacquoise', title: 'Dacquoise', author: 'Tina', image: '/images/bakeoff/dacquoise.jpeg' },
     { id: 'canelé', title: 'Canelé', author: 'Ryan', image: '/images/bakeoff/canele.jpg' },
     { id: 'basque-cake', title: 'Basque Cake', author: 'Mandy', image: '/images/bakeoff/basque-cake.jpg' },
-    { id: 'mushroom-ham-tart', title: 'Mushroom & Ham Tart', author: 'Hugh', image: '/images/bakeoff/mushroom-ham-tart.jpg' },
+    { id: 'mushroom-ham-tart', title: 'Mushroom & Ham Tart', author: 'Hugh', image: '/images/bakeoff/mushroom-ham-tart.png' },
 ];
 
 export const voteKey = (id: string) => `${BAKEOFF_KEYSPACE}:votes:${id}`;
