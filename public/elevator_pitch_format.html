@@ -1,90 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Elevator Pitch Format Guide</title>
-</head>
-<body style="margin:20px; background:#f9f9f9;">
-  <h1 style="font-family:Arial, sans-serif; font-size:24px; font-weight:bold; margin-bottom:16px;">
-    Elevator Pitch Format Guide
-  </h1>
-    <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif; font-size:16px;">
-    <thead>
-        <tr>
-        <th style="background:#b07d00; color:#fff; text-align:left; padding:12px; border:1px solid #ddd;">
-            Element
-        </th>
-        <th style="background:#b07d00; color:#fff; text-align:left; padding:12px; border:1px solid #ddd;">
-            Statement
-        </th>
-        <th style="background:#b07d00; color:#fff; text-align:left; padding:12px; border:1px solid #ddd;">
-            Examples
-        </th>
-        </tr>
-    </thead>
+<section class="elevator-pitch-3col" aria-label="Elevator pitch table (Element / Statement / Examples)">
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0f172a;         /* slate-900 */
+      --muted:#475569;        /* slate-600 */
+      --border:#e2e8f0;       /* slate-200 */
+      --header:#f1f5f9;       /* slate-100 */
+      --rowAlt:#fafafa;
+      --accent:#2563eb;       /* blue-600 */
+      --radius:14px;
+      --shadow:0 6px 20px rgba(2,6,23,0.08);
+    }
 
-    <tbody>
-        <tr>
-        <td style="padding:12px; border:1px solid #ddd; background:#efe7dc;">For</td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            Who is the product audience?
-        </td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            For the virtual Project Manager
-        </td>
-        </tr>
+    .elevator-pitch-3col{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+    }
 
-        <tr>
-        <td style="padding:12px; border:1px solid #ddd; background:#ffffff;">Who</td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            What is the problem or opportunity?
-        </td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            Who needs to manage and assign multiple tasks remotely
-        </td>
-        </tr>
+    .elevator-pitch-3col .card{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin: 18px 0;
+    }
 
-        <tr>
-        <td style="padding:12px; border:1px solid #ddd; background:#efe7dc;">Our Product</td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            What is the product or category?
-        </td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            Task Z is a fully digital project and task management platform
-        </td>
-        </tr>
+    .elevator-pitch-3col .table-wrap{
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: calc(var(--radius) - 6px);
+      border: 1px solid var(--border);
+      background: #fff;
+    }
 
-        <tr>
-        <td style="padding:12px; border:1px solid #ddd; background:#ffffff;">That</td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            What is the compelling reason to buy the product?
-        </td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            That uses standard kanban methodology and templates
-        </td>
-        </tr>
+    .elevator-pitch-3col table{
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 860px;
+    }
 
-        <tr>
-        <td style="padding:12px; border:1px solid #ddd; background:#efe7dc;">Unlike</td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            How does the product differ from competition?
-        </td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            Unlike more complicated and costly platforms
-        </td>
-        </tr>
+    .elevator-pitch-3col thead th{
+      background: var(--header);
+      color: var(--text);
+      font-weight: 650;
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
 
-        <tr>
-        <td style="padding:12px; border:1px solid #ddd; background:#ffffff;">(Our Product)</td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            What is the ultimate value proposition or differentiator?
-        </td>
-        <td style="padding:12px; border:1px solid #ddd;">
-            Task Z is easy to understand, affordable, and can be tailored to meet your needs
-        </td>
-        </tr>
-    </tbody>
-    </table>
-</body>
-</html>
+    .elevator-pitch-3col tbody td{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      background: #fff;
+    }
+
+    .elevator-pitch-3col tbody tr:nth-child(even) td{
+      background: var(--rowAlt);
+    }
+
+    .elevator-pitch-3col tbody tr:last-child td{
+      border-bottom: 0;
+    }
+
+    .elevator-pitch-3col .col-element{ width: 18%; }
+    .elevator-pitch-3col .col-statement{ width: 38%; }
+    .elevator-pitch-3col .col-examples{ width: 44%; }
+
+    @media (min-width: 1100px){
+      .elevator-pitch-3col table{ min-width: 0; }
+    }
+  </style>
+
+  <div class="card">
+    <div class="table-wrap" role="region" aria-label="Elevator pitch format with examples">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" class="col-element">Element</th>
+            <th scope="col" class="col-statement">Statement</th>
+            <th scope="col" class="col-examples">Examples</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td><strong>For</strong></td>
+            <td>Who is the product audience?</td>
+            <td>For the virtual Project Manager</td>
+          </tr>
+
+          <tr>
+            <td><strong>Who</strong></td>
+            <td>What is the problem or opportunity?</td>
+            <td>Who needs to manage and assign multiple tasks remotely</td>
+          </tr>
+
+          <tr>
+            <td><strong>Our Product</strong></td>
+            <td>What is the product or category?</td>
+            <td>Task Z is a fully digital project and task management platform</td>
+          </tr>
+
+          <tr>
+            <td><strong>That</strong></td>
+            <td>What is the compelling reason to buy the product?</td>
+            <td>That uses standard kanban methodology and templates</td>
+          </tr>
+
+          <tr>
+            <td><strong>Unlike</strong></td>
+            <td>How does the product differ from competition?</td>
+            <td>Unlike more complicated and costly platforms</td>
+          </tr>
+
+          <tr>
+            <td><strong>(Our Product)</strong></td>
+            <td>What is the ultimate value proposition or differentiator?</td>
+            <td>Task Z is easy to understand, affordable, and can be tailored to meet your needs</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
