@@ -6,46 +6,139 @@
   <title>Elevator Pitch Format</title>
 </head>
 <body style="margin:20px;">
-  <h1 style="font-family:Arial, sans-serif; color:#c85a5a;">Elevator Pitch Format</h1>
-  <table style="width:100%; border-collapse:collapse; font-family:Arial, sans-serif; font-size:16px;">
-  <thead>
-    <tr>
-      <th style="background:#c85a5a; color:#fff; text-align:left; padding:12px; border:1px solid #ddd;">
-        Element
-      </th>
-      <th style="background:#c85a5a; color:#fff; text-align:left; padding:12px; border:1px solid #ddd;">
-        Description
-      </th>
-    </tr>
-  </thead>
+  <section class="elevator-pitch" aria-labelledby="pitch-title">
+    <style>
+      :root{
+        --bg:#ffffff;
+        --text:#0f172a;         /* slate-900 */
+        --muted:#475569;        /* slate-600 */
+        --border:#e2e8f0;       /* slate-200 */
+        --header:#f1f5f9;       /* slate-100 */
+        --rowAlt:#fafafa;
+        --accent:#2563eb;       /* blue-600 */
+        --radius:14px;
+        --shadow:0 6px 20px rgba(2,6,23,0.08);
+      }
 
-  <tbody>
-    <tr>
-      <td style="padding:12px; border:1px solid #ddd; background:#f7eeee; width:30%;">For</td>
-      <td style="padding:12px; border:1px solid #ddd;">Who is the product audience?</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border:1px solid #ddd; background:#ffffff;">Who</td>
-      <td style="padding:12px; border:1px solid #ddd;">What is the problem or opportunity?</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border:1px solid #ddd; background:#f7eeee;">Our Product</td>
-      <td style="padding:12px; border:1px solid #ddd;">What is the product or category?</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border:1px solid #ddd; background:#ffffff;">That</td>
-      <td style="padding:12px; border:1px solid #ddd;">What is a compelling reason to buy the product?</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border:1px solid #ddd; background:#f7eeee;">Unlike</td>
-      <td style="padding:12px; border:1px solid #ddd;">How does this product differ from competition?</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border:1px solid #ddd; background:#ffffff;">(Our Product)</td>
-      <td style="padding:12px; border:1px solid #ddd;">What is the ultimate value proposition or differentiator?</td>
-    </tr>
-  </tbody>
-</table>
+      .elevator-pitch{
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.5;
+      }
 
+      .elevator-pitch .card{
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 18px;
+        margin: 18px 0;
+      }
+
+      .elevator-pitch h1{
+        margin: 0 0 6px 0;
+        font-size: 1.35rem;
+        letter-spacing: -0.01em;
+      }
+
+      .elevator-pitch p{
+        margin: 0 0 14px 0;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .elevator-pitch .table-wrap{
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: calc(var(--radius) - 6px);
+        border: 1px solid var(--border);
+        background: #fff;
+      }
+
+      .elevator-pitch table{
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 640px;
+      }
+
+      .elevator-pitch thead th{
+        background: var(--header);
+        color: var(--text);
+        font-weight: 650;
+        text-align: left;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+
+      .elevator-pitch tbody td{
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+        background: #fff;
+      }
+
+      .elevator-pitch tbody tr:nth-child(even) td{
+        background: var(--rowAlt);
+      }
+
+      .elevator-pitch tbody tr:last-child td{
+        border-bottom: 0;
+      }
+
+      .elevator-pitch .col-element{ width: 28%; }
+      .elevator-pitch .col-desc{ width: 72%; }
+
+      @media (min-width: 1100px){
+        .elevator-pitch table{ min-width: 0; }
+      }
+    </style>
+
+    <div class="card">
+      <h1 id="pitch-title">Elevator Pitch Format</h1>
+      <p>Fill in each row to produce a clear, complete elevator pitch.</p>
+
+      <div class="table-wrap" role="region" aria-label="Elevator pitch format table">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col" class="col-element">Element</th>
+              <th scope="col" class="col-desc">Description</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><strong>For</strong></td>
+              <td>Who is the product audience?</td>
+            </tr>
+            <tr>
+              <td><strong>Who</strong></td>
+              <td>What is the problem or opportunity?</td>
+            </tr>
+            <tr>
+              <td><strong>Our Product</strong></td>
+              <td>What is the product or category?</td>
+            </tr>
+            <tr>
+              <td><strong>That</strong></td>
+              <td>What is a compelling reason to buy the product?</td>
+            </tr>
+            <tr>
+              <td><strong>Unlike</strong></td>
+              <td>How does this product differ from competition?</td>
+            </tr>
+            <tr>
+              <td><strong>(Our Product)</strong></td>
+              <td>What is the ultimate value proposition or differentiator?</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
