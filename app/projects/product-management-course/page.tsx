@@ -18,6 +18,11 @@ export default function ProductManagementCourse() {
               Elevator Pitch Format Guide
             </Link>
           </li>
+          <li>
+            <Link href="/pm_knowledge_share_1.html" target="_blank" className="text-blue-600 underline">
+              Influence without Authority - Knowledge Share
+            </Link>
+          </li>
         </ul>
       </section>
       {/* Add more resources, links, or tools here as needed */}
