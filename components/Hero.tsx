@@ -22,6 +22,7 @@ HuCrafts is my studio for building meaningful systems—mechanisms that move, in
 </p>
 <div className="mt-8 flex flex-wrap gap-3">
 <a href="#projects" className="rounded-xl px-4 py-2 bg-amber-300 text-zinc-950 font-medium hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-amber-300">Explore Projects</a>
+<a href="#knowledge" className="rounded-xl px-4 py-2 border border-zinc-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-zinc-300">Knowledge Sharing</a>
 <a href="#about" className="rounded-xl px-4 py-2 border border-zinc-300 hover:bg-white focus:outline-none focus:ring-2 focus:ring-zinc-300">About HuCrafts</a>
 </div>
 <div className="mt-10 grid grid-cols-3 gap-4 text-sm">

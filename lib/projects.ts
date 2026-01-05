@@ -55,16 +55,6 @@ export const PROJECTS: Project[] = [
         image: '/images/mini-bake-off.jpg',
         link: '/projects/mini-bake-off-summer-2025/polls'
     },
-    {
-        id: 'pm-1',
-        slug: 'product-management-course',
-        title: 'Product Management Course: Learning Resources',
-        blurb: 'Curated resources and tools for learning product management, including the SMART Goals Worksheet.',
-        category: 'Engineering',
-        tags: ['Product Management', 'SMART Goals', 'Learning'],
-        image: '/images/proj-pm.svg',
-        link: '/projects/product-management-course'
-    },
     // {
     // id: 'des-2',
     // slug: 'hucrafts-poster-series',

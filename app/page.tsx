@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import ProjectsGrid from '@/components/ProjectsGrid';
+import KnowledgeSharing from '@/components/KnowledgeSharing';
 import About from '@/components/About';
 import ContactForm from '@/components/ContactForm';
 import Footer from '@/components/Footer';
@@ -56,6 +57,8 @@ export default function Page() {
 
           <ProjectsGrid projects={filtered} />
         </section>
+
+        <KnowledgeSharing />
 
         <About />
         <section id="contact" className="py-16 border-t border-zinc-200">
