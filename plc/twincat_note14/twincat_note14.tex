@@ -1,0 +1,686 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== CODE LISTING STYLES =====
+\lstdefinestyle{generalstyle}{
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{codeblue}\bfseries,
+    stringstyle=\color{codeorange},
+}
+
+\lstdefinestyle{bashstyle}{
+    style=generalstyle,
+    language=bash,
+    morekeywords={git, add, commit, push, tag, checkout, branch, merge, status, log, diff},
+    morecomment=[l]{\#},
+    morestring=[b]",
+    morestring=[b]',
+}
+
+\lstdefinestyle{configstyle}{
+    style=generalstyle,
+    morecomment=[l]{\#},
+    morecomment=[l]{//},
+    morekeywords={Version, Library, Placeholder, Resolution, Compiler, Build, Target},
+}
+
+\lstset{style=generalstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Handling Different Versions},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Handling Different TwinCAT 3 Versions
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{The Challenge of Version Management}
+% ============================================================
+
+In industrial automation, machines often run for years or decades. As a developer, you will eventually manage several PLCs, each potentially running a different version of \textbf{TwinCAT}. If the version on your development machine (\textbf{XAE}) does not match the version on the target machine (\textbf{XAR}), you may encounter issues when attempting to perform maintenance or minor code changes.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Scenario} & \textbf{Risk Level} & \textbf{Potential Issues} \\
+\midrule
+XAE = XAR version & Low & None expected \\
+XAE newer than XAR & Medium & Library mismatch, compiler differences \\
+XAE older than XAR & High & Missing features, compatibility errors \\
+Unfrozen project & Critical & Unpredictable binary changes \\
+\bottomrule
+\end{tabular}
+\caption{Version Mismatch Risk Assessment}
+\end{table}
+
+\begin{warningbox}
+Opening an old project with a newer TwinCAT version can silently change the compiled binary, even if you don't modify any code. This can cause unexpected behavior on machines that have been running reliably for years.
+\end{warningbox}
+
+% ============================================================
+\section{TwinCAT Installation Components}
+% ============================================================
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{XAE (Engineering):} The full development environment bundled with Visual Studio, the XAR, libraries, and compilers.
+    \item \textbf{XAR (Runtime):} The component that executes the code on the PLC.
+    \item \textbf{Remote Manager:} A specific download from Beckhoff that includes only the \textbf{libraries and compilers} for a particular TwinCAT version.
+    \begin{itemize}
+        \item \textbf{Installation Rule:} You can install newer XAE versions alongside older ones, but you cannot install an older XAE on a machine that already has a newer one.
+        \item \textbf{The Solution:} Use the \textbf{Remote Manager} to install older compilers and libraries on a system that already has a newer XAE installed.
+    \end{itemize}
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llp{5cm}@{}}
+\toprule
+\textbf{Component} & \textbf{Contains} & \textbf{When to Use} \\
+\midrule
+XAE Full & VS Integration + XAR + Libs + Compilers & Primary development machine \\
+XAR Only & Runtime execution environment & Production PLCs \\
+Remote Manager & Libs + Compilers (no VS) & Add old versions to new XAE \\
+\bottomrule
+\end{tabular}
+\caption{TwinCAT Installation Component Overview}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Development PC} & & \textbf{Target PLC} \\
+\hline
+XAE 4026.0 (Latest) & $\rightarrow$ & XAR 4024.12 \\
++ Remote Manager 4024.12 & & \\
++ Remote Manager 4022.31 & & \\
+\hline
+\end{tabular}
+\caption{Multi-Version Development Setup}
+\end{figure}
+
+\begin{tipbox}
+Download and archive Remote Manager installers for every TwinCAT version used in your production machines. Store them in a shared network location or version control system for long-term accessibility.
+\end{tipbox}
+
+% ============================================================
+\section{The Problem: Automatic Updates}
+% ============================================================
+
+By default, when you open a TwinCAT project, the IDE automatically selects the \textbf{latest version} of the libraries and the \textbf{newest version} of the IEC compiler available on your machine.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Library Star (*):} In the library manager, a star symbol indicates the project is using ``whatever the latest version is''.
+    \item \textbf{Online Change Warnings:} Even if you haven't changed a single line of code, opening an old project on a machine with newer TwinCAT versions can trigger an ``Application change'' message. This is because the binary executable differs when compiled with newer libraries or compilers.
+\end{itemize}
+
+\subsubsection*{Library Placeholder Definition}
+
+\begin{lstlisting}[style=configstyle]
+# =====================================================
+# LIBRARY PLACEHOLDER CONCEPTS
+# =====================================================
+# In TwinCAT, library references can be either:
+# 1. DYNAMIC (using placeholder with *)
+# 2. FROZEN (using specific version number)
+
+# =====================================================
+# DYNAMIC REFERENCE (DEFAULT - DANGEROUS FOR MAINTENANCE)
+# =====================================================
+# The asterisk (*) means "use the latest installed version"
+# This is convenient during development but problematic for
+# long-term maintenance
+
+Library Placeholder:
+    Name:       Tc2_Standard
+    Version:    * (Latest)              # <-- DYNAMIC
+    Resolution: Tc2_Standard, 3.4.1.0   # Resolves to newest on THIS machine
+    
+# Problem: On another machine with different TwinCAT version,
+# this might resolve to:
+#    Resolution: Tc2_Standard, 3.3.2.0   # Different version!
+
+# =====================================================
+# FROZEN REFERENCE (RECOMMENDED FOR PRODUCTION)
+# =====================================================
+# Specifying exact version ensures reproducible builds
+# across all development machines and over time
+
+Library Placeholder:
+    Name:       Tc2_Standard
+    Version:    3.3.2.0                 # <-- FROZEN
+    Resolution: Tc2_Standard, 3.3.2.0   # Always this exact version
+    
+Library Placeholder:
+    Name:       Tc2_System
+    Version:    3.4.3.0                 # <-- FROZEN
+    Resolution: Tc2_System, 3.4.3.0     # Always this exact version
+
+Library Placeholder:
+    Name:       Tc2_Utilities
+    Version:    3.3.45.0                # <-- FROZEN
+    Resolution: Tc2_Utilities, 3.3.45.0 # Always this exact version
+
+# =====================================================
+# VISUAL COMPARISON IN TWINCAT LIBRARY MANAGER
+# =====================================================
+#
+# BEFORE FREEZING (Dynamic References):
+# +------------------------------------------+
+# | References                               |
+# |   +-- Tc2_Standard, * (Placeholder)      |  <-- Star = Dynamic
+# |   +-- Tc2_System, * (Placeholder)        |  <-- Star = Dynamic
+# |   +-- Tc2_Utilities, * (Placeholder)     |  <-- Star = Dynamic
+# |   +-- Tc3_Module, * (Placeholder)        |  <-- Star = Dynamic
+# +------------------------------------------+
+#
+# AFTER FREEZING (Fixed References):
+# +------------------------------------------+
+# | References                               |
+# |   +-- Tc2_Standard, 3.3.2.0              |  <-- Fixed version
+# |   +-- Tc2_System, 3.4.3.0                |  <-- Fixed version
+# |   +-- Tc2_Utilities, 3.3.45.0            |  <-- Fixed version
+# |   +-- Tc3_Module, 3.1.10.0               |  <-- Fixed version
+# +------------------------------------------+
+\end{lstlisting}
+
+\begin{lstlisting}[style=configstyle]
+# =====================================================
+# EXAMPLE: PROJECT FILE DIFFERENCES
+# =====================================================
+# The .plcproj file stores library references
+# Here's what changes when you freeze:
+
+# BEFORE (Dynamic - in .plcproj XML):
+<PlaceholderReference Include="Tc2_Standard">
+    <DefaultResolution>Tc2_Standard, * (Beckhoff)</DefaultResolution>
+    <Namespace>Tc2_Standard</Namespace>
+</PlaceholderReference>
+
+# AFTER (Frozen - in .plcproj XML):
+<PlaceholderReference Include="Tc2_Standard">
+    <DefaultResolution>Tc2_Standard, 3.3.2.0 (Beckhoff)</DefaultResolution>
+    <Namespace>Tc2_Standard</Namespace>
+</PlaceholderReference>
+
+# =====================================================
+# DEPENDENCY CHAIN EXAMPLE
+# =====================================================
+# When you freeze a library, its dependencies should also
+# be frozen to ensure complete reproducibility
+
+Project: MyMachineController
+    |
+    +-- Tc2_Standard, 3.3.2.0 (frozen)
+    |       |
+    |       +-- Tc2_System, 3.4.3.0 (auto-frozen as dependency)
+    |
+    +-- Tc2_Utilities, 3.3.45.0 (frozen)
+    |       |
+    |       +-- Tc2_System, 3.4.3.0 (same version - OK)
+    |       +-- Tc2_Standard, 3.3.2.0 (same version - OK)
+    |
+    +-- MyCompanyLibrary, 1.2.0.0 (frozen)
+            |
+            +-- Tc2_Standard, 3.3.2.0 (same version - OK)
+\end{lstlisting}
+
+\begin{notebox}
+The asterisk (*) in library placeholders is a convenience feature for active development. However, it should \textbf{always} be replaced with specific version numbers before releasing a project to production.
+\end{notebox}
+
+% ============================================================
+\section{How to ``Freeze'' a Project for Long-Term Maintenance}
+% ============================================================
+
+To ensure you can rebuild an application years later and get the \textbf{exact same binary}, you must decouple the project from the latest system updates.
+
+\subsection{A. Freezing Library Placeholders}
+
+Instead of using the default latest version (*), developers must manually fix libraries to the versions they were originally developed with.
+
+\begin{enumerate}
+    \item Go to the \textbf{Placeholders} section in the Library Manager.
+    \item Select the specific version delivered with that TwinCAT build (e.g., Tc2\_Standard version 3.3.2.0).
+    \item This also forces dependencies (libraries within libraries) to remain at those fixed versions.
+\end{enumerate}
+
+\subsection{B. Pinning the Compiler and Project Version}
+
+You must ``pin'' the project to a specific TwinCAT build to prevent it from automatically upgrading to the latest installed version.
+
+\begin{enumerate}
+    \item In the project tree, go to \textbf{System}.
+    \item Select \textbf{Pin version} to lock the project to the current build (e.g., 4024.12).
+    \item If a colleague attempts to open this project without that specific version installed, TwinCAT will issue a warning.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Step} & \textbf{Location} & \textbf{Action} \\
+\midrule
+1. Freeze Libraries & PLC $\rightarrow$ References $\rightarrow$ Placeholders & Select exact versions \\
+2. Pin Compiler & SYSTEM $\rightarrow$ General & Check ``Pin Version'' \\
+3. Verify Build & Build $\rightarrow$ Rebuild Solution & Confirm no warnings \\
+4. Commit Changes & Version Control & Save frozen state \\
+\bottomrule
+\end{tabular}
+\caption{Project Freezing Checklist}
+\end{table}
+
+\begin{warningbox}
+Always test your project after freezing to ensure it compiles correctly with the pinned versions. Some library combinations may have compatibility issues that only become apparent when specific versions are locked together.
+\end{warningbox}
+
+% ============================================================
+\section{Professional Workflow and Build Integrity}
+% ============================================================
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Git Integration:} All frozen library and compiler settings should be committed to version control.
+    \item \textbf{TwinCAT Functions:} Remember to also track the versions of any \textbf{TwinCAT Functions} or supplements (e.g., Vision, OPC-UA, TCP/IP) used, as these also install their own sets of libraries.
+    \item \textbf{Final Release:} Before delivering a machine, \textbf{freeze everything}---libraries and the compiler---and create a formal release in Git.
+\end{itemize}
+
+\subsubsection*{Version Control Commands}
+
+\begin{lstlisting}[style=bashstyle]
+# =====================================================
+# GIT WORKFLOW FOR TWINCAT PROJECT RELEASES
+# =====================================================
+# After freezing all library placeholders and pinning
+# the compiler version, commit and tag the release
+
+# -----------------------------------------------------
+# Step 1: Check current status
+# -----------------------------------------------------
+git status
+
+# You should see modified files including:
+#   - *.plcproj (library placeholder changes)
+#   - *.tsproj (compiler pin settings)
+#   - *.sln (solution file)
+
+# -----------------------------------------------------
+# Step 2: Stage all changes
+# -----------------------------------------------------
+git add .
+
+# Or be more selective:
+git add *.plcproj
+git add *.tsproj
+git add *.sln
+
+# -----------------------------------------------------
+# Step 3: Commit with descriptive message
+# -----------------------------------------------------
+git commit -m "Freeze libraries and compiler for Release 1.0
+
+- Pinned TwinCAT version to 4024.12
+- Frozen library placeholders:
+  - Tc2_Standard: 3.3.2.0
+  - Tc2_System: 3.4.3.0
+  - Tc2_Utilities: 3.3.45.0
+  - Tc2_MC2: 3.3.42.0
+- Tested full rebuild: SUCCESS
+- Ready for production deployment"
+
+# -----------------------------------------------------
+# Step 4: Create annotated release tag
+# -----------------------------------------------------
+git tag -a v1.0.0 -m "Release 1.0.0 - Production Ready
+
+Machine: PackagingLine_01
+Customer: ACME Manufacturing
+TwinCAT Build: 4024.12
+Delivery Date: 2024-01-15
+
+Frozen Components:
+- All library placeholders locked
+- Compiler version pinned
+- Full regression test passed"
+
+# -----------------------------------------------------
+# Step 5: Push commits and tags to remote
+# -----------------------------------------------------
+git push origin main
+git push origin v1.0.0
+
+# Or push all tags at once:
+git push origin --tags
+
+# -----------------------------------------------------
+# Step 6: Verify the release
+# -----------------------------------------------------
+git log --oneline -5
+git tag -l
+
+# =====================================================
+# ADDITIONAL BEST PRACTICES
+# =====================================================
+
+# Create a branch for each major machine/customer
+git checkout -b machine/packaging-line-01
+
+# Archive the Remote Manager installer version
+# (Store in separate artifact repository or network share)
+# Example: TwinCAT_Remote_Manager_4024.12.exe
+
+# Document the development environment
+git add ENVIRONMENT.md
+git commit -m "Document development environment requirements"
+\end{lstlisting}
+
+\begin{lstlisting}[style=bashstyle]
+# =====================================================
+# ENVIRONMENT.md - Example Documentation File
+# =====================================================
+# Include this file in your repository root
+
+cat > ENVIRONMENT.md << 'EOF'
+# Development Environment Requirements
+
+## TwinCAT Version
+- **Build:** 4024.12
+- **XAE Version:** 3.1.4024.12
+- **Visual Studio:** 2019 (16.11.x) or 2022 (17.x)
+
+## Required Remote Managers
+If your XAE is newer than 4024.12, install:
+- TwinCAT 3.1 Remote Manager Build 4024.12
+
+Download from: https://www.beckhoff.com/download
+
+## Frozen Library Versions
+| Library | Version | Notes |
+|---------|---------|-------|
+| Tc2_Standard | 3.3.2.0 | Core functions |
+| Tc2_System | 3.4.3.0 | System utilities |
+| Tc2_Utilities | 3.3.45.0 | Extended utilities |
+| Tc2_MC2 | 3.3.42.0 | Motion control |
+| Tc3_JsonXml | 3.3.18.0 | Data serialization |
+
+## TwinCAT Functions Installed
+- TF6100 OPC-UA Server: 3.3.15.0
+- TF6310 TCP/IP: 3.3.12.0
+
+## Build Verification
+After cloning, perform a full rebuild to verify:
+1. Open solution in Visual Studio
+2. Build > Rebuild Solution
+3. Verify zero errors and zero warnings
+EOF
+\end{lstlisting}
+
+\begin{lstlisting}[style=bashstyle]
+# =====================================================
+# RESTORING A FROZEN PROJECT (Years Later)
+# =====================================================
+
+# Clone the repository
+git clone https://github.com/company/machine-project.git
+cd machine-project
+
+# Checkout the specific release tag
+git checkout v1.0.0
+
+# Read the environment requirements
+cat ENVIRONMENT.md
+
+# Install required Remote Manager if needed
+# (Download from Beckhoff, run installer)
+
+# Open project in TwinCAT
+# If version mismatch warning appears:
+#   - Install the required Remote Manager
+#   - Or adjust project settings (not recommended)
+
+# Rebuild and verify
+# The binary should be identical to original release
+\end{lstlisting}
+
+\begin{tipbox}
+Create a \texttt{ENVIRONMENT.md} or \texttt{BUILD\_REQUIREMENTS.txt} file in your repository documenting all version requirements. This serves as a quick reference for anyone maintaining the project in the future.
+\end{tipbox}
+
+% ============================================================
+\section{Industry Context}
+% ============================================================
+
+Traditional software development uses automated build chains (like Maven or NuGet) to resolve dependencies. Because TwinCAT is based on the \textbf{CODESYS platform}, many of these versioning steps are currently manual and require the developer to keep track of configurations themselves. This process is critical because getting it wrong can make software maintenance nearly impossible over a machine's 10-year lifespan.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{IT/Web Development} & \textbf{TwinCAT/PLC} & \textbf{Impact} \\
+\midrule
+package.json / pom.xml & Manual placeholder config & More error-prone \\
+npm install / mvn build & Manual Remote Manager install & Time-consuming setup \\
+Semantic versioning & Manual version tracking & Requires discipline \\
+CI/CD pipelines & Manual build verification & Less automation \\
+\bottomrule
+\end{tabular}
+\caption{Dependency Management: IT vs. Industrial Automation}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\textbf{Machine Lifecycle Timeline}} \\
+\hline
+\textbf{Year 0} & \textbf{Year 5} & \textbf{Year 10+} \\
+\hline
+Initial Development & Minor Updates & Major Retrofit \\
+TwinCAT 4024.12 & Same version needed & May need old compilers \\
+Libraries frozen & Reproduce exact build & Remote Manager critical \\
+\hline
+\end{tabular}
+\caption{Long-Term Project Maintenance Considerations}
+\end{figure}
+
+\begin{warningbox}
+Industrial machines can operate for 15-20 years or more. The TwinCAT version and libraries you use today must be reproducible decades from now. Always maintain archives of installers and documentation.
+\end{warningbox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Version Freezing Checklist}
+
+\begin{enumerate}
+    \item \textbf{Freeze Libraries:} PLC Project $\rightarrow$ References $\rightarrow$ Placeholders $\rightarrow$ Set specific versions
+    \item \textbf{Pin Compiler:} SYSTEM $\rightarrow$ General $\rightarrow$ Pin Version
+    \item \textbf{Document:} Create ENVIRONMENT.md with all version details
+    \item \textbf{Test:} Rebuild solution, verify zero warnings
+    \item \textbf{Commit:} Stage and commit all changes
+    \item \textbf{Tag:} Create annotated Git tag for release
+    \item \textbf{Archive:} Store Remote Manager installer
+\end{enumerate}
+
+\subsection*{Key File Locations}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Component} & \textbf{Location} \\
+\midrule
+Remote Managers & \texttt{C:\textbackslash TwinCAT\textbackslash 3.1\textbackslash} \\
+Managed Libraries & \texttt{...\textbackslash Components\textbackslash Plc\textbackslash Managed Libraries\textbackslash} \\
+Compilers & \texttt{...\textbackslash Components\textbackslash Plc\textbackslash Compilers\textbackslash} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Git Commands Summary}
+
+\begin{lstlisting}[style=bashstyle]
+# Stage all changes
+git add .
+
+# Commit frozen state
+git commit -m "Freeze for Release X.Y"
+
+# Create release tag
+git tag -a vX.Y.Z -m "Release description"
+
+# Push everything
+git push origin main --tags
+\end{lstlisting}
+
+\subsection*{Version Compatibility Matrix}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{XAE Version} & \textbf{Can Open Older} & \textbf{Can Target Older XAR} & \textbf{Needs Remote Mgr} \\
+\midrule
+4026.x & Yes & Yes (if RM installed) & For older builds \\
+4024.x & Yes & Yes (native) & For 4022 and older \\
+4022.x & Yes & Yes (native) & For 4020 and older \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

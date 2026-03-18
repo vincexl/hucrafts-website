@@ -1,0 +1,14 @@
+\contentsline {section}{\numberline {1}Procedural vs. Object-Oriented Programming}{2}{section.1}%
+\contentsline {section}{\numberline {2}Function Blocks as Blueprints}{2}{section.2}%
+\contentsline {section}{\numberline {3}The Pillars of OOP in TwinCAT 3}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Encapsulation}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Abstraction}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Inheritance}{3}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Methods and Access Specifiers}{4}{section.4}%
+\contentsline {section}{\numberline {5}FB Body vs. Methods}{5}{section.5}%
+\contentsline {section}{\numberline {6}Best Practices for Professional Code}{5}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Self-Descriptive Code}{5}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Avoid ``Magic Numbers''}{5}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Modularization}{5}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Practical Example: The Event Logger}{6}{section.7}%
+\contentsline {section}{Quick Reference Card}{8}{lstnumber.-10.18}%

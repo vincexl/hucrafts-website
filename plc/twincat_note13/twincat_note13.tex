@@ -1,0 +1,708 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+\definecolor{xmltag}{rgb}{0.5,0.0,0.5}
+\definecolor{xmlattr}{rgb}{0.0,0.5,0.0}
+\definecolor{xmlvalue}{rgb}{0.0,0.0,0.8}
+
+% ===== CODE LISTING STYLES =====
+
+% Style for Bash/Git commands
+\lstdefinestyle{bashstyle}{
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{codeblue}\bfseries,
+    stringstyle=\color{codeorange},
+    morecomment=[l]{\#},
+    morekeywords={git,add,commit,push,pull,clone,checkout,branch,merge,status,log,diff,init,remote,origin,main,master},
+}
+
+% Style for .gitignore and config files
+\lstdefinestyle{configstyle}{
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+    commentstyle=\color{codegreen}\itshape,
+    morecomment=[l]{\#},
+}
+
+% Style for XML
+\lstdefinelanguage{XML}{
+    basicstyle=\ttfamily\small,
+    morestring=[b]",
+    morestring=[s]{>}{<},
+    morecomment=[s]{<?}{?>},
+    morecomment=[s]{<!--}{-->},
+    stringstyle=\color{xmlvalue},
+    identifierstyle=\color{xmltag},
+    keywordstyle=\color{xmlattr},
+    morekeywords={xmlns,version,encoding,LineId,Id,Name,Type,Value},
+}
+
+\lstdefinestyle{xmlstyle}{
+    language=XML,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Version Control},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Version Control in TwinCAT 3
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to Version Control}
+% ============================================================
+
+\textbf{Version control} is the practice of tracking and managing changes to software code over time. For automation engineers, using a version control system (VCS) is a mark of \textbf{professionalism}, regardless of the project's size.
+
+\subsection{The ``Old Way''}
+
+Historically, engineers managed revisions by manually copying folders and renaming them (e.g., ``Machine\_Version\_0.8,'' ``Machine\_Release\_Final'').
+
+\subsection{Problems with Manual Folders}
+
+This leads to ``version madness,'' where it is impossible to track what is installed on a machine, making collaboration between multiple developers nearly impossible and highly prone to error.
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Folder Name} & \textbf{Problem} \\
+\hline
+\texttt{Project\_Final} & Which final? \\
+\texttt{Project\_Final\_v2} & Is this newer? \\
+\texttt{Project\_REALLY\_Final} & Confusion increases \\
+\texttt{Project\_Final\_John\_Edit} & Who has the latest? \\
+\texttt{Project\_USE\_THIS\_ONE} & Chaos ensues \\
+\hline
+\end{tabular}
+\caption{The ``Version Madness'' Problem}
+\end{figure}
+
+\subsection{Benefits of VCS}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Long-term History:} Tracks every change, including who made it, when, and why (via commit notes).
+    
+    \item \textbf{Root Cause Analysis:} Enables developers to revert to previous versions to identify when a bug was introduced.
+    
+    \item \textbf{Branching and Merging:} Allows individuals or teams to work on separate features in independent streams before merging them back together.
+    
+    \item \textbf{Traceability:} Connects code changes to project management and bug-tracking software.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Aspect} & \textbf{Manual Folders} & \textbf{Version Control} \\
+\midrule
+History & Lost or unclear & Complete and searchable \\
+Collaboration & Error-prone & Structured and safe \\
+Reverting & Manual copy/paste & One command \\
+Blame/Attribution & Unknown & Tracked per line \\
+Branching & Copy entire folder & Lightweight branches \\
+\bottomrule
+\end{tabular}
+\caption{Manual Folders vs. Version Control}
+\end{table}
+
+% ============================================================
+\section{Git: Distributed Version Control}
+% ============================================================
+
+\textbf{Git} is the world's most popular version control system. It is a \textbf{distributed} system, meaning every user has a full copy of the project history on their own hard drive, rather than relying solely on a central server.
+
+\subsection{Key Components}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Working Directory:} The actual project folder on your computer.
+    
+    \item \textbf{Stage (Index):} A middle ground where you mark changes to be included in the next ``snapshot''.
+    
+    \item \textbf{Local Repository:} The hidden \texttt{.git} folder on your drive that stores the full history of snapshots (commits).
+    
+    \item \textbf{Remote Repository:} A version of the project hosted on a network or the internet (e.g., \textbf{GitHub, GitLab, or Azure DevOps}) to facilitate team sharing.
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Working Directory} & $\xrightarrow{\text{git add}}$ & \textbf{Staging Area} & $\xrightarrow{\text{git commit}}$ \\
+\hline
+\multicolumn{2}{|c|}{Your files} & \multicolumn{2}{c|}{Prepared changes} \\
+\hline
+\end{tabular}
+
+\vspace{0.5cm}
+
+\begin{tabular}{|c|c|c|}
+\hline
+$\xrightarrow{\text{git commit}}$ & \textbf{Local Repository} & $\xrightarrow{\text{git push}}$ \\
+\hline
+\multicolumn{2}{|c|}{Your .git folder} & Remote (GitHub, etc.) \\
+\hline
+\end{tabular}
+\caption{Git Workflow Stages}
+\end{figure}
+
+\subsection{The Standard Workflow}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Step 1:} Modify files in the working directory.
+    \item \textbf{Step 2: Stage} the changes using \texttt{git add}.
+    \item \textbf{Step 3: Commit} the staged changes to the local repository using \texttt{git commit} to create a permanent snapshot.
+    \item \textbf{Step 4: Push} the local commits to the remote repository using \texttt{git push} so others can see them.
+    \item \textbf{Step 5: Pull} changes from others into your local copy using \texttt{git pull}.
+\end{itemize}
+
+\subsubsection*{Example: Basic Git Commands}
+
+\begin{lstlisting}[style=bashstyle]
+# Navigate to your TwinCAT project directory
+cd C:\TwinCAT\Projects\MyMachineProject
+
+# Initialize a new Git repository (only needed once)
+git init
+
+# Check the status of your files
+git status
+
+# Stage all changed files for commit
+# The "." means "all files in current directory and subdirectories"
+git add .
+
+# Alternatively, stage specific files only
+git add POUs/FB_Motor.TcPOU
+git add POUs/MAIN.TcPOU
+
+# Commit the staged changes with a descriptive message
+# Good commit messages explain WHAT changed and WHY
+git commit -m "Add motor control function block with safety interlock"
+
+# Push commits to the remote repository (e.g., GitHub)
+# 'origin' is the default name for the remote server
+# 'main' is the branch name (formerly 'master')
+git push origin main
+
+# Pull latest changes from the remote repository
+# Always do this before starting work to get teammates' changes
+git pull origin main
+\end{lstlisting}
+
+\begin{lstlisting}[style=bashstyle]
+# Additional useful Git commands for daily work
+
+# View commit history
+git log --oneline
+
+# Example output:
+# a1b2c3d Add emergency stop logic
+# e4f5g6h Fix conveyor speed calculation
+# i7j8k9l Initial project setup
+
+# See what changed in a specific commit
+git show a1b2c3d
+
+# Create a new branch for a feature
+git checkout -b feature/new-safety-system
+
+# Switch back to main branch
+git checkout main
+
+# Merge feature branch into main
+git merge feature/new-safety-system
+
+# Discard local changes to a file (careful!)
+git checkout -- POUs/MAIN.TcPOU
+
+# See differences between working directory and last commit
+git diff
+\end{lstlisting}
+
+\begin{tipbox}
+Write meaningful commit messages! Instead of ``fixed bug'' or ``updated code,'' write ``Fix motor overtemperature alarm threshold from 80C to 85C per customer request \#1234''. This makes history searchable and useful.
+\end{tipbox}
+
+% ============================================================
+\section{TwinCAT 3 Specifics}
+% ============================================================
+
+Beckhoff's TwinCAT 3 is highly compatible with Git because its development environment (TcXaeShell) is based on \textbf{Visual Studio}, which has built-in Git integration. Unlike many PLC vendors who use expensive, proprietary binary formats, Beckhoff stores code in \textbf{human-readable XML}, which is ideal for version control.
+
+\subsection{The .gitignore File}
+
+You should not track every file in a project folder. Compiling code generates \textbf{software artifacts} (executables, object files, binaries) that do not belong in version control. A \texttt{.gitignore} file tells Git to ignore these files.
+
+\subsubsection*{Example: TwinCAT .gitignore Template}
+
+\begin{lstlisting}[style=configstyle]
+# ===========================================
+# TwinCAT 3 .gitignore Template
+# Place this file in your project root folder
+# ===========================================
+
+# ------------------------------------------
+# TwinCAT Specific Files
+# ------------------------------------------
+
+# Compiled library files (generated during build)
+*.compiled-library
+
+# TwinCAT boot project files
+*.bootdata
+*.bootdata-*
+
+# Line ID files (when using "Separate LineIDs" setting)
+*.TcLIds
+
+# TwinCAT project cache
+_Boot/
+_CompileInfo/
+_Libraries/
+
+# TwinCAT log files
+*.log
+*.tpzip
+
+# Binary/runtime files
+*.tmc
+*.tmcRefac
+
+# ------------------------------------------
+# Visual Studio Specific Files
+# ------------------------------------------
+
+# User-specific solution options (window layouts, etc.)
+*.suo
+*.user
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# Visual Studio cache/options directory
+.vs/
+
+# NuGet packages (can be restored)
+packages/
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# ------------------------------------------
+# Operating System Files
+# ------------------------------------------
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ------------------------------------------
+# Backup Files
+# ------------------------------------------
+
+# Common backup extensions
+*.bak
+*.tmp
+*~
+*.orig
+
+# TwinCAT backup files
+*.TcPOU.bak
+*.TcDUT.bak
+*.TcGVL.bak
+\end{lstlisting}
+
+\begin{notebox}
+Create the \texttt{.gitignore} file \textbf{before} your first commit. If you accidentally commit files that should be ignored, they will remain in the repository history even after adding them to \texttt{.gitignore}. You would need to use \texttt{git rm --cached} to remove them.
+\end{notebox}
+
+\subsection{Essential Settings for Clean Code History}
+
+To make code reviews and comparisons (``diffs'') easier, you must change several default TwinCAT settings to prevent ``noise'' in your XML files.
+
+\subsubsection{1. Separate LineIDs}
+
+By default, TwinCAT embeds ``LineIDs'' directly into the source code for online tracking. This creates constant, unnecessary changes in your Git history.
+
+\textbf{Action:} Go to \textit{Tools $>$ Options $>$ TwinCAT $>$ PLC Environment $>$ Write Options} and set \textbf{``Separate LineIDs'' to True}.
+
+\subsubsection{2. Independent Project Files}
+
+Instead of one giant ``mega-blob'' file for the whole project, TwinCAT can store I/O devices and EtherCAT configurations in separate files.
+
+\textbf{Action:} Go to \textit{TwinCAT $>$ XAE Environment $>$ File Settings} and set these to \textbf{True} to make code reviews much simpler.
+
+\subsubsection*{Example: XML LineID Noise}
+
+\begin{lstlisting}[style=xmlstyle]
+<!-- BAD: LineIDs embedded in source code (default setting) -->
+<!-- Every time you open/save the file, LineIDs may change! -->
+<!-- This creates "noise" in Git history - changes that aren't real code changes -->
+
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{12345678-1234-1234-1234-123456789abc}">
+    <Declaration><![CDATA[
+PROGRAM MAIN
+VAR
+    bStart : BOOL;
+    nCounter : INT;
+END_VAR
+    ]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+<!-- LineIds are embedded directly in the code block -->
+<LineId Id="1">IF bStart THEN</LineId>
+<LineId Id="2">    nCounter := nCounter + 1;</LineId>
+<LineId Id="3">END_IF</LineId>
+      ]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
+\end{lstlisting}
+
+\begin{lstlisting}[style=xmlstyle]
+<!-- GOOD: With "Separate LineIDs" = True -->
+<!-- Source code is clean and readable -->
+<!-- LineIDs are stored in a separate .TcLIds file (which is in .gitignore) -->
+
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{12345678-1234-1234-1234-123456789abc}">
+    <Declaration><![CDATA[
+PROGRAM MAIN
+VAR
+    bStart : BOOL;
+    nCounter : INT;
+END_VAR
+    ]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF bStart THEN
+    nCounter := nCounter + 1;
+END_IF
+      ]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
+
+<!-- The LineIDs are now in a separate file: MAIN.TcLIds -->
+<!-- This file is listed in .gitignore and not tracked -->
+\end{lstlisting}
+
+\begin{warningbox}
+Without the ``Separate LineIDs'' setting, your Git history will show changes to LineID numbers even when you haven't modified any actual code. This makes it nearly impossible to review real code changes and defeats much of the purpose of version control.
+\end{warningbox}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Setting} & \textbf{Location} & \textbf{Value} \\
+\midrule
+Separate LineIDs & TwinCAT $>$ PLC Environment $>$ Write Options & True \\
+Separate I/O & TwinCAT $>$ XAE Environment $>$ File Settings & True \\
+Separate Routes & TwinCAT $>$ XAE Environment $>$ File Settings & True \\
+\bottomrule
+\end{tabular}
+\caption{Recommended TwinCAT Settings for Version Control}
+\end{table}
+
+% ============================================================
+\section{Visual Comparisons (Diffing)}
+% ============================================================
+
+Because TwinCAT code is XML-based, standard Git comparison tools look like raw text. To see differences in a user-friendly way (including graphical languages like Ladder), you should use the \textbf{TwinCAT Project Compare} tool.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Configuration:} You can configure Visual Studio to automatically launch \texttt{TcProjectCompare} whenever you want to see the difference between two commits.
+    
+    \item \textbf{Capabilities:} This tool works for Structured Text, I/O configurations, and even graphical programming languages.
+\end{itemize}
+
+\begin{lstlisting}[style=bashstyle]
+# Configure Git to use TwinCAT Project Compare as diff tool
+# Run these commands once to set up your Git configuration
+
+# Set TcProjectCompare as the diff tool
+git config --global diff.tool TcProjectCompare
+git config --global difftool.TcProjectCompare.cmd \
+    '"C:/TwinCAT/3.1/Components/TcProjectCompare/TcProjectCompare.exe" "$LOCAL" "$REMOTE"'
+
+# Set TcProjectCompare as the merge tool
+git config --global merge.tool TcProjectCompare
+git config --global mergetool.TcProjectCompare.cmd \
+    '"C:/TwinCAT/3.1/Components/TcProjectCompare/TcProjectCompare.exe" "$LOCAL" "$REMOTE" "$MERGED"'
+
+# Now you can use these commands:
+git difftool                    # Compare working directory with last commit
+git difftool HEAD~1             # Compare with previous commit
+git difftool branch1 branch2    # Compare two branches
+\end{lstlisting}
+
+\begin{tipbox}
+The TwinCAT Project Compare tool can show side-by-side differences for Structured Text, Function Block Diagrams, Ladder Logic, and even hardware configurations. This is much more useful than looking at raw XML differences!
+\end{tipbox}
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+Using version control is \textbf{100\% free} in TwinCAT 3. By using standard tools like Git and GitHub, automation engineers can adopt the same high-quality workflows used in the traditional software industry, leading to safer, more maintainable projects.
+
+\subsection{Summary of Best Practices}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Practice} & \textbf{Recommendation} \\
+\midrule
+Version Control System & Use Git (industry standard) \\
+Remote Repository & GitHub, GitLab, or Azure DevOps \\
+.gitignore & Create before first commit \\
+Separate LineIDs & Enable in TwinCAT settings \\
+Commit Messages & Descriptive and meaningful \\
+Branching & Use feature branches for new work \\
+Code Review & Use TcProjectCompare for diffs \\
+\bottomrule
+\end{tabular}
+\caption{Version Control Best Practices for TwinCAT}
+\end{table}
+
+\subsection{Quick Start Checklist}
+
+\begin{enumerate}[leftmargin=*]
+    \item Install Git from \url{https://git-scm.com}
+    \item Create account on GitHub/GitLab/Azure DevOps
+    \item Configure TwinCAT settings (Separate LineIDs, etc.)
+    \item Create \texttt{.gitignore} file in project folder
+    \item Initialize repository: \texttt{git init}
+    \item Make first commit: \texttt{git add .} then \texttt{git commit -m "Initial commit"}
+    \item Create remote repository and push: \texttt{git push origin main}
+    \item Configure TcProjectCompare as diff tool
+\end{enumerate}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Essential Git Commands}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Command} & \textbf{Purpose} \\
+\midrule
+\texttt{git init} & Initialize new repository \\
+\texttt{git clone <url>} & Copy remote repository \\
+\texttt{git status} & Show changed files \\
+\texttt{git add .} & Stage all changes \\
+\texttt{git commit -m "msg"} & Create snapshot \\
+\texttt{git push origin main} & Upload to remote \\
+\texttt{git pull origin main} & Download from remote \\
+\texttt{git log --oneline} & View history \\
+\texttt{git diff} & Show unstaged changes \\
+\texttt{git checkout -b <name>} & Create new branch \\
+\bottomrule
+\end{tabular}
+\caption{Essential Git Commands}
+\end{table}
+
+\subsection*{TwinCAT Files to Ignore}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Pattern} & \textbf{Description} \\
+\midrule
+\texttt{*.compiled-library} & Compiled libraries \\
+\texttt{*.TcLIds} & LineID files \\
+\texttt{*.suo, *.user} & VS user settings \\
+\texttt{\_Boot/} & Boot project folder \\
+\texttt{.vs/} & VS cache folder \\
+\texttt{*.log} & Log files \\
+\bottomrule
+\end{tabular}
+\caption{Common TwinCAT .gitignore Entries}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

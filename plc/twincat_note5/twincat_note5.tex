@@ -1,0 +1,451 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+
+% ===== CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TcEventSeverity, T_FILETIME},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, FILETIME_TO_DT, GETSYSTEMTIME},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Structures and Functions},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Structures and Functions
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to Structures (DUTs)}
+% ============================================================
+
+While \textbf{arrays} are used to hold multiple data items of the same kind, \textbf{structures} allow you to hold several data items of \textbf{different kinds}. Structures are user-defined data types (UDT) that represent a record or a logical group.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Advantages:} They are more user-friendly than maintaining multiple separate arrays for related data. If a data definition changes, you only need to update it in one place (the structure definition) rather than everywhere those variables are used.
+    
+    \item \textbf{Syntax:} To access components within a structure, use \textbf{dot notation} (e.g., \texttt{StructureName.ComponentName}).
+    
+    \item \textbf{Creation:} Right-click on the \textbf{DUTs} folder in the project tree, select \textbf{Add > DUT}, choose \textbf{Structure}, and give it a name (often prefixed with \texttt{ST\_} by convention).
+    
+    \item \textbf{Scope:} In TwinCAT 3, structures have a \textbf{global scope}, meaning they are visible to all code within the project.
+\end{itemize}
+
+\subsection*{Example: Structure Definition}
+
+\begin{lstlisting}
+// DUT Definition: ST_Event
+// Created as a separate DUT file in the project tree under the DUTs folder
+TYPE ST_Event :
+STRUCT
+    eEventType     : E_EventType;        // User-defined ENUM for event classification
+    eEventSeverity : TcEventSeverity;    // Beckhoff event severity type
+    nIdentity      : UDINT;              // Unique identifier for the event
+    sText          : STRING(255);        // Descriptive text for the event
+    dtTimestamp    : DATE_AND_TIME;      // When the event occurred
+END_STRUCT
+END_TYPE
+\end{lstlisting}
+
+\begin{tipbox}
+Use the \texttt{ST\_} prefix convention for structure names to easily identify them throughout your codebase and distinguish them from other data types.
+\end{tipbox}
+
+% ============================================================
+\section{Functions (POUs)}
+% ============================================================
+
+Functions are essential for \textbf{modularization and code reuse}; you define the logic once and can use it many times throughout your software.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Components:} A function consists of a name, an optional \textbf{return type} (e.g., REAL, INT), \textbf{input parameters}, and \textbf{local variables} that act as a ``scratch pad''.
+    
+    \item \textbf{Returning Values:} To return a value from a function, you assign the result directly to the \textbf{function's name} within the code.
+    
+    \item \textbf{Advanced Features:}
+    \begin{itemize}
+        \item \textbf{Multiple Outputs:} Functions can be designed to return more than one value by defining additional output parameters.
+        \item \textbf{VAR\_IN\_OUT:} This keyword allows variables to act as both inputs and outputs, meaning the function can both read from and write to the same variable.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Example: Basic Function}
+
+\begin{lstlisting}
+// Function: Celsius_To_Fahrenheit
+// Converts a temperature value from Celsius to Fahrenheit
+FUNCTION Celsius_To_Fahrenheit : REAL
+VAR_INPUT
+    fCelsius : REAL;    // Input temperature in Celsius
+END_VAR
+VAR
+    // Local variables (scratch pad) - none needed for this simple function
+END_VAR
+
+// Calculate and return the Fahrenheit value
+// Assign the result to the function name to return it
+Celsius_To_Fahrenheit := fCelsius * 1.8 + 32.0;
+\end{lstlisting}
+
+\subsubsection*{Usage Example}
+
+\begin{lstlisting}
+// Calling the function from a program or function block
+VAR
+    fTempCelsius    : REAL := 25.0;
+    fTempFahrenheit : REAL;
+END_VAR
+
+// Call the function and store the result
+fTempFahrenheit := Celsius_To_Fahrenheit(fCelsius := fTempCelsius);
+// Result: fTempFahrenheit = 77.0
+\end{lstlisting}
+
+% ============================================================
+\section{Passing Parameters: Value vs. Reference}
+% ============================================================
+
+When sending data into a function, it can be passed in two ways:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Pass by Value:} The function receives a \textbf{copy} of the variable. Changes made inside the function do not affect the original data. This is best for small, simple data types like INT, REAL, or BOOL.
+    
+    \item \textbf{Pass by Reference:} The function receives the \textbf{memory location} of the original variable. Any changes made inside the function persist after the function completes. This is more efficient for large data sets like \textbf{structures} because it avoids the ``memory penalty'' of copying large amounts of data.
+    
+    \item \textbf{Implementation:} In TwinCAT, passing by reference is achieved using either the \texttt{VAR\_IN\_OUT} keyword or by defining a parameter as a \texttt{REFERENCE TO} a specific type.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Aspect} & \textbf{Pass by Value} & \textbf{Pass by Reference} \\
+\midrule
+Data Passed & Copy of the variable & Memory address \\
+Original Affected & No & Yes \\
+Best For & Small types (INT, REAL, BOOL) & Large types (structures, arrays) \\
+Memory Overhead & Higher (copy created) & Lower (no copy) \\
+Keywords & \texttt{VAR\_INPUT} & \texttt{VAR\_IN\_OUT}, \texttt{REFERENCE TO} \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of Parameter Passing Methods}
+\end{table}
+
+\subsection*{Example: Passing by Reference}
+
+\begin{lstlisting}
+// Function: UpdateEventTimestamp
+// Updates the timestamp of an event structure passed by reference
+FUNCTION UpdateEventTimestamp : BOOL
+VAR_INPUT
+    stEvent : REFERENCE TO ST_Event;    // Reference to the event structure
+END_VAR
+VAR
+    fbGetSystemTime : GETSYSTEMTIME;    // Function block instance for system time
+    stFileTime      : T_FILETIME;       // Temporary storage for file time
+END_VAR
+
+// Get the current system time
+fbGetSystemTime(timeLoDW => stFileTime.dwLowDateTime,
+                timeHiDW => stFileTime.dwHighDateTime);
+
+// Directly modify the referenced structure's timestamp member
+// This change persists after the function returns
+stEvent.dtTimestamp := FILETIME_TO_DT(stFileTime);
+
+// Return TRUE to indicate successful update
+UpdateEventTimestamp := TRUE;
+\end{lstlisting}
+
+\begin{warningbox}
+When passing by reference, any modifications made to the parameter inside the function will directly affect the original variable. Ensure this is the intended behavior before using \texttt{REFERENCE TO} or \texttt{VAR\_IN\_OUT}.
+\end{warningbox}
+
+% ============================================================
+\section{Practical Implementation: System Time \& Libraries}
+% ============================================================
+
+The sources illustrate these concepts through a practical example: a function that updates an event's timestamp using the PLC's system time.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{External Libraries:} To access advanced functionality like system time, you may need to add references to libraries like \textbf{Tc2\_Utilities}.
+    
+    \item \textbf{Format Conversion:} The system time is often provided as a 64-bit integer (FILETIME) which must be converted into a human-readable \texttt{DATE\_AND\_TIME} format using built-in functions like \texttt{FILETIME\_TO\_DT}.
+    
+    \item \textbf{Function Blocks (Preview):} To get the system time, the example uses a \textbf{Function Block} (\texttt{GETSYSTEMTIME}), which must be \textbf{instantiated} in the local variables before use.
+\end{itemize}
+
+\subsection*{Example: System Time Conversion}
+
+\begin{lstlisting}
+// Declaration section
+VAR
+    fbGetSystemTime : GETSYSTEMTIME;    // Instance of the system time function block
+    stFileTime      : T_FILETIME;       // Structure to hold the raw file time
+    dtCurrentTime   : DATE_AND_TIME;    // Human-readable date and time result
+END_VAR
+
+// Implementation section
+// Step 1: Call the GETSYSTEMTIME function block to retrieve system time
+// The function block outputs the time as two 32-bit values (low and high DWORD)
+fbGetSystemTime(
+    timeLoDW => stFileTime.dwLowDateTime,   // Lower 32 bits of file time
+    timeHiDW => stFileTime.dwHighDateTime   // Upper 32 bits of file time
+);
+
+// Step 2: Convert the T_FILETIME structure to a DATE_AND_TIME value
+// FILETIME_TO_DT is a built-in conversion function from Tc2_Utilities
+dtCurrentTime := FILETIME_TO_DT(stFileTime);
+
+// dtCurrentTime now contains the current date and time in a readable format
+// Example value: DT#2024-06-15-14:30:45
+\end{lstlisting}
+
+\subsection{Adding the Tc2\_Utilities Library}
+
+To use the \texttt{GETSYSTEMTIME} function block and \texttt{FILETIME\_TO\_DT} function, you must first add the library reference:
+
+\begin{enumerate}
+    \item In the Solution Explorer, expand your PLC project
+    \item Right-click on \textbf{References}
+    \item Select \textbf{Add library...}
+    \item Search for \textbf{Tc2\_Utilities} and add it
+\end{enumerate}
+
+\begin{tipbox}
+The \texttt{T\_FILETIME} structure represents time as the number of 100-nanosecond intervals since January 1, 1601. The \texttt{FILETIME\_TO\_DT} function handles this conversion automatically, making it easy to work with human-readable timestamps.
+\end{tipbox}
+
+\subsection{Complete Working Example}
+
+Below is a complete example combining all the concepts from this lecture:
+
+\begin{lstlisting}
+// Function: LogEvent
+// Creates and logs an event with the current system timestamp
+FUNCTION LogEvent : BOOL
+VAR_INPUT
+    stEvent      : REFERENCE TO ST_Event;   // Event to be logged (by reference)
+    eType        : E_EventType;             // Type of event
+    eSeverity    : TcEventSeverity;         // Severity level
+    nId          : UDINT;                   // Event identifier
+    sDescription : STRING(255);             // Event description
+END_VAR
+VAR
+    fbGetSystemTime : GETSYSTEMTIME;        // System time function block instance
+    stFileTime      : T_FILETIME;           // Temporary file time storage
+END_VAR
+
+// Populate the event structure members
+stEvent.eEventType     := eType;
+stEvent.eEventSeverity := eSeverity;
+stEvent.nIdentity      := nId;
+stEvent.sText          := sDescription;
+
+// Get and set the current timestamp
+fbGetSystemTime(timeLoDW => stFileTime.dwLowDateTime,
+                timeHiDW => stFileTime.dwHighDateTime);
+stEvent.dtTimestamp := FILETIME_TO_DT(stFileTime);
+
+// Return success
+LogEvent := TRUE;
+\end{lstlisting}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Structure Declaration Syntax}
+
+\begin{lstlisting}
+TYPE <StructureName> :
+STRUCT
+    <member1> : <DataType1>;
+    <member2> : <DataType2>;
+    // ... additional members
+END_STRUCT
+END_TYPE
+\end{lstlisting}
+
+\subsection*{Function Declaration Syntax}
+
+\begin{lstlisting}
+FUNCTION <FunctionName> : <ReturnType>
+VAR_INPUT
+    <inputParam> : <DataType>;              // Pass by value
+    <refParam>   : REFERENCE TO <DataType>; // Pass by reference
+END_VAR
+VAR_IN_OUT
+    <inOutParam> : <DataType>;              // Pass by reference (read/write)
+END_VAR
+VAR
+    <localVar> : <DataType>;                // Local scratch variables
+END_VAR
+
+// Function body
+<FunctionName> := <returnValue>;            // Assign return value
+\end{lstlisting}
+
+\subsection*{Common Naming Conventions}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Prefix} & \textbf{Type} & \textbf{Example} \\
+\midrule
+\texttt{ST\_} & Structure & \texttt{ST\_Event}, \texttt{ST\_MotorData} \\
+\texttt{E\_} & Enumeration & \texttt{E\_EventType}, \texttt{E\_State} \\
+\texttt{fb} & Function Block Instance & \texttt{fbGetSystemTime} \\
+\texttt{st} & Structure Instance & \texttt{stEvent}, \texttt{stFileTime} \\
+\texttt{dt} & DATE\_AND\_TIME & \texttt{dtTimestamp}, \texttt{dtCurrentTime} \\
+\bottomrule
+\end{tabular}
+\caption{Common TwinCAT Naming Conventions}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

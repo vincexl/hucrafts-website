@@ -1,0 +1,638 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TcEventSeverity, T_FILETIME},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, FILETIME_TO_DT, GETSYSTEMTIME},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Function Blocks and OOP},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Function Blocks and Object-Oriented Programming (OOP)
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Procedural vs. Object-Oriented Programming}
+% ============================================================
+
+The transition from functions to \textbf{function blocks (FBs)} represents a shift from \textbf{Procedural Programming (POP)} to \textbf{Object-Oriented Programming (OOP)}.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Procedural (POP):} Focuses on a sequence of actions. Global data is defined, and functions act upon that data.
+    
+    \item \textbf{Object-Oriented (OOP):} Focuses on data. Programs are divided into \textbf{objects} that carry their own state (data) and behavior (methods).
+    
+    \item \textbf{The Object:} In industrial automation, an object can represent physical hardware (a motor, a sensor) or abstract concepts (a database logger, a mathematical calculation).
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Aspect} & \textbf{Procedural (POP)} & \textbf{Object-Oriented (OOP)} \\
+\midrule
+Focus & Sequence of actions & Data and objects \\
+Data Location & Global variables & Encapsulated in objects \\
+Code Reuse & Functions & Classes/Function Blocks \\
+State Management & External to functions & Internal to objects \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of Programming Paradigms}
+\end{table}
+
+% ============================================================
+\section{Function Blocks as Blueprints}
+% ============================================================
+
+A function block serves as the \textbf{blueprint} for an object.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{State:} Defined by internal variables (e.g., a motor's current velocity or temperature).
+    
+    \item \textbf{Behavior:} Defined by \textbf{methods} (e.g., \texttt{PowerEnable}, \texttt{SetSpeed}).
+    
+    \item \textbf{Instantiation:} To use an FB, you must create an \textbf{instance} of it. This reserves memory in the PLC, allowing multiple objects (e.g., \texttt{fbWinch} and \texttt{fbConveyor}) to exist independently, each holding its own unique data.
+\end{itemize}
+
+\subsection*{Example: Instantiation}
+
+\begin{lstlisting}
+// Program: MAIN
+// Declaring multiple instances of the Motor function block
+// Each instance maintains its own independent state and data
+PROGRAM MAIN
+VAR
+    fbWinch    : FB_Motor;    // First instance - controls the winch motor
+    fbConveyor : FB_Motor;    // Second instance - controls the conveyor motor
+    fbPump     : FB_Motor;    // Third instance - controls the pump motor
+END_VAR
+
+// Each instance can be controlled independently
+fbWinch(bEnable := TRUE, fTargetSpeed := 50.0);
+fbConveyor(bEnable := TRUE, fTargetSpeed := 75.0);
+fbPump(bEnable := FALSE, fTargetSpeed := 0.0);
+
+// Access instance-specific data
+// fbWinch.fCurrentSpeed will be different from fbConveyor.fCurrentSpeed
+\end{lstlisting}
+
+\begin{notebox}
+Each instance of a function block has its own memory allocation. This means \texttt{fbWinch} and \texttt{fbConveyor} can have completely different internal states even though they are created from the same blueprint.
+\end{notebox}
+
+% ============================================================
+\section{The Pillars of OOP in TwinCAT 3}
+% ============================================================
+
+\subsection{Encapsulation}
+
+Bundling data with the methods that operate on it and hiding the internal state from the outside. This prevents ``spaghetti code'' caused by excessive global variables.
+
+\subsection{Abstraction}
+
+Hiding complex internal logic from the user. The caller only needs to know \textit{what} a method does (e.g., \texttt{AddEvent}), not the specific details of \textit{how} it is accomplished.
+
+\subsection{Inheritance}
+
+The process where a \textbf{child function block} inherits all attributes and methods of a \textbf{parent function block}.
+
+\begin{itemize}[leftmargin=*]
+    \item The child can add its own specific features or methods.
+    \item \textbf{``IS-A'' Relationship:} An SMS notification \textit{is a} notification.
+    \item \textbf{Syntax:} Use the \texttt{EXTENDS} keyword to implement inheritance.
+\end{itemize}
+
+\subsection*{Example: Inheritance}
+
+\begin{lstlisting}
+// Parent Function Block: FB_Notification
+// Base class containing common notification functionality
+FUNCTION_BLOCK FB_Notification
+VAR
+    sRecipient   : STRING(255);    // Who receives the notification
+    sMessage     : STRING(1000);   // The notification content
+    dtTimestamp  : DATE_AND_TIME;  // When the notification was created
+    bSent        : BOOL;           // Whether notification has been sent
+END_VAR
+
+// Methods for the parent FB would be defined here
+// e.g., Send(), GetStatus(), etc.
+\end{lstlisting}
+
+\begin{lstlisting}
+// Child Function Block: FB_SMSNotification
+// Inherits from FB_Notification and adds SMS-specific functionality
+FUNCTION_BLOCK FB_SMSNotification EXTENDS FB_Notification
+VAR
+    sPhoneNumber    : STRING(20);     // SMS-specific: recipient phone number
+    nMaxCharacters  : INT := 160;     // SMS-specific: character limit
+    bDeliveryReport : BOOL;           // SMS-specific: request delivery confirmation
+END_VAR
+
+// This FB automatically has access to:
+// - sRecipient (inherited)
+// - sMessage (inherited)
+// - dtTimestamp (inherited)
+// - bSent (inherited)
+// Plus its own SMS-specific variables
+\end{lstlisting}
+
+\begin{lstlisting}
+// Another Child: FB_EmailNotification
+// Different specialization of the base notification class
+FUNCTION_BLOCK FB_EmailNotification EXTENDS FB_Notification
+VAR
+    sEmailAddress : STRING(255);      // Email-specific: recipient address
+    sSubject      : STRING(255);      // Email-specific: email subject line
+    sAttachment   : STRING(255);      // Email-specific: attachment path
+    bHTMLFormat   : BOOL;             // Email-specific: HTML or plain text
+END_VAR
+\end{lstlisting}
+
+\begin{tipbox}
+Use inheritance when you have a clear ``IS-A'' relationship. For example, \texttt{FB\_SMSNotification} IS-A \texttt{FB\_Notification}. This promotes code reuse and maintains a logical hierarchy.
+\end{tipbox}
+
+% ============================================================
+\section{Methods and Access Specifiers}
+% ============================================================
+
+Methods are used to change or access the internal state of an object. Every method requires an \textbf{access specifier} to define who can call it:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llp{7cm}@{}}
+\toprule
+\textbf{Specifier} & \textbf{Symbol} & \textbf{Accessibility} \\
+\midrule
+\texttt{PUBLIC} & + & Accessible by everyone (the FB itself and external code) \\
+\texttt{PRIVATE} & - & Accessible only within the FB where it is declared \\
+\texttt{PROTECTED} & \# & Accessible by the FB and its children (via inheritance) \\
+\texttt{INTERNAL} & \texttildelow & Accessible within the FB and its local library \\
+\bottomrule
+\end{tabular}
+\caption{Access Specifiers in TwinCAT 3}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Access From} & \textbf{PUBLIC} & \textbf{PRIVATE} & \textbf{PROTECTED} & \textbf{INTERNAL} \\
+\hline
+Same FB & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline
+Child FB & \checkmark & & \checkmark & \checkmark \\
+\hline
+Same Library & \checkmark & & & \checkmark \\
+\hline
+External Code & \checkmark & & & \\
+\hline
+\end{tabular}
+\caption{Access Specifier Visibility Matrix}
+\end{figure}
+
+% ============================================================
+\section{FB Body vs. Methods}
+% ============================================================
+
+Unlike traditional languages like Java where all state changes must occur through methods, TwinCAT allows you to call the \textbf{body} of the function block directly.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Cyclical Logic (The Body):} Use the FB body for code that must run every single PLC cycle.
+    
+    \item \textbf{One-Shot Logic (Methods):} Use methods for specific requests or messages to change state that do not need to run every cycle.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Aspect} & \textbf{FB Body} & \textbf{Methods} \\
+\midrule
+Execution & Every PLC cycle & On-demand (when called) \\
+Use Case & Continuous monitoring/control & Specific actions/requests \\
+Example & Motor speed regulation loop & \texttt{SetTargetSpeed()} \\
+\bottomrule
+\end{tabular}
+\caption{FB Body vs. Methods}
+\end{table}
+
+% ============================================================
+\section{Best Practices for Professional Code}
+% ============================================================
+
+\subsection{Self-Descriptive Code}
+
+Prioritize descriptive variable and method names over comments. Comments often become outdated as code changes, leading to confusion.
+
+\subsection{Avoid ``Magic Numbers''}
+
+Use \textbf{constants} for fixed values (like buffer sizes) to make the code more readable.
+
+\subsection{Modularization}
+
+Create small function blocks that do ``one thing only'' but do it very well.
+
+\subsection*{Example: Constants vs. Magic Numbers}
+
+\begin{lstlisting}
+// BAD PRACTICE: Using "Magic Numbers"
+// What does 100 mean? Why 100? Hard to understand and maintain.
+FUNCTION_BLOCK FB_EventLogger_Bad
+VAR
+    astEventBuffer : ARRAY[0..99] OF ST_Event;  // Why 99? What if we need to change it?
+    nCurrentIndex  : UDINT;
+END_VAR
+
+// Checking against magic number - unclear intent
+IF nCurrentIndex < 100 THEN
+    // Add event...
+END_IF
+\end{lstlisting}
+
+\begin{lstlisting}
+// GOOD PRACTICE: Using Named Constants
+// Clear, self-documenting, easy to maintain
+FUNCTION_BLOCK FB_EventLogger_Good
+VAR CONSTANT
+    MAXIMUM_BUFFER_SIZE : UDINT := 100;    // Single point of definition
+    MINIMUM_EVENT_ID    : UDINT := 1;       // Descriptive name explains purpose
+    INVALID_INDEX       : UDINT := 16#FFFFFFFF;  // Clear meaning
+END_VAR
+VAR
+    // Array size defined using the constant - change in one place updates everywhere
+    astEventBuffer : ARRAY[0..(MAXIMUM_BUFFER_SIZE - 1)] OF ST_Event;
+    nCurrentIndex  : UDINT := 0;
+    nEventCount    : UDINT := 0;
+END_VAR
+
+// Clear intent: checking against named constant
+IF nCurrentIndex < MAXIMUM_BUFFER_SIZE THEN
+    // Add event...
+END_IF
+\end{lstlisting}
+
+\begin{warningbox}
+Magic numbers make code difficult to maintain. If you need to change a buffer size from 100 to 200, you would have to find and update every occurrence of ``100'' in your code. With constants, you change it in one place.
+\end{warningbox}
+
+% ============================================================
+\section{Practical Example: The Event Logger}
+% ============================================================
+
+The tutorial demonstrates building an \texttt{EventLogger} function block to store a fixed-size buffer of events.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Internal Buffer:} An array of event structures.
+    
+    \item \textbf{Public Method (\texttt{AddEvent}):} Allows external code to submit an event identity, text, etc.
+    
+    \item \textbf{Private Method (\texttt{IsEventBufferFull}):} An internal helper method used by \texttt{AddEvent} to check if the buffer has reached its maximum capacity before adding new data.
+\end{itemize}
+
+\subsection*{Example: Private Helper Method}
+
+\begin{lstlisting}
+// Function Block: FB_EventLogger
+// A circular buffer for storing system events
+FUNCTION_BLOCK FB_EventLogger
+VAR CONSTANT
+    MAXIMUM_BUFFER_SIZE : UDINT := 100;    // Maximum events to store
+END_VAR
+VAR
+    astEventBuffer : ARRAY[0..(MAXIMUM_BUFFER_SIZE - 1)] OF ST_Event;
+    nCurrentIndex  : UDINT := 0;           // Current write position
+    nEventCount    : UDINT := 0;           // Total events stored
+    bBufferFull    : BOOL := FALSE;        // Buffer status flag
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Private Method: IsEventBufferFull
+// Checks if the event buffer has reached maximum capacity
+// Access: PRIVATE - can only be called from within FB_EventLogger
+METHOD PRIVATE IsEventBufferFull : BOOL
+VAR_INPUT
+    // No inputs needed - uses internal FB variables
+END_VAR
+
+// Compare current index against the maximum buffer size constant
+// Returns TRUE if buffer is full, FALSE otherwise
+IF nCurrentIndex >= MAXIMUM_BUFFER_SIZE THEN
+    IsEventBufferFull := TRUE;
+ELSE
+    IsEventBufferFull := FALSE;
+END_IF
+
+// Alternative one-liner:
+// IsEventBufferFull := (nCurrentIndex >= MAXIMUM_BUFFER_SIZE);
+\end{lstlisting}
+
+\begin{lstlisting}
+// Public Method: AddEvent
+// Adds a new event to the buffer if space is available
+// Access: PUBLIC - can be called from external code
+METHOD PUBLIC AddEvent : BOOL
+VAR_INPUT
+    nEventId    : UDINT;           // Unique event identifier
+    sEventText  : STRING(255);     // Event description
+    eSeverity   : TcEventSeverity; // Event severity level
+END_VAR
+VAR
+    fbGetSystemTime : GETSYSTEMTIME;
+    stFileTime      : T_FILETIME;
+END_VAR
+
+// First check if buffer is full using our private helper method
+IF THIS^.IsEventBufferFull() THEN
+    // Buffer is full - cannot add new event
+    AddEvent := FALSE;
+    RETURN;
+END_IF
+
+// Buffer has space - add the new event
+astEventBuffer[nCurrentIndex].nIdentity      := nEventId;
+astEventBuffer[nCurrentIndex].sText          := sEventText;
+astEventBuffer[nCurrentIndex].eEventSeverity := eSeverity;
+
+// Get current timestamp
+fbGetSystemTime(timeLoDW => stFileTime.dwLowDateTime,
+                timeHiDW => stFileTime.dwHighDateTime);
+astEventBuffer[nCurrentIndex].dtTimestamp := FILETIME_TO_DT(stFileTime);
+
+// Update index and count
+nCurrentIndex := nCurrentIndex + 1;
+nEventCount   := nEventCount + 1;
+
+// Return success
+AddEvent := TRUE;
+\end{lstlisting}
+
+\subsection*{Usage Example}
+
+\begin{lstlisting}
+// Program: MAIN
+// Demonstrating the use of FB_EventLogger
+PROGRAM MAIN
+VAR
+    fbLogger    : FB_EventLogger;    // Instance of the event logger
+    bAddResult  : BOOL;              // Result of AddEvent call
+    bTrigger    : BOOL;              // Trigger to add an event
+END_VAR
+
+// Add an event when triggered
+IF bTrigger THEN
+    bAddResult := fbLogger.AddEvent(
+        nEventId   := 1001,
+        sEventText := 'System started successfully',
+        eSeverity  := TcEventSeverity.Info
+    );
+    bTrigger := FALSE;  // Reset trigger
+END_IF
+\end{lstlisting}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Function Block Declaration Syntax}
+
+\begin{lstlisting}
+FUNCTION_BLOCK <Name>
+// Or with inheritance:
+FUNCTION_BLOCK <Name> EXTENDS <ParentFB>
+VAR_INPUT
+    // Input parameters
+END_VAR
+VAR_OUTPUT
+    // Output parameters
+END_VAR
+VAR
+    // Internal variables (state)
+END_VAR
+VAR CONSTANT
+    // Named constants
+END_VAR
+
+// FB Body code here (runs every cycle when FB is called)
+\end{lstlisting}
+
+\subsection*{Method Declaration Syntax}
+
+\begin{lstlisting}
+METHOD <AccessSpecifier> <MethodName> : <ReturnType>
+VAR_INPUT
+    // Input parameters
+END_VAR
+VAR
+    // Local variables
+END_VAR
+
+// Method implementation
+<MethodName> := <returnValue>;
+\end{lstlisting}
+
+\subsection*{OOP Keywords Summary}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Keyword} & \textbf{Purpose} \\
+\midrule
+\texttt{EXTENDS} & Inherit from a parent function block \\
+\texttt{IMPLEMENTS} & Implement an interface \\
+\texttt{THIS\^{}} & Reference to the current instance \\
+\texttt{SUPER\^{}} & Reference to the parent class \\
+\texttt{METHOD} & Define a method within an FB \\
+\texttt{PROPERTY} & Define a property (getter/setter) \\
+\texttt{VAR CONSTANT} & Define named constants \\
+\bottomrule
+\end{tabular}
+\caption{OOP Keywords in TwinCAT 3}
+\end{table}
+
+\subsection*{Common Naming Conventions}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Prefix} & \textbf{Type} & \textbf{Example} \\
+\midrule
+\texttt{FB\_} & Function Block & \texttt{FB\_Motor}, \texttt{FB\_EventLogger} \\
+\texttt{I\_} & Interface & \texttt{I\_Notification}, \texttt{I\_Loggable} \\
+\texttt{fb} & FB Instance & \texttt{fbWinch}, \texttt{fbLogger} \\
+\texttt{UPPER\_CASE} & Constants & \texttt{MAXIMUM\_BUFFER\_SIZE} \\
+\bottomrule
+\end{tabular}
+\caption{Naming Conventions for OOP in TwinCAT 3}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

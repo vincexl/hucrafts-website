@@ -1,0 +1,888 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TcEventSeverity, T_FILETIME, E_Color},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, FILETIME_TO_DT, GETSYSTEMTIME, FB_init,
+                 CONCAT, TO_STRING, FB_FileOpen, FB_FilePuts, FB_FileClose},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Program Flow Instructions and State Machines},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Program Flow Instructions \& State Machines
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to Program Flow Control}
+% ============================================================
+
+Instructions are used to control the flow of execution within a PLC program. There are four primary types of instructions covered:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Conditional Statements:} IF/ELSE and CASE switches.
+    \item \textbf{Iteration Statements (Loops):} FOR loops and WHILE loops.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Category} & \textbf{Instruction} & \textbf{Use Case} \\
+\midrule
+Conditional & IF/ELSIF/ELSE & Boolean logic decisions \\
+Conditional & CASE & Multiple discrete value testing \\
+Iteration & FOR & Fixed number of iterations \\
+Iteration & WHILE & Condition-based iteration \\
+\bottomrule
+\end{tabular}
+\caption{Program Flow Instructions Overview}
+\end{table}
+
+% ============================================================
+\section{Conditional Statements}
+% ============================================================
+
+\subsection{IF / ELSIF / ELSE}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{IF:} Specifies a block of code to execute only if a boolean expression evaluates to \textbf{TRUE}.
+    
+    \item \textbf{ELSE:} Provides an alternative path of execution if the IF condition is \textbf{FALSE}.
+    
+    \item \textbf{ELSIF:} Allows for testing additional conditions if the preceding conditions are false. You can use as many ELSIFs as needed.
+\end{itemize}
+
+\subsubsection*{Example: IF/ELSE Logic}
+
+\begin{lstlisting}
+// Program: Temperature Classification
+// Demonstrates IF/ELSIF/ELSE conditional logic
+PROGRAM MAIN
+VAR
+    nTemperature    : INT;           // Current temperature reading
+    sStatus         : STRING(50);    // Status message
+    bAlarmActive    : BOOL;          // Alarm flag
+    
+    // Threshold constants
+    nHighThreshold  : INT := 80;     // High temperature threshold
+    nLowThreshold   : INT := 20;     // Low temperature threshold
+END_VAR
+
+// IF/ELSIF/ELSE structure for temperature classification
+IF nTemperature > nHighThreshold THEN
+    // Temperature exceeds high threshold - critical condition
+    sStatus := 'CRITICAL: Temperature too high!';
+    bAlarmActive := TRUE;
+    
+ELSIF nTemperature < nLowThreshold THEN
+    // Temperature below low threshold - warning condition
+    sStatus := 'WARNING: Temperature too low!';
+    bAlarmActive := TRUE;
+    
+ELSIF nTemperature = 50 THEN
+    // Temperature exactly at optimal value
+    sStatus := 'OPTIMAL: Perfect temperature';
+    bAlarmActive := FALSE;
+    
+ELSE
+    // Temperature within normal operating range
+    sStatus := 'NORMAL: Temperature acceptable';
+    bAlarmActive := FALSE;
+    
+END_IF
+\end{lstlisting}
+
+\begin{lstlisting}
+// Additional example: Nested IF statements
+VAR
+    bSensorOK       : BOOL;
+    bSystemReady    : BOOL;
+    nErrorCode      : INT;
+END_VAR
+
+IF bSensorOK THEN
+    IF bSystemReady THEN
+        // Both conditions met - proceed with operation
+        nErrorCode := 0;
+    ELSE
+        // Sensor OK but system not ready
+        nErrorCode := 2;
+    END_IF
+ELSE
+    // Sensor failure - critical error
+    nErrorCode := 1;
+END_IF
+\end{lstlisting}
+
+\subsection{CASE Statements}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Purpose:} Used to perform different actions based on the specific value of a condition variable (typically an \textbf{INT} or \textbf{WORD}).
+    
+    \item \textbf{Note:} Strings are \textbf{not} supported in CASE statements; for strings, you must use IF/ELSIF.
+    
+    \item \textbf{Preferred Use:} Generally preferred over long chains of IF/ELSIF when testing many different values of a single variable.
+\end{itemize}
+
+\subsubsection*{Example: CASE Statement}
+
+\begin{lstlisting}
+// Program: State-Based Control using CASE
+// Demonstrates CASE statement with integer state variable
+PROGRAM MAIN
+VAR
+    nState          : INT := 1;      // Current state (1, 2, 3, etc.)
+    sStateDesc      : STRING(50);    // State description
+    bMotorEnable    : BOOL;          // Motor control output
+    bValveOpen      : BOOL;          // Valve control output
+    fSetpoint       : REAL;          // Process setpoint
+END_VAR
+
+// CASE statement for state machine control
+CASE nState OF
+
+    1:  // Initialization State
+        sStateDesc := 'State 1: Initialization';
+        bMotorEnable := FALSE;
+        bValveOpen := FALSE;
+        fSetpoint := 0.0;
+        
+        // Transition logic would go here
+        // IF bInitComplete THEN nState := 2; END_IF
+        
+    2:  // Startup State
+        sStateDesc := 'State 2: System Startup';
+        bMotorEnable := TRUE;
+        bValveOpen := FALSE;
+        fSetpoint := 25.0;
+        
+    3:  // Running State
+        sStateDesc := 'State 3: Normal Operation';
+        bMotorEnable := TRUE;
+        bValveOpen := TRUE;
+        fSetpoint := 75.0;
+        
+    4, 5:  // Multiple values can share the same action
+        sStateDesc := 'State 4 or 5: Maintenance Mode';
+        bMotorEnable := FALSE;
+        bValveOpen := FALSE;
+        
+    10..20:  // Range of values (10 through 20)
+        sStateDesc := 'States 10-20: Error Recovery';
+        bMotorEnable := FALSE;
+        bValveOpen := FALSE;
+        fSetpoint := 0.0;
+
+ELSE
+    // Default case - handles any undefined state values
+    sStateDesc := 'UNKNOWN STATE - Check nState value';
+    bMotorEnable := FALSE;
+    bValveOpen := FALSE;
+    fSetpoint := 0.0;
+    
+END_CASE
+\end{lstlisting}
+
+\begin{warningbox}
+CASE statements do not support STRING variables. If you need to branch based on string values, you must use IF/ELSIF chains or convert the string to an enumeration or integer first.
+\end{warningbox}
+
+% ============================================================
+\section{Iteration Statements (Loops)}
+% ============================================================
+
+\subsection{FOR Loops}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Function:} Executes a block of code a specific number of times.
+    
+    \item \textbf{Use Case:} Highly efficient for iterating through \textbf{arrays}.
+    
+    \item \textbf{Mechanism:} Uses a counter variable that automatically increments by 1 (or a custom step size defined by the \texttt{BY} keyword) at the end of each loop until a target value is reached.
+\end{itemize}
+
+\subsubsection*{Example: FOR Loop Array Summation}
+
+\begin{lstlisting}
+// Program: Array Processing with FOR Loop
+// Demonstrates summing array elements using a FOR loop
+PROGRAM MAIN
+VAR
+    // Array of data values (indices 1 to 5)
+    aData   : ARRAY[1..5] OF INT := [10, 20, 30, 40, 50];
+    
+    // Loop counter variable
+    i       : INT;
+    
+    // Accumulator for sum
+    nSum    : INT := 0;
+    
+    // Additional example variables
+    nMax    : INT;
+    nMin    : INT;
+    fAverage: REAL;
+END_VAR
+
+// Reset sum before calculation
+nSum := 0;
+
+// FOR loop to sum all elements in the array
+// Loop runs from index 1 to index 5 (inclusive)
+FOR i := 1 TO 5 DO
+    nSum := nSum + aData[i];
+END_FOR
+
+// Result: nSum = 10 + 20 + 30 + 40 + 50 = 150
+\end{lstlisting}
+
+\begin{lstlisting}
+// Additional FOR loop examples
+
+// Example 1: Find maximum value in array
+nMax := aData[1];  // Initialize with first element
+FOR i := 2 TO 5 DO
+    IF aData[i] > nMax THEN
+        nMax := aData[i];
+    END_IF
+END_FOR
+
+// Example 2: FOR loop with custom step size (BY keyword)
+// Count down from 10 to 0 by steps of 2
+VAR
+    nCountdown : INT;
+    j          : INT;
+END_VAR
+
+FOR j := 10 TO 0 BY -2 DO
+    nCountdown := j;  // Values: 10, 8, 6, 4, 2, 0
+END_FOR
+
+// Example 3: Initialize array with calculated values
+VAR
+    aSquares : ARRAY[0..9] OF INT;
+    k        : INT;
+END_VAR
+
+FOR k := 0 TO 9 DO
+    aSquares[k] := k * k;  // Store square of index
+END_FOR
+// Result: aSquares = [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+\end{lstlisting}
+
+\subsection{WHILE Loops}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Function:} Continues to execute a block of code as long as a specified condition remains \textbf{TRUE}.
+    
+    \item \textbf{Risk:} Unlike FOR loops, the developer must ensure the condition eventually becomes false to avoid an infinite loop that could crash the PLC cycle.
+\end{itemize}
+
+\begin{lstlisting}
+// Example: WHILE loop for searching an array
+VAR
+    aBuffer     : ARRAY[0..99] OF INT;
+    nSearchVal  : INT := 42;
+    nFoundIndex : INT := -1;    // -1 indicates not found
+    nIndex      : INT := 0;
+    bFound      : BOOL := FALSE;
+END_VAR
+
+// Search for value using WHILE loop
+nIndex := 0;
+bFound := FALSE;
+
+WHILE (nIndex <= 99) AND (NOT bFound) DO
+    IF aBuffer[nIndex] = nSearchVal THEN
+        nFoundIndex := nIndex;
+        bFound := TRUE;
+    ELSE
+        nIndex := nIndex + 1;  // CRITICAL: Must increment to avoid infinite loop!
+    END_IF
+END_WHILE
+\end{lstlisting}
+
+\begin{warningbox}
+WHILE loops can cause infinite loops if the exit condition is never met. Always ensure that the loop condition will eventually become FALSE, and consider adding a maximum iteration counter as a safety mechanism.
+\end{warningbox}
+
+% ============================================================
+\section{State Machines and Best Practices}
+% ============================================================
+
+In PLC programming, \textbf{state machines} are a standard way to manage complex sequences.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Avoiding ``Magic Numbers'':} Many programmers use integers (10, 20, 30) for states. The sources strongly advise \textbf{against} this because numbers do not describe what the code is doing.
+    
+    \item \textbf{Local Enumerations:} Use a \textbf{local ENUM} (defined within the function block) to name states (e.g., \texttt{FILE\_OPEN}, \texttt{WAIT\_FOR\_EVENT}). This makes the code self-descriptive and prevents ``namespace pollution''.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Approach} & \textbf{Example} & \textbf{Readability} \\
+\midrule
+Magic Numbers & \texttt{CASE nState OF 10: ...} & Poor \\
+Global ENUM & \texttt{CASE eState OF E\_State.Running: ...} & Good \\
+Local ENUM & \texttt{CASE eWriteState OF E\_WriteState.FILE\_OPEN: ...} & Best \\
+\bottomrule
+\end{tabular}
+\caption{State Machine Implementation Approaches}
+\end{table}
+
+\subsubsection*{Example: Local ENUM State Machine}
+
+\begin{lstlisting}
+// Function Block: FB_CsvEventWriter
+// Demonstrates local ENUM for state machine implementation
+FUNCTION_BLOCK FB_CsvEventWriter
+VAR
+    // LOCAL ENUMERATION - defined within the function block
+    // Prevents namespace pollution and makes code self-descriptive
+    {attribute 'strict'}
+    E_WriteState : (
+        IDLE,                   // Waiting for write request
+        FILE_OPEN_TRIGGER,      // Trigger file open operation
+        FILE_OPEN_WAIT,         // Wait for file to open
+        WRITE_DATA_TRIGGER,     // Trigger data write
+        WRITE_DATA_WAIT,        // Wait for write completion
+        FILE_CLOSE_TRIGGER,     // Trigger file close
+        FILE_CLOSE_WAIT,        // Wait for file to close
+        WAIT_FOR_EVENT,         // Wait for next event to log
+        DONE,                   // Operation completed successfully
+        ERROR                   // Error state
+    );
+    
+    // Current state variable using the local enum
+    eWriteState : E_WriteState := E_WriteState.IDLE;
+    
+    // File operation function blocks
+    fbFileOpen  : FB_FileOpen;
+    fbFilePuts  : FB_FilePuts;
+    fbFileClose : FB_FileClose;
+    
+    // File handle and path
+    hFile       : UINT;
+    sFilePath   : STRING(255) := 'C:\EventLogs\events.csv';
+    
+    // Status flags
+    bBusy       : BOOL;
+    bError      : BOOL;
+    nErrorId    : UDINT;
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// State machine implementation using CASE with local ENUM
+CASE eWriteState OF
+
+    E_WriteState.IDLE:
+        // Initial state - waiting for trigger
+        bBusy := FALSE;
+        bError := FALSE;
+        // Transition: IF bStartWrite THEN eWriteState := E_WriteState.FILE_OPEN_TRIGGER; END_IF
+        
+    E_WriteState.FILE_OPEN_TRIGGER:
+        // Trigger the file open operation
+        bBusy := TRUE;
+        fbFileOpen(
+            bExecute := TRUE,
+            sPathName := sFilePath,
+            nMode := FOPEN_MODEAPPEND OR FOPEN_MODETEXT
+        );
+        eWriteState := E_WriteState.FILE_OPEN_WAIT;
+        
+    E_WriteState.FILE_OPEN_WAIT:
+        // Wait for file open to complete
+        fbFileOpen(bExecute := FALSE);
+        
+        IF NOT fbFileOpen.bBusy THEN
+            IF fbFileOpen.bError THEN
+                nErrorId := fbFileOpen.nErrId;
+                eWriteState := E_WriteState.ERROR;
+            ELSE
+                hFile := fbFileOpen.hFile;
+                eWriteState := E_WriteState.WRITE_DATA_TRIGGER;
+            END_IF
+        END_IF
+        
+    E_WriteState.WRITE_DATA_TRIGGER:
+        // Trigger data write operation
+        fbFilePuts(
+            bExecute := TRUE,
+            hFile := hFile,
+            sLine := sCsvLine  // CSV formatted string
+        );
+        eWriteState := E_WriteState.WRITE_DATA_WAIT;
+        
+    E_WriteState.WRITE_DATA_WAIT:
+        // Wait for write to complete
+        fbFilePuts(bExecute := FALSE);
+        
+        IF NOT fbFilePuts.bBusy THEN
+            IF fbFilePuts.bError THEN
+                nErrorId := fbFilePuts.nErrId;
+                eWriteState := E_WriteState.ERROR;
+            ELSE
+                eWriteState := E_WriteState.FILE_CLOSE_TRIGGER;
+            END_IF
+        END_IF
+        
+    E_WriteState.FILE_CLOSE_TRIGGER:
+        // Trigger file close to flush data to disk
+        fbFileClose(bExecute := TRUE, hFile := hFile);
+        eWriteState := E_WriteState.FILE_CLOSE_WAIT;
+        
+    E_WriteState.FILE_CLOSE_WAIT:
+        // Wait for file close to complete
+        fbFileClose(bExecute := FALSE);
+        
+        IF NOT fbFileClose.bBusy THEN
+            IF fbFileClose.bError THEN
+                nErrorId := fbFileClose.nErrId;
+                eWriteState := E_WriteState.ERROR;
+            ELSE
+                eWriteState := E_WriteState.DONE;
+            END_IF
+        END_IF
+        
+    E_WriteState.DONE:
+        // Operation completed successfully
+        bBusy := FALSE;
+        eWriteState := E_WriteState.IDLE;
+        
+    E_WriteState.ERROR:
+        // Error handling state
+        bBusy := FALSE;
+        bError := TRUE;
+        // Remain in error state until acknowledged
+        
+END_CASE
+\end{lstlisting}
+
+\begin{tipbox}
+Using the \texttt{\{attribute 'strict'\}} pragma on local enumerations ensures type safety and prevents accidental assignment of integer values directly to the enum variable.
+\end{tipbox}
+
+% ============================================================
+\section{Practical Implementation: CSV Persistent Storage}
+% ============================================================
+
+The lecture demonstrates these concepts by building a CSV event logger using a state machine and built-in Beckhoff function blocks (\texttt{FB\_FileOpen}, \texttt{FB\_FilePuts}, \texttt{FB\_FileClose}).
+
+\subsection{Asynchronous Communication}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Windows Dependency:} File operations are handled by Windows, not the real-time TwinCAT kernel. This communication is \textbf{asynchronous} and non-deterministic.
+    
+    \item \textbf{Trigger and Wait Pattern:} Because an operation might take several PLC cycles to complete, states must be split:
+    \begin{enumerate}
+        \item \textbf{Trigger Step:} Set \texttt{bExecute := TRUE} to start the operation.
+        \item \textbf{Wait Step:} Continuously call the FB and check the \texttt{bBusy} and \texttt{bError} flags until the operation is complete.
+    \end{enumerate}
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Step} & \textbf{Action} & \textbf{Next Step Condition} \\
+\hline
+Trigger & Set \texttt{bExecute := TRUE} & Immediate \\
+\hline
+Wait & Check \texttt{bBusy} flag & \texttt{bBusy = FALSE} \\
+\hline
+Evaluate & Check \texttt{bError} flag & Proceed or Error state \\
+\hline
+\end{tabular}
+\caption{Asynchronous Operation Pattern}
+\end{figure}
+
+\subsection{Helper Methods and String Manipulation}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{CreateCsvString():} A private helper method used to convert a data structure into a comma-separated string.
+    
+    \item \textbf{TO\_STRING Pragma:} Adding \texttt{\{attribute 'to\_string'\}} to an enumeration allows TwinCAT to automatically convert the ENUM name into a string, which is useful for logging.
+    
+    \item \textbf{CONCAT:} A function used to join multiple strings together with commas and special characters like \texttt{\$n} (new line).
+\end{itemize}
+
+\subsubsection*{Example: CSV String Building}
+
+\begin{lstlisting}
+// Enumeration with 'to_string' attribute for automatic string conversion
+{attribute 'qualified_only'}
+{attribute 'to_string'}
+TYPE E_EventType :
+(
+    Info := 0,
+    Warning := 1,
+    Error := 2,
+    Critical := 3
+);
+END_TYPE
+
+{attribute 'qualified_only'}
+{attribute 'to_string'}
+TYPE E_EventSeverity :
+(
+    Low := 0,
+    Medium := 1,
+    High := 2
+);
+END_TYPE
+\end{lstlisting}
+
+\begin{lstlisting}
+// Private Method: CreateCsvString
+// Converts an event structure into a comma-separated string for file storage
+METHOD PRIVATE CreateCsvString : STRING(1000)
+VAR_INPUT
+    stEvent : REFERENCE TO ST_Event;  // Event to convert
+END_VAR
+VAR
+    sTempString   : STRING(1000);     // Temporary string builder
+    sEventType    : STRING(50);       // Event type as string
+    sSeverity     : STRING(50);       // Severity as string
+    sTimestamp    : STRING(50);       // Timestamp as string
+    sEventId      : STRING(20);       // Event ID as string
+END_VAR
+
+// Convert enumeration values to strings using TO_STRING
+// (Requires {attribute 'to_string'} on the enum definition)
+sEventType := TO_STRING(stEvent.eEventType);
+sSeverity := TO_STRING(stEvent.eEventSeverity);
+
+// Convert numeric ID to string
+sEventId := UDINT_TO_STRING(stEvent.nIdentity);
+
+// Convert timestamp to string
+sTimestamp := DT_TO_STRING(stEvent.dtTimestamp);
+
+// Build CSV string using CONCAT
+// Format: EventType,Severity,EventID,Timestamp,Description
+sTempString := '';
+
+// Add event type
+sTempString := CONCAT(sTempString, sEventType);
+
+// Add comma separator and severity
+sTempString := CONCAT(sTempString, ',');
+sTempString := CONCAT(sTempString, sSeverity);
+
+// Add comma separator and event ID
+sTempString := CONCAT(sTempString, ',');
+sTempString := CONCAT(sTempString, sEventId);
+
+// Add comma separator and timestamp
+sTempString := CONCAT(sTempString, ',');
+sTempString := CONCAT(sTempString, sTimestamp);
+
+// Add comma separator and description text
+sTempString := CONCAT(sTempString, ',');
+sTempString := CONCAT(sTempString, stEvent.sText);
+
+// Add newline character for end of CSV row
+// $n is the escape sequence for newline in IEC 61131-3
+sTempString := CONCAT(sTempString, '$n');
+
+// Return the completed CSV string
+CreateCsvString := sTempString;
+\end{lstlisting}
+
+\begin{lstlisting}
+// Example output from CreateCsvString:
+// "Warning,High,1001,DT#2024-06-15-14:30:45,Pump pressure exceeded threshold$n"
+
+// Alternative: More compact CONCAT chaining
+sTempString := CONCAT(
+    CONCAT(
+        CONCAT(
+            CONCAT(
+                CONCAT(
+                    CONCAT(sEventType, ','),
+                    sSeverity
+                ),
+                ','
+            ),
+            sEventId
+        ),
+        ','
+    ),
+    CONCAT(
+        CONCAT(sTimestamp, ','),
+        CONCAT(stEvent.sText, '$n')
+    )
+);
+\end{lstlisting}
+
+\subsection{Important Discovery}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{File Buffering:} In TwinCAT, data may not be written to the file immediately. The implementation found that explicitly calling \texttt{FB\_FileClose} after writing an event was necessary to ensure the data was flushed to the disk.
+\end{itemize}
+
+\begin{warningbox}
+File write operations in TwinCAT are buffered by Windows. To ensure data is actually written to disk (especially important for logging critical events), you must call \texttt{FB\_FileClose} after writing. Simply calling \texttt{FB\_FilePuts} does not guarantee the data reaches the physical file.
+\end{warningbox}
+
+\begin{lstlisting}
+// Critical pattern: Always close file to flush buffer
+// This ensures data is written to disk
+
+// After write operation completes...
+E_WriteState.FILE_CLOSE_TRIGGER:
+    // IMPORTANT: Close file to flush write buffer to disk
+    // Without this, data may remain in memory buffer and not be saved
+    fbFileClose(bExecute := TRUE, hFile := hFile);
+    eWriteState := E_WriteState.FILE_CLOSE_WAIT;
+\end{lstlisting}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Conditional Statement Syntax}
+
+\begin{lstlisting}
+// IF/ELSIF/ELSE
+IF <condition1> THEN
+    // Code block 1
+ELSIF <condition2> THEN
+    // Code block 2
+ELSE
+    // Default code block
+END_IF
+
+// CASE Statement
+CASE <variable> OF
+    <value1>:
+        // Code for value1
+    <value2>, <value3>:
+        // Code for value2 or value3
+    <start>..<end>:
+        // Code for range
+ELSE
+    // Default code
+END_CASE
+\end{lstlisting}
+
+\subsection*{Loop Syntax}
+
+\begin{lstlisting}
+// FOR Loop
+FOR <counter> := <start> TO <end> BY <step> DO
+    // Loop body
+END_FOR
+
+// WHILE Loop
+WHILE <condition> DO
+    // Loop body (must modify condition!)
+END_WHILE
+\end{lstlisting}
+
+\subsection*{State Machine Best Practices}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Practice} & \textbf{Recommendation} \\
+\midrule
+State Values & Use local ENUMs, not magic numbers \\
+State Names & Descriptive (e.g., \texttt{FILE\_OPEN\_WAIT}) \\
+Async Operations & Split into TRIGGER and WAIT states \\
+Error Handling & Include dedicated ERROR state \\
+File Operations & Always close files to flush buffers \\
+\bottomrule
+\end{tabular}
+\caption{State Machine Best Practices}
+\end{table}
+
+\subsection*{String Functions}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Function} & \textbf{Purpose} \\
+\midrule
+\texttt{CONCAT(s1, s2)} & Join two strings \\
+\texttt{TO\_STRING(enum)} & Convert ENUM to string (requires attribute) \\
+\texttt{INT\_TO\_STRING(n)} & Convert integer to string \\
+\texttt{DT\_TO\_STRING(dt)} & Convert DATE\_AND\_TIME to string \\
+\texttt{\$n} & Newline escape sequence \\
+\bottomrule
+\end{tabular}
+\caption{Common String Functions}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

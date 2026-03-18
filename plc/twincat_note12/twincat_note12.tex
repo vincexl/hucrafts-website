@@ -1,0 +1,778 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== IEC 61131-3 CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 FB_MBReadCoils, FB_MBWriteCoils, FB_MBReadRegs, 
+                 FB_MBWriteSingleRegister, FB_MBWriteRegs,
+                 E_ReadState, E_WriteState},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, INT_TO_WORD, WORD_TO_INT, BOOL_TO_BYTE},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Extending Functionality with TwinCAT Functions},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Extending Functionality with TwinCAT Functions
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to TwinCAT Functions}
+% ============================================================
+
+While the base installation of TwinCAT 3 (XAE) covers the majority of industrial automation needs, certain specialized tasks require extending the system's core capabilities. This is achieved through \textbf{TwinCAT Functions}, an ecosystem of extensions categorized by their specific application area.
+
+\begin{notebox}
+TwinCAT Functions are add-on modules that extend the base TwinCAT functionality. They are installed separately and require their own licenses (though trial licenses are available for testing).
+\end{notebox}
+
+% ============================================================
+\section{Categories of TwinCAT Functions}
+% ============================================================
+
+TwinCAT functions are organized into several major series:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Series} & \textbf{Category} & \textbf{Examples} \\
+\midrule
+TF1xxx & System & Matlab/Simulink, UML editors \\
+TF2xxx & HMI & HTML5, CSS, JavaScript interfaces \\
+TF3xxx & Measurement & TwinCAT Scope, power measurement \\
+TF4xxx & Controller & PID controllers, filters, speech commands \\
+TF5xxx & Motion Control & Axis control, multi-axis synchronization \\
+TF6xxx & Connectivity & JSON, OPC-UA, Modbus TCP, PROFINET, FTP \\
+TF7xxx & Vision & Camera integration, quality inspection \\
+TF8xxx & Industry Specific & Building automation, wind power \\
+\bottomrule
+\end{tabular}
+\caption{TwinCAT Function Categories}
+\end{table}
+
+\subsection{TF1xxx (System)}
+Extensions for the PLC runtime, such as running Matlab/Simulink models or using UML editors.
+
+\subsection{TF2xxx (HMI)}
+Tools for creating modern operator interfaces using HTML5, CSS, and JavaScript.
+
+\subsection{TF3xxx (Measurement)}
+Tools for analytics, power measurement, and the TwinCAT Scope for process analysis.
+
+\subsection{TF4xxx (Controller)}
+Includes PID controllers, various filters, and even speech-to-PLC command functions.
+
+\subsection{TF5xxx (Motion Control)}
+A massive category covering all aspects of motion, from simple axis control to complex multi-axis synchronization.
+
+\subsection{TF6xxx (Connectivity)}
+Enables the PLC to communicate with external systems via protocols like:
+\begin{itemize}[leftmargin=*]
+    \item JSON (TF6020)
+    \item OPC-UA (TF6100)
+    \item Modbus TCP (TF6250)
+    \item PROFINET (TF6270)
+    \item FTP (TF6300)
+\end{itemize}
+
+\subsection{TF7xxx (Vision)}
+Integrates camera support directly into the TwinCAT environment for quality inspection.
+
+\subsection{TF8xxx (Industry Specific)}
+Specialized frameworks for industries like building automation or wind power.
+
+% ============================================================
+\section{Architecture of a Connectivity Function (Modbus TCP)}
+% ============================================================
+
+Using a function like \textbf{TF6250 (Modbus TCP)} involves a specific architecture to bridge the gap between real-time control and standard networking.
+
+\subsection{Installation}
+The function is a separate executable downloaded from the Beckhoff website and installed on the PLC runtime (XAR).
+
+\subsection{The Process}
+Installation creates a background process in the Windows operating system (user-land).
+
+\subsection{Communication Bridge}
+The real-time TwinCAT kernel communicates with this Windows process (likely via ADS). The Windows process then utilizes the standard network stack to talk to external Modbus devices.
+
+\subsection{Asynchronous Execution}
+Because the networking happens in non-deterministic Windows space, the communication is \textbf{asynchronous} to the real-time PLC cycle.
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{PLC Code} & $\xleftrightarrow{\text{ADS}}$ & \textbf{Windows Process} & $\xleftrightarrow{\text{TCP/IP}}$ \\
+(Real-time) & & (TF6250 Service) & \\
+\hline
+\multicolumn{2}{|c|}{TwinCAT Kernel} & \multicolumn{2}{c|}{Windows User Space} \\
+\hline
+\end{tabular}
+
+\vspace{0.3cm}
+
+\begin{tabular}{|c|}
+\hline
+\textbf{Modbus Device} \\
+(External PLC, Sensor, etc.) \\
+\hline
+\end{tabular}
+\caption{TF6250 Modbus TCP Architecture}
+\end{figure}
+
+% ============================================================
+\section{Programming and Licensing}
+% ============================================================
+
+\subsection{Libraries}
+To use the function, you must add a reference to the specific library (e.g., \texttt{Tc2\_ModbusTCP}) in your PLC project to access its function blocks.
+
+\subsection{Licensing}
+These extensions are not free. They require a specific license (e.g., TF6250) added in the ``Manage Licenses'' tab. For testing, 7-day trial licenses can be generated.
+
+\subsection{Modbus Protocol Basics}
+Modbus is a primitive protocol from the 1970s that works with bits (coils) and 16-bit values (registers) rather than named variables.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Modbus Type} & \textbf{Data Type} & \textbf{Access} & \textbf{Function Codes} \\
+\midrule
+Coils & Single bit (BOOL) & Read/Write & 01, 05, 15 \\
+Discrete Inputs & Single bit (BOOL) & Read only & 02 \\
+Holding Registers & 16-bit (WORD) & Read/Write & 03, 06, 16 \\
+Input Registers & 16-bit (WORD) & Read only & 04 \\
+\bottomrule
+\end{tabular}
+\caption{Modbus Data Types}
+\end{table}
+
+\begin{warningbox}
+ADS Error \textbf{1828 (0x724)} specifically indicates a missing license for the TwinCAT function. Ensure you have activated the appropriate license or trial before testing.
+\end{warningbox}
+
+% ============================================================
+\section{Implementation: State Machine Logic}
+% ============================================================
+
+Because Modbus communication is asynchronous, you cannot simply call a function block and expect an immediate result. You must implement a state machine to manage the request.
+
+\subsection{State Machine Enumeration}
+
+\begin{lstlisting}
+// Local enumeration for managing asynchronous Modbus read operations
+// Using local enums prevents namespace pollution and makes code self-documenting
+// The {attribute 'strict'} ensures type safety
+
+FUNCTION_BLOCK FB_ModbusReader
+VAR
+    // Local enumeration for state machine states
+    // Defines the asynchronous communication flow
+    {attribute 'strict'}
+    E_ReadState : (
+        WAIT,       // Idle state - waiting for trigger command
+        TRIGGER,    // Send the Modbus request (set bExecute := TRUE)
+        BUSY        // Wait for response (monitor bBusy and bError)
+    );
+    
+    // Current state variable
+    eReadState : E_ReadState := E_ReadState.WAIT;
+    
+    // Trigger to start a read operation
+    bStartRead : BOOL;
+    
+    // Status outputs
+    bReadComplete : BOOL;
+    bReadError    : BOOL;
+    nErrorCode    : UDINT;
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Alternative: Separate enumeration for write operations
+// You may need different states for different operation types
+
+VAR
+    // Enumeration for write state machine
+    {attribute 'strict'}
+    E_WriteState : (
+        IDLE,           // Waiting for write command
+        SEND_REQUEST,   // Trigger the write operation
+        WAIT_RESPONSE,  // Wait for confirmation
+        COMPLETE,       // Write successful
+        ERROR           // Write failed
+    );
+    
+    eWriteState : E_WriteState := E_WriteState.IDLE;
+END_VAR
+\end{lstlisting}
+
+\begin{tipbox}
+Using local enumerations within function blocks (rather than global types) keeps your code organized and prevents naming conflicts when multiple function blocks need similar state definitions.
+\end{tipbox}
+
+\subsection{Modbus Read Coils Implementation}
+
+\begin{lstlisting}
+// Modbus TCP Read Coils Implementation
+// Reads digital inputs (bits) from a remote Modbus device
+// Library required: Tc2_ModbusTCP
+
+FUNCTION_BLOCK FB_ModbusCoilReader
+VAR
+    // State machine enumeration
+    {attribute 'strict'}
+    E_ReadState : (
+        WAIT,       // Idle - waiting for trigger
+        TRIGGER,    // Start the read operation
+        READ        // Wait for completion (BUSY state)
+    );
+    
+    eReadState : E_ReadState := E_ReadState.WAIT;
+    
+    // Modbus Read Coils function block instance
+    // From Tc2_ModbusTCP library
+    fbReadCoils : FB_MBReadCoils;
+    
+    // Local buffer to store the read coil data
+    // Each BYTE can hold 8 coil values (bits)
+    // Size depends on nQuantity: need nQuantity/8 bytes (rounded up)
+    aCoilBuffer : ARRAY[0..9] OF BYTE;  // Buffer for up to 80 coils
+    
+    // Configuration parameters
+    sDeviceIP   : STRING(15) := '192.168.1.100';  // Target device IP
+    nTCPPort    : UINT := 502;                     // Standard Modbus port
+    nUnitID     : BYTE := 255;                     // Modbus unit ID (255 = broadcast)
+    nStartAddr  : UINT := 0;                       // Starting coil address
+    nNumCoils   : UINT := 8;                       // Number of coils to read
+    
+    // Control and status
+    bExecuteRead   : BOOL;           // Trigger to start read
+    bReadDone      : BOOL;           // Read completed successfully
+    bReadError     : BOOL;           // Read failed
+    nErrorID       : UDINT;          // Error code if failed
+    
+    // Extracted coil values (for convenience)
+    bCoil0         : BOOL;           // First coil value
+    bCoil1         : BOOL;           // Second coil value
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// State machine implementation for reading coils
+CASE eReadState OF
+
+    E_ReadState.WAIT:
+        // Idle state - waiting for trigger
+        bReadDone := FALSE;
+        bReadError := FALSE;
+        
+        IF bExecuteRead THEN
+            bExecuteRead := FALSE;  // Reset trigger
+            eReadState := E_ReadState.TRIGGER;
+        END_IF
+        
+    E_ReadState.TRIGGER:
+        // Start the Modbus read operation
+        // Configure and trigger the function block
+        fbReadCoils(
+            sIPAddr     := sDeviceIP,           // Target device IP address
+            nTCPPort    := nTCPPort,            // TCP port (502 standard)
+            nUnitID     := nUnitID,             // Modbus unit identifier
+            nQuantity   := nNumCoils,           // Number of coils to read
+            nMBAddr     := nStartAddr,          // Starting Modbus address
+            cbLength    := SIZEOF(aCoilBuffer), // Buffer size
+            pDestAddr   := ADR(aCoilBuffer),    // Pointer to destination buffer
+            bExecute    := TRUE,                // TRIGGER the operation
+            tTimeout    := T#5S                 // 5 second timeout
+        );
+        
+        eReadState := E_ReadState.READ;
+        
+    E_ReadState.READ:
+        // Wait for operation to complete
+        // Must continue calling FB with bExecute := FALSE
+        fbReadCoils(bExecute := FALSE);
+        
+        // Check if operation is complete
+        IF NOT fbReadCoils.bBusy THEN
+            IF fbReadCoils.bError THEN
+                // Read failed
+                bReadError := TRUE;
+                nErrorID := fbReadCoils.nErrId;
+            ELSE
+                // Read successful - extract coil values
+                bReadDone := TRUE;
+                
+                // Extract individual bits from buffer
+                // Coil 0 is bit 0 of byte 0, etc.
+                bCoil0 := (aCoilBuffer[0] AND 16#01) > 0;
+                bCoil1 := (aCoilBuffer[0] AND 16#02) > 0;
+            END_IF
+            
+            eReadState := E_ReadState.WAIT;
+        END_IF
+
+END_CASE
+\end{lstlisting}
+
+\begin{notebox}
+The \texttt{ADR()} function returns a pointer to the variable. This is required because the Modbus function blocks write data directly to memory at the specified address. The \texttt{cbLength} parameter tells the function block how much space is available in the buffer.
+\end{notebox}
+
+% ============================================================
+\section{Practical Workflow: Reading and Writing}
+% ============================================================
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Wait State:} The program remains idle until a trigger is received.
+    \item \textbf{Trigger State:} Set the \texttt{execute} flag of the Modbus function block to \textbf{TRUE} to send the command to the Windows process.
+    \item \textbf{Busy/Read State:} Set \texttt{execute} back to \textbf{FALSE} and monitor the \texttt{bBusy} and \texttt{bError} outputs.
+    \item \textbf{Completion:} Once \texttt{bBusy} is false, check \texttt{bError}. If successful, the data is available in your local buffer.
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{WAIT} & $\xrightarrow{\text{Trigger}}$ & \textbf{TRIGGER} & $\xrightarrow{\text{Immediate}}$ \\
+\hline
+\multicolumn{2}{|c|}{bExecute = FALSE} & \multicolumn{2}{c|}{bExecute = TRUE} \\
+\hline
+\end{tabular}
+
+\vspace{0.3cm}
+
+\begin{tabular}{|c|c|c|}
+\hline
+$\xrightarrow{\text{Immediate}}$ & \textbf{BUSY/READ} & $\xrightarrow{\text{!bBusy}}$ \\
+\hline
+\multicolumn{2}{|c|}{bExecute = FALSE, monitor bBusy} & Complete or Error \\
+\hline
+\end{tabular}
+\caption{Asynchronous Communication State Flow}
+\end{figure}
+
+\subsection{Modbus Write Register Implementation}
+
+\begin{lstlisting}
+// Modbus TCP Write Single Register Implementation
+// Writes a 16-bit value to a remote Modbus device
+// Library required: Tc2_ModbusTCP
+
+FUNCTION_BLOCK FB_ModbusRegisterWriter
+VAR
+    // State machine enumeration
+    {attribute 'strict'}
+    E_WriteState : (
+        IDLE,           // Waiting for write command
+        SEND,           // Trigger the write operation
+        WAIT_COMPLETE   // Wait for confirmation
+    );
+    
+    eWriteState : E_WriteState := E_WriteState.IDLE;
+    
+    // Modbus Write Single Register function block instance
+    // From Tc2_ModbusTCP library
+    fbWriteRegister : FB_MBWriteSingleRegister;
+    
+    // Configuration parameters
+    sDeviceIP    : STRING(15) := '192.168.1.100';  // Target device IP
+    nTCPPort     : UINT := 502;                     // Standard Modbus port
+    nUnitID      : BYTE := 1;                       // Modbus unit ID
+    nRegisterAddr: UINT := 100;                     // Register address to write
+    
+    // Value to write (as INT for user convenience)
+    nWriteValue  : INT := 0;
+    
+    // Internal: Value converted to WORD for Modbus
+    wRegisterValue : WORD;
+    
+    // Control and status
+    bExecuteWrite  : BOOL;           // Trigger to start write
+    bWriteDone     : BOOL;           // Write completed successfully
+    bWriteError    : BOOL;           // Write failed
+    nErrorID       : UDINT;          // Error code if failed
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// State machine implementation for writing a single register
+CASE eWriteState OF
+
+    E_WriteState.IDLE:
+        // Idle state - waiting for write command
+        bWriteDone := FALSE;
+        bWriteError := FALSE;
+        
+        IF bExecuteWrite THEN
+            bExecuteWrite := FALSE;  // Reset trigger
+            
+            // IMPORTANT: Convert INT to WORD for Modbus protocol
+            // Modbus registers are 16-bit unsigned values
+            // Use appropriate conversion based on your data type
+            wRegisterValue := INT_TO_WORD(nWriteValue);
+            
+            eWriteState := E_WriteState.SEND;
+        END_IF
+        
+    E_WriteState.SEND:
+        // Start the Modbus write operation
+        fbWriteRegister(
+            sIPAddr     := sDeviceIP,           // Target device IP address
+            nTCPPort    := nTCPPort,            // TCP port (502 standard)
+            nUnitID     := nUnitID,             // Modbus unit identifier
+            nMBAddr     := nRegisterAddr,       // Register address to write
+            nValue      := wRegisterValue,      // Value to write (WORD type!)
+            bExecute    := TRUE,                // TRIGGER the operation
+            tTimeout    := T#5S                 // 5 second timeout
+        );
+        
+        eWriteState := E_WriteState.WAIT_COMPLETE;
+        
+    E_WriteState.WAIT_COMPLETE:
+        // Wait for write operation to complete
+        fbWriteRegister(bExecute := FALSE);
+        
+        IF NOT fbWriteRegister.bBusy THEN
+            IF fbWriteRegister.bError THEN
+                // Write failed
+                bWriteError := TRUE;
+                nErrorID := fbWriteRegister.nErrId;
+            ELSE
+                // Write successful
+                bWriteDone := TRUE;
+            END_IF
+            
+            eWriteState := E_WriteState.IDLE;
+        END_IF
+
+END_CASE
+\end{lstlisting}
+
+\begin{lstlisting}
+// Example: Writing multiple registers
+// Use FB_MBWriteRegs for writing multiple consecutive registers
+
+VAR
+    fbWriteMultiple : FB_MBWriteRegs;
+    
+    // Buffer containing values to write
+    // Each element is a WORD (16-bit)
+    aWriteBuffer : ARRAY[0..4] OF WORD := [100, 200, 300, 400, 500];
+END_VAR
+
+// In SEND state:
+fbWriteMultiple(
+    sIPAddr     := '192.168.1.100',
+    nTCPPort    := 502,
+    nUnitID     := 1,
+    nMBAddr     := 100,                    // Starting address
+    nQuantity   := 5,                      // Number of registers
+    cbLength    := SIZEOF(aWriteBuffer),   // Buffer size in bytes
+    pSrcAddr    := ADR(aWriteBuffer),      // Pointer to source data
+    bExecute    := TRUE,
+    tTimeout    := T#5S
+);
+\end{lstlisting}
+
+\begin{warningbox}
+Modbus uses 16-bit unsigned WORD values for registers. When writing signed integers (INT), you must convert them using \texttt{INT\_TO\_WORD()}. When reading, convert back using \texttt{WORD\_TO\_INT()}. Failure to convert properly can result in incorrect values, especially for negative numbers.
+\end{warningbox}
+
+% ============================================================
+\section{Key Considerations}
+% ============================================================
+
+\subsection{Virtual Machines}
+When testing communication between separate systems (e.g., a PLC and a simulator), ensure they have distinct IP addresses on the same network.
+
+\subsection{Error Handling}
+Always monitor error codes. Common error codes include:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Error Code} & \textbf{Hex} & \textbf{Description} \\
+\midrule
+1828 & 0x724 & Missing TwinCAT function license \\
+1861 & 0x745 & Target device not responding \\
+6 & 0x06 & Target busy (device specific) \\
+274 & 0x112 & Invalid Modbus address \\
+\bottomrule
+\end{tabular}
+\caption{Common Modbus TCP Error Codes}
+\end{table}
+
+\subsection{Port 502}
+This is the standard TCP port for Modbus communication. Ensure firewalls allow traffic on this port.
+
+\begin{lstlisting}
+// Comprehensive error handling example
+IF fbReadCoils.bError THEN
+    CASE fbReadCoils.nErrId OF
+        16#724:  // 1828 decimal
+            sErrorMsg := 'License missing for TF6250';
+            
+        16#745:  // 1861 decimal
+            sErrorMsg := 'Device not responding - check IP/connection';
+            
+        16#112:  // 274 decimal
+            sErrorMsg := 'Invalid Modbus address';
+            
+    ELSE
+        sErrorMsg := CONCAT('Unknown error: ', UDINT_TO_STRING(fbReadCoils.nErrId));
+    END_CASE
+END_IF
+\end{lstlisting}
+
+\begin{tipbox}
+When testing Modbus communication, use a Modbus simulator (such as ModRSsim2 or Modbus Poll) on a separate machine or VM. This allows you to verify your PLC code is working correctly before connecting to actual field devices.
+\end{tipbox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{TwinCAT Function Series}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Series} & \textbf{Category} \\
+\midrule
+TF1xxx & System \\
+TF2xxx & HMI \\
+TF3xxx & Measurement \\
+TF4xxx & Controller \\
+TF5xxx & Motion Control \\
+TF6xxx & Connectivity \\
+TF7xxx & Vision \\
+TF8xxx & Industry Specific \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Modbus Function Blocks}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Function Block} & \textbf{Purpose} \\
+\midrule
+FB\_MBReadCoils & Read digital outputs (coils) \\
+FB\_MBReadInputs & Read digital inputs \\
+FB\_MBReadRegs & Read holding registers \\
+FB\_MBReadInputRegs & Read input registers \\
+FB\_MBWriteCoils & Write multiple coils \\
+FB\_MBWriteSingleRegister & Write single register \\
+FB\_MBWriteRegs & Write multiple registers \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Asynchronous Pattern}
+
+\begin{lstlisting}
+// Standard pattern for all async Modbus operations
+CASE eState OF
+    WAIT:
+        IF bTrigger THEN eState := TRIGGER; END_IF
+        
+    TRIGGER:
+        fbModbus(bExecute := TRUE, ...);
+        eState := BUSY;
+        
+    BUSY:
+        fbModbus(bExecute := FALSE);
+        IF NOT fbModbus.bBusy THEN
+            // Check bError, process results
+            eState := WAIT;
+        END_IF
+END_CASE
+\end{lstlisting}
+
+\subsection*{Data Type Conversions}
+
+\begin{lstlisting}
+// INT to WORD (for writing)
+wValue := INT_TO_WORD(nIntValue);
+
+// WORD to INT (for reading)
+nIntValue := WORD_TO_INT(wValue);
+
+// BOOL to BYTE (for coils)
+byValue := BOOL_TO_BYTE(bValue);
+\end{lstlisting}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

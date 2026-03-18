@@ -1,0 +1,23 @@
+\contentsline {section}{\numberline {1}Traditional IT Software vs. PLC Software}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Standard OS (Windows)}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Industrial Automation Requirement}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}TwinCAT 3 Architecture: Ring 0 vs. Ring 3}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Ring 0 (Kernel Mode)}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Ring 3 (User Mode)}{2}{subsection.2.2}%
+\contentsline {section}{\numberline {3}CPU Core Management}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Shared Cores}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Isolated Cores}{3}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Hardware and BIOS Requirements}{3}{section.4}%
+\contentsline {section}{\numberline {5}TwinCAT Project Structure}{4}{section.5}%
+\contentsline {subsection}{\numberline {5.1}SYSTEM}{4}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}PLC}{4}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}I/O}{4}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}PLC Project Folders}{4}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Real-Time Tasks and Cycle Time}{4}{section.6}%
+\contentsline {section}{\numberline {7}Hands-on: ``Hello World'' with ADSLOGSTR}{5}{section.7}%
+\contentsline {subsection}{\numberline {7.1}ADSLOGSTR Function}{5}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Single-Run Logic}{6}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Licensing and Debugging}{9}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Licensing}{9}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Online Monitoring}{9}{subsection.8.2}%
+\contentsline {section}{Quick Reference Card}{9}{subsection.8.2}%

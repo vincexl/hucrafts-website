@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}Introduction to Version Control}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}The ``Old Way''}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Problems with Manual Folders}{2}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Benefits of VCS}{2}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Git: Distributed Version Control}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Key Components}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}The Standard Workflow}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3}TwinCAT 3 Specifics}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The .gitignore File}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Essential Settings for Clean Code History}{6}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}1. Separate LineIDs}{6}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}2. Independent Project Files}{6}{subsubsection.3.2.2}%
+\contentsline {section}{\numberline {4}Visual Comparisons (Diffing)}{8}{section.4}%
+\contentsline {section}{\numberline {5}Conclusion}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Summary of Best Practices}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Quick Start Checklist}{9}{subsection.5.2}%
+\contentsline {section}{Quick Reference Card}{9}{Item.12}%

@@ -1,0 +1,887 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== IEC 61131-3 CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TON, TOF, TP, CTU, CTD, CTUD, R_TRIG, F_TRIG,
+                 CONCAT, CONCAT2, LEFT, RIGHT, MID, LEN, FIND, INSERT, DELETE, REPLACE},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, ABS, SQRT, SIN, COS, TAN, LN, LOG, EXP,
+                 SEL, MUX, LIMIT, MAX, MIN, MOVE, ADSLOGSTR},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Standard Functions and Function Blocks},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Standard Functions and Function Blocks (Tc2\_Standard)
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to the IEC 61131-3 Standard}
+% ============================================================
+
+This lecture focuses on the basic functions and function blocks defined by the \textbf{IEC 61131-3 standard}, which are essential for every PLC programmer. In TwinCAT 3, these are found in the \textbf{Tc2\_Standard library}. Because these functions are standardized, code written using them is \textbf{highly portable} across different PLC environments.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Category} & \textbf{Function Blocks} & \textbf{Purpose} \\
+\midrule
+Timers & TON, TOF, TP & Time-based control \\
+Counters & CTU, CTD, CTUD & Event counting \\
+Edge Detection & R\_TRIG, F\_TRIG & Signal transition detection \\
+String Operations & CONCAT, LEFT, RIGHT, MID & Text manipulation \\
+\bottomrule
+\end{tabular}
+\caption{Key IEC 61131-3 Standard Library Components}
+\end{table}
+
+\begin{notebox}
+The Tc2\_Standard library is automatically referenced in most new TwinCAT projects. If you encounter ``undefined symbol'' errors for timers or triggers, verify that the library reference exists under References in your PLC project.
+\end{notebox}
+
+% ============================================================
+\section{Timer Function Blocks}
+% ============================================================
+
+Timers are used to manage time-sensitive operations, such as waiting for a process to complete or limiting the duration of an action.
+
+\subsection{Timer On Delay (TON)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Purpose:} The \texttt{TON} function block turns its output (\texttt{Q}) on only after a specified time delay (\texttt{PT}).
+    
+    \item \textbf{Inputs:}
+    \begin{itemize}
+        \item \textbf{IN:} A rising edge (transition from FALSE to TRUE) starts the timer. A falling edge resets the timer.
+        \item \textbf{PT (Preset Time):} The duration of the delay (e.g., \texttt{T\#3s}).
+    \end{itemize}
+    
+    \item \textbf{Outputs:}
+    \begin{itemize}
+        \item \textbf{Q:} Becomes TRUE once the elapsed time reaches the preset time.
+        \item \textbf{ET (Elapsed Time):} Shows how much time has passed since the timer started.
+    \end{itemize}
+    
+    \item \textbf{Behavior:} If the input \texttt{IN} goes low before the preset time is reached, the timer resets and \texttt{Q} never goes high.
+\end{itemize}
+
+\subsubsection*{Example: TON Declaration and Call}
+
+\begin{lstlisting}
+// PROGRAM: MAIN
+// Demonstrates TON (Timer On Delay) function block usage
+// The timer output Q goes TRUE after the preset time elapses
+
+PROGRAM MAIN
+VAR
+    // =====================================================
+    // TON Instance Declaration
+    // The timer can be initialized with a preset time (PT)
+    // This sets the default delay duration
+    // =====================================================
+    fbTimer     : TON := (PT := T#10S);  // 10 second delay timer
+    
+    // Alternative declaration without initialization
+    fbTimer2    : TON;                    // PT must be set when called
+    
+    // Additional timers for different purposes
+    fbStartupDelay  : TON := (PT := T#5S);   // 5 second startup delay
+    fbTimeoutTimer  : TON := (PT := T#30S);  // 30 second timeout
+    
+    // Control variables
+    bStartProcess   : BOOL;     // Input: Start button
+    bProcessActive  : BOOL;     // Output: Process is running
+    bTimerComplete  : BOOL;     // Output: Timer has finished
+    
+    // Monitoring variables
+    tElapsedTime    : TIME;     // Current elapsed time
+END_VAR
+
+// =====================================================
+// Basic TON Call
+// The timer starts counting when IN transitions to TRUE
+// Q becomes TRUE after PT time has elapsed
+// =====================================================
+
+// Call the timer with the start button as trigger
+fbTimer(IN := bStartProcess);
+
+// Read the outputs
+bTimerComplete := fbTimer.Q;      // TRUE when 10 seconds elapsed
+tElapsedTime := fbTimer.ET;       // Current elapsed time (0 to PT)
+
+// =====================================================
+// Alternative: Set PT dynamically when calling
+// =====================================================
+fbTimer2(
+    IN := bStartProcess,
+    PT := T#15S                   // Override preset time
+);
+
+// =====================================================
+// Practical Example: Startup Delay
+// Wait 5 seconds after start button before activating
+// =====================================================
+fbStartupDelay(IN := bStartProcess);
+
+IF fbStartupDelay.Q THEN
+    bProcessActive := TRUE;       // Activate after delay
+END_IF
+
+// =====================================================
+// Using ET for progress indication
+// ET counts from T#0S up to PT while IN is TRUE
+// =====================================================
+// tElapsedTime can be used for:
+// - Progress bars on HMI
+// - Logging how long a process takes
+// - Conditional logic based on partial timing
+\end{lstlisting}
+
+\begin{lstlisting}
+// Extended example: Multiple timers working together
+
+VAR
+    fbWarmupTimer   : TON := (PT := T#2M);    // 2 minute warmup
+    fbCycleTimer    : TON := (PT := T#500MS); // 500ms cycle
+    fbAlarmDelay    : TON := (PT := T#5S);    // 5 second alarm delay
+    
+    bMachineOn      : BOOL;
+    bOverTemp       : BOOL;
+    bWarmupComplete : BOOL;
+    bAlarmActive    : BOOL;
+END_VAR
+
+// Warmup timer - machine needs 2 minutes before operation
+fbWarmupTimer(IN := bMachineOn);
+bWarmupComplete := fbWarmupTimer.Q;
+
+// Alarm delay - only trigger alarm if overtemp persists for 5 seconds
+// This prevents false alarms from brief temperature spikes
+fbAlarmDelay(IN := bOverTemp AND bWarmupComplete);
+bAlarmActive := fbAlarmDelay.Q;
+\end{lstlisting}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Time} & 0s & 1s & 2s & 3s & 4s & 5s & 6s & 7s \\
+\hline
+\textbf{IN} & 0 & 1 & 1 & 1 & 1 & 1 & 0 & 0 \\
+\hline
+\textbf{ET} & 0 & 1s & 2s & 3s & 3s & 3s & 0 & 0 \\
+\hline
+\textbf{Q} (PT=3s) & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 \\
+\hline
+\end{tabular}
+\caption{TON Timing Diagram (PT = 3 seconds)}
+\end{figure}
+
+\subsection{Timer Off Delay (TOF)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Purpose:} The inverse of \texttt{TON}. It counts time when the input \texttt{IN} is \textbf{low}.
+    \item \textbf{Trigger:} It is triggered by a \textbf{falling edge}.
+    \item \textbf{Output Q:} Goes TRUE immediately when \texttt{IN} is high and only drops to FALSE after the input has been low for the duration of \texttt{PT}.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Timer} & \textbf{Starts When} & \textbf{Q Goes HIGH} & \textbf{Q Goes LOW} \\
+\midrule
+TON & IN rises & After PT elapsed & When IN falls \\
+TOF & IN falls & When IN rises & After PT elapsed \\
+TP & IN rises & When IN rises & After PT elapsed \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of Timer Function Blocks}
+\end{table}
+
+\subsection{Use Case: Motor Safety}
+
+Timers can be used as a \textbf{safety feature} to prevent equipment from running indefinitely due to system errors. For instance, if an HMI button controlling a motor gets ``stuck'' in a high state (due to a crash or communication error), a \texttt{TON} can ensure the motor moves for a maximum of 5 or 10 seconds before automatically stopping.
+
+\subsubsection*{Example: Motor Safety Logic}
+
+\begin{lstlisting}
+// PROGRAM: MotorSafetyControl
+// Demonstrates using a timer as a safety limit for motor operation
+// Prevents motor from running indefinitely if HMI crashes
+
+PROGRAM MotorSafetyControl
+VAR
+    // =====================================================
+    // Safety Timer
+    // Limits maximum motor run time to prevent damage
+    // =====================================================
+    fbSafetyTimer   : TON := (PT := T#10S);  // 10 second maximum run time
+    
+    // Inputs
+    bOperatorClick  : BOOL;     // HMI button: Operator commands motor to move
+    bLimitSwitch    : BOOL;     // Physical limit switch (motor reached position)
+    bSafetyOK       : BOOL := TRUE;  // Safety circuit status
+    
+    // Outputs
+    bMoveMotor      : BOOL;     // Output to motor contactor/drive
+    bTimeoutAlarm   : BOOL;     // Alarm: Motor ran too long
+    
+    // Status
+    bMotorMoving    : BOOL;     // Motor is currently moving
+END_VAR
+
+// =====================================================
+// Start the safety timer when operator clicks the button
+// The timer runs as long as the operator holds the button
+// =====================================================
+fbSafetyTimer(IN := bOperatorClick);
+
+// =====================================================
+// MOTOR SAFETY LOGIC
+// Motor runs when:
+//   - Operator is pressing the button (bOperatorClick = TRUE)
+//   - AND safety timer has NOT elapsed (fbSafetyTimer.Q = FALSE)
+//   - AND safety circuit is OK
+//   - AND limit switch not reached
+// =====================================================
+bMoveMotor := bOperatorClick 
+              AND NOT fbSafetyTimer.Q 
+              AND bSafetyOK 
+              AND NOT bLimitSwitch;
+
+// Alternative simplified version:
+// bMoveMotor := (bOperatorClick AND NOT fbSafetyTimer.Q);
+
+// =====================================================
+// Generate alarm if timer elapsed while button still pressed
+// This indicates the HMI may be stuck or motor is jammed
+// =====================================================
+bTimeoutAlarm := fbSafetyTimer.Q AND bOperatorClick;
+
+// Status output
+bMotorMoving := bMoveMotor;
+
+// =====================================================
+// BEHAVIOR EXPLANATION:
+// 1. Operator presses button -> Motor starts, timer starts
+// 2. If operator releases before 10s -> Motor stops, timer resets
+// 3. If 10 seconds elapse with button held -> Motor stops automatically
+// 4. Operator must release and re-press button to restart
+// =====================================================
+\end{lstlisting}
+
+\begin{lstlisting}
+// Extended example with multiple safety features
+
+VAR
+    fbMaxRunTimer   : TON := (PT := T#30S);   // Maximum run time
+    fbJogTimer      : TON := (PT := T#2S);    // Jog mode limit
+    
+    bJogForward     : BOOL;
+    bJogReverse     : BOOL;
+    bAutoMode       : BOOL;
+    bMotorFwd       : BOOL;
+    bMotorRev       : BOOL;
+END_VAR
+
+// Jog mode - limited to 2 seconds per press
+fbJogTimer(IN := bJogForward OR bJogReverse);
+
+// Motor outputs with safety limits
+bMotorFwd := bJogForward AND NOT fbJogTimer.Q AND NOT bJogReverse;
+bMotorRev := bJogReverse AND NOT fbJogTimer.Q AND NOT bJogForward;
+\end{lstlisting}
+
+\begin{warningbox}
+Always implement safety timers for manual motor control. If an HMI freezes or loses communication while a button is pressed, the motor could run indefinitely, causing equipment damage, product loss, or personnel injury.
+\end{warningbox}
+
+% ============================================================
+\section{Edge Detection Function Blocks}
+% ============================================================
+
+Edge detectors are used to identify the exact moment a signal changes state.
+
+\subsection{Rising Edge (R\_TRIG)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Purpose:} Detects a transition from FALSE to TRUE.
+    \item \textbf{Behavior:} The output \texttt{Q} stays TRUE for only \textbf{one PLC cycle}. To re-trigger it, the input must return to FALSE and then go TRUE again.
+    \item \textbf{Common Use:} Detecting an operator button press or raising an alarm only once when a condition is met.
+\end{itemize}
+
+\subsection{Falling Edge (F\_TRIG)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Purpose:} Detects a transition from TRUE to FALSE.
+    \item \textbf{Behavior:} Like \texttt{R\_TRIG}, the output \texttt{Q} is high for exactly one PLC cycle upon detecting the falling edge.
+\end{itemize}
+
+\subsubsection*{Example: Edge Trigger Counter}
+
+\begin{lstlisting}
+// PROGRAM: EdgeDetectionDemo
+// Demonstrates R_TRIG and F_TRIG for edge detection
+// Essential for counting events and preventing repeated actions
+
+PROGRAM EdgeDetectionDemo
+VAR
+    // =====================================================
+    // Edge Detection Function Block Instances
+    // Each instance maintains its own state (previous CLK value)
+    // =====================================================
+    rtButtonPress   : R_TRIG;    // Rising edge detector for button
+    ftButtonRelease : F_TRIG;    // Falling edge detector
+    rtSensorTrigger : R_TRIG;    // Rising edge for sensor
+    
+    // Inputs
+    bButton         : BOOL;      // Pushbutton input
+    bSensorSignal   : BOOL;      // Sensor input (e.g., part detected)
+    
+    // Counters
+    nTriggerCounter : INT := 0;  // Counts rising edges (button presses)
+    nReleaseCounter : INT := 0;  // Counts falling edges (button releases)
+    nPartCount      : INT := 0;  // Counts parts detected by sensor
+    
+    // Status flags
+    bJustPressed    : BOOL;      // TRUE for one cycle when pressed
+    bJustReleased   : BOOL;      // TRUE for one cycle when released
+END_VAR
+
+// =====================================================
+// Call the rising edge detector
+// CLK is the signal to monitor for edges
+// =====================================================
+rtButtonPress(CLK := bButton);
+
+// =====================================================
+// Use the Q output to increment a counter
+// Q is TRUE for exactly ONE PLC cycle on each rising edge
+// This ensures the counter increments once per button press
+// =====================================================
+IF rtButtonPress.Q THEN
+    // This block executes exactly ONCE per button press
+    nTriggerCounter := nTriggerCounter + 1;
+    bJustPressed := TRUE;
+ELSE
+    bJustPressed := FALSE;
+END_IF
+
+// =====================================================
+// Falling edge detection - detect button release
+// =====================================================
+ftButtonRelease(CLK := bButton);
+
+IF ftButtonRelease.Q THEN
+    // This block executes exactly ONCE per button release
+    nReleaseCounter := nReleaseCounter + 1;
+    bJustReleased := TRUE;
+ELSE
+    bJustReleased := FALSE;
+END_IF
+
+// =====================================================
+// Practical Example: Part Counter
+// Count parts as they pass a sensor
+// =====================================================
+rtSensorTrigger(CLK := bSensorSignal);
+
+IF rtSensorTrigger.Q THEN
+    nPartCount := nPartCount + 1;
+    // Could also log the event, update HMI, etc.
+END_IF
+\end{lstlisting}
+
+\begin{lstlisting}
+// Extended example: Multiple edge detectors for different purposes
+
+VAR
+    rtStartButton   : R_TRIG;
+    rtStopButton    : R_TRIG;
+    rtResetButton   : R_TRIG;
+    ftSafetyGate    : F_TRIG;    // Detect when gate opens (signal drops)
+    
+    bStart          : BOOL;
+    bStop           : BOOL;
+    bReset          : BOOL;
+    bGateClosed     : BOOL;
+    
+    bMachineRunning : BOOL;
+    nCycleCount     : UDINT := 0;
+    bGateAlarm      : BOOL;
+END_VAR
+
+// Start/Stop logic using edge detection
+rtStartButton(CLK := bStart);
+rtStopButton(CLK := bStop);
+rtResetButton(CLK := bReset);
+ftSafetyGate(CLK := bGateClosed);
+
+// Start machine on start button press
+IF rtStartButton.Q AND bGateClosed THEN
+    bMachineRunning := TRUE;
+END_IF
+
+// Stop machine on stop button press
+IF rtStopButton.Q THEN
+    bMachineRunning := FALSE;
+END_IF
+
+// Alarm if gate opens while machine is running
+IF ftSafetyGate.Q AND bMachineRunning THEN
+    bGateAlarm := TRUE;
+    bMachineRunning := FALSE;  // Emergency stop
+END_IF
+
+// Reset alarm
+IF rtResetButton.Q THEN
+    bGateAlarm := FALSE;
+    nCycleCount := 0;
+END_IF
+\end{lstlisting}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Cycle} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+\hline
+\textbf{CLK} & 0 & 1 & 1 & 1 & 0 & 0 & 1 & 1 & 0 \\
+\hline
+\textbf{R\_TRIG.Q} & 0 & \textbf{1} & 0 & 0 & 0 & 0 & \textbf{1} & 0 & 0 \\
+\hline
+\textbf{F\_TRIG.Q} & 0 & 0 & 0 & 0 & \textbf{1} & 0 & 0 & 0 & \textbf{1} \\
+\hline
+\end{tabular}
+\caption{Edge Detection Timing Diagram}
+\end{figure}
+
+\subsection{Use Case: Preventing Message Flooding}
+
+When logging events (e.g., using \texttt{ADSLOGSTR}), calling the function directly with a boolean input can result in hundreds of messages per second because the PLC runs cyclically. Using an \texttt{R\_TRIG} ensures that only \textbf{one message is generated} per event (like a button click or temperature threshold), and the signal must be reset before another message can be sent.
+
+\begin{lstlisting}
+// Example: Using R_TRIG to prevent log message flooding
+
+VAR
+    rtLogTrigger    : R_TRIG;
+    bAlarmCondition : BOOL;     // TRUE when temperature too high
+END_VAR
+
+rtLogTrigger(CLK := bAlarmCondition);
+
+IF rtLogTrigger.Q THEN
+    // This logs ONCE when alarm condition becomes true
+    // Not every cycle while it remains true
+    ADSLOGSTR(ADSLOG_MSGTYPE_WARN, 'Temperature alarm activated', '');
+END_IF
+\end{lstlisting}
+
+\begin{tipbox}
+Always use R\_TRIG or F\_TRIG when you need to perform an action ``once per event'' rather than ``continuously while condition is true.'' This is especially important for logging, counting, and state machine transitions.
+\end{tipbox}
+
+% ============================================================
+\section{String Manipulation: CONCAT}
+% ============================================================
+
+The \texttt{CONCAT} function is used to join two strings together into one.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Limitations:} The standard \texttt{CONCAT} function works with strings up to \textbf{255 characters}.
+    \item \textbf{Arbitrary Length:} For strings longer than 255 characters, the \texttt{CONCAT2} function should be used instead.
+\end{itemize}
+
+\subsubsection*{Example: String Concatenation}
+
+\begin{lstlisting}
+// PROGRAM: StringOperationsDemo
+// Demonstrates CONCAT and other string manipulation functions
+// Useful for building messages, file paths, and formatted output
+
+PROGRAM StringOperationsDemo
+VAR
+    // =====================================================
+    // String Variables for Concatenation
+    // STRING default length is 80 characters
+    // STRING(n) specifies maximum length of n characters
+    // =====================================================
+    s1          : STRING := 'Hello ';       // First string
+    s2          : STRING := 'World!';       // Second string
+    sResult     : STRING(255);              // Result string (larger buffer)
+    
+    // Additional strings for examples
+    sPrefix     : STRING := 'Error: ';
+    sMessage    : STRING := 'Sensor disconnected';
+    sFullMessage: STRING(255);
+    
+    // For building file paths
+    sBasePath   : STRING := 'C:\Data\';
+    sFileName   : STRING := 'log_';
+    sExtension  : STRING := '.txt';
+    sFullPath   : STRING(255);
+    
+    // For dynamic messages
+    sProductID  : STRING := 'WIDGET-001';
+    sStatus     : STRING := ' - PASSED';
+    sLogEntry   : STRING(255);
+    
+    // Numeric values to include in strings
+    nErrorCode  : INT := 42;
+    sErrorCode  : STRING;
+END_VAR
+
+// =====================================================
+// Basic CONCAT Usage
+// Joins two strings into one
+// Syntax: result := CONCAT(string1, string2);
+// =====================================================
+sResult := CONCAT(s1, s2);
+// sResult now contains: 'Hello World!'
+
+// =====================================================
+// Building an error message
+// =====================================================
+sFullMessage := CONCAT(sPrefix, sMessage);
+// sFullMessage now contains: 'Error: Sensor disconnected'
+
+// =====================================================
+// Multiple concatenations (chained)
+// CONCAT only takes 2 arguments, so chain calls for more
+// =====================================================
+sFullPath := CONCAT(sBasePath, sFileName);
+sFullPath := CONCAT(sFullPath, sExtension);
+// sFullPath now contains: 'C:\Data\log_.txt'
+
+// Alternative: Nested CONCAT calls
+sFullPath := CONCAT(CONCAT(sBasePath, sFileName), sExtension);
+
+// =====================================================
+// Building a log entry
+// =====================================================
+sLogEntry := CONCAT(sProductID, sStatus);
+// sLogEntry now contains: 'WIDGET-001 - PASSED'
+
+// =====================================================
+// IMPORTANT: Converting numbers to strings
+// Use INT_TO_STRING, REAL_TO_STRING, etc.
+// =====================================================
+sErrorCode := INT_TO_STRING(nErrorCode);
+sFullMessage := CONCAT('Error code: ', sErrorCode);
+// sFullMessage now contains: 'Error code: 42'
+\end{lstlisting}
+
+\begin{lstlisting}
+// Extended example: Building formatted messages
+
+VAR
+    sTimestamp      : STRING := '2024-01-15 10:30:00';
+    sMachineName    : STRING := 'Conveyor_01';
+    sEventType      : STRING := 'FAULT';
+    sDescription    : STRING := 'Motor overtemperature';
+    
+    sLogLine        : STRING(255);
+    sTemp           : STRING(255);
+END_VAR
+
+// Build a structured log message:
+// "[2024-01-15 10:30:00] Conveyor_01 - FAULT: Motor overtemperature"
+
+sLogLine := CONCAT('[', sTimestamp);
+sLogLine := CONCAT(sLogLine, '] ');
+sLogLine := CONCAT(sLogLine, sMachineName);
+sLogLine := CONCAT(sLogLine, ' - ');
+sLogLine := CONCAT(sLogLine, sEventType);
+sLogLine := CONCAT(sLogLine, ': ');
+sLogLine := CONCAT(sLogLine, sDescription);
+
+// Result: '[2024-01-15 10:30:00] Conveyor_01 - FAULT: Motor overtemperature'
+\end{lstlisting}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Function} & \textbf{Syntax} & \textbf{Description} \\
+\midrule
+CONCAT & CONCAT(s1, s2) & Joins two strings \\
+LEFT & LEFT(str, n) & Returns first n characters \\
+RIGHT & RIGHT(str, n) & Returns last n characters \\
+MID & MID(str, pos, n) & Returns n chars starting at pos \\
+LEN & LEN(str) & Returns string length \\
+FIND & FIND(str1, str2) & Finds str2 in str1, returns position \\
+\bottomrule
+\end{tabular}
+\caption{Common String Manipulation Functions}
+\end{table}
+
+\begin{notebox}
+When concatenating strings, always ensure your result variable has sufficient capacity. If the combined string exceeds the variable's declared length, it will be truncated without warning.
+\end{notebox}
+
+% ============================================================
+\section{Library Management}
+% ============================================================
+
+To access these functions, your TwinCAT project must have a reference to the \textbf{Tc2\_Standard library}. Most new TwinCAT projects include this reference automatically, but it is necessary for functions like timers and triggers to be recognized by the compiler.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Library} & \textbf{Contents} & \textbf{Required For} \\
+\midrule
+Tc2\_Standard & TON, TOF, R\_TRIG, etc. & Basic PLC functions \\
+Tc2\_System & ADSLOGSTR, system functions & Logging, diagnostics \\
+Tc2\_Utilities & File I/O, advanced functions & Extended functionality \\
+\bottomrule
+\end{tabular}
+\caption{Common TwinCAT Libraries}
+\end{table}
+
+\begin{tipbox}
+To add a library reference, right-click on ``References'' in your PLC project, select ``Add library...'', and search for the library name. The Tc2\_Standard library should always be present for basic PLC functionality.
+\end{tipbox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Timer Function Blocks}
+
+\begin{lstlisting}
+// TON - On Delay Timer
+fbTON : TON := (PT := T#5S);
+fbTON(IN := bTrigger);
+// Q goes TRUE after 5 seconds if IN stays TRUE
+
+// TOF - Off Delay Timer
+fbTOF : TOF := (PT := T#5S);
+fbTOF(IN := bTrigger);
+// Q stays TRUE for 5 seconds after IN goes FALSE
+
+// TP - Pulse Timer
+fbTP : TP := (PT := T#5S);
+fbTP(IN := bTrigger);
+// Q goes TRUE for exactly 5 seconds on rising edge
+\end{lstlisting}
+
+\subsection*{Edge Detection}
+
+\begin{lstlisting}
+// Rising Edge
+rtTrigger : R_TRIG;
+rtTrigger(CLK := bInput);
+IF rtTrigger.Q THEN
+    // Executes once on FALSE->TRUE transition
+END_IF
+
+// Falling Edge
+ftTrigger : F_TRIG;
+ftTrigger(CLK := bInput);
+IF ftTrigger.Q THEN
+    // Executes once on TRUE->FALSE transition
+END_IF
+\end{lstlisting}
+
+\subsection*{String Functions}
+
+\begin{lstlisting}
+// Concatenation
+sResult := CONCAT(s1, s2);
+
+// Substring
+sLeft := LEFT(sSource, 5);     // First 5 chars
+sRight := RIGHT(sSource, 3);   // Last 3 chars
+sMid := MID(sSource, 2, 4);    // 4 chars from pos 2
+
+// Length
+nLen := LEN(sSource);
+\end{lstlisting}
+
+\subsection*{Time Literals}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Literal} & \textbf{Value} \\
+\midrule
+T\#100MS & 100 milliseconds \\
+T\#5S & 5 seconds \\
+T\#2M30S & 2 minutes 30 seconds \\
+T\#1H & 1 hour \\
+T\#1D & 1 day \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

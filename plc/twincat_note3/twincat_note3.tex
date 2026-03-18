@@ -1,0 +1,699 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== IEC 61131-3 CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TON, TOF, TP, CTU, CTD, CTUD, R_TRIG, F_TRIG,
+                 ADSLOGSTR, ADSLOG_MSGTYPE_ERROR, ADSLOG_MSGTYPE_LOG,
+                 ADSLOG_MSGTYPE_WARN, ADSLOG_MSGTYPE_HINT},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, ABS, SQRT, SIN, COS, TAN, LN, LOG, EXP,
+                 SEL, MUX, LIMIT, MAX, MIN, MOVE},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Real-Time Architecture and Hello World},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Real-Time Architecture and ``Hello World'' Implementation
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Traditional IT Software vs. PLC Software}
+% ============================================================
+
+The fundamental difference between conventional IT software and PLC software lies in \textbf{determinism}.
+
+\subsection{Standard OS (Windows)}
+
+Uses a \textbf{scheduler} to distribute CPU time based on a scheduling policy, such as the ``Multilevel feedback queue''. This process is \textbf{not deterministic}; there are no guarantees on how much CPU time a process gets, and it can be interrupted at any time (context switching).
+
+\subsection{Industrial Automation Requirement}
+
+Machine control requires strict boundaries for execution time. Interrupting a process while it is controlling a moving object can lead to dangerous results.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Aspect} & \textbf{Standard IT Software} & \textbf{PLC Software} \\
+\midrule
+Execution & Non-deterministic & Deterministic \\
+Timing & Best effort & Guaranteed cycle time \\
+Interruption & Can be preempted anytime & Protected execution window \\
+Priority & OS scheduler decides & Fixed, developer-defined \\
+Failure Mode & Slow response & Cycle overrun / fault \\
+\bottomrule
+\end{tabular}
+\caption{IT Software vs. PLC Software Characteristics}
+\end{table}
+
+\begin{warningbox}
+Non-deterministic execution in machine control can cause serious safety issues. If a motion control algorithm is interrupted mid-calculation, the resulting commands could cause collisions, damage equipment, or injure personnel.
+\end{warningbox}
+
+% ============================================================
+\section{TwinCAT 3 Architecture: Ring 0 vs. Ring 3}
+% ============================================================
+
+TwinCAT 3 acts as a \textbf{real-time extension} to the operating system (Windows or Tc/BSD) by running as a \textbf{kernel module}. It utilizes the CPU's ``rings'' to manage priority:
+
+\subsection{Ring 0 (Kernel Mode)}
+
+Has direct hardware access. This is where the TwinCAT scheduler, real-time tasks, and critical I/O communications (like \textbf{EtherCAT}) reside.
+
+\subsection{Ring 3 (User Mode)}
+
+A restricted space for standard Windows applications (Office, games). Virtual memory prevents these applications from interfering with each other or the system.
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{\textbf{CPU Protection Rings}} \\
+\hline
+\textbf{Ring 0 - Kernel Mode} & \textbf{Ring 3 - User Mode} \\
+\hline
+TwinCAT Real-Time Kernel & Windows Applications \\
+EtherCAT Master & Office, Browsers \\
+Real-Time Tasks & HMI Applications \\
+I/O Drivers & User Programs \\
+\hline
+Direct Hardware Access & Virtual Memory \\
+Highest Priority & Lower Priority \\
+\hline
+\end{tabular}
+\caption{TwinCAT CPU Ring Architecture}
+\end{figure}
+
+\begin{notebox}
+The ring architecture is a hardware feature of x86/x64 processors. Ring 0 has the highest privilege level with direct hardware access, while Ring 3 is the most restricted. TwinCAT leverages this to ensure real-time tasks cannot be preempted by user applications.
+\end{notebox}
+
+% ============================================================
+\section{CPU Core Management}
+% ============================================================
+
+TwinCAT allows developers to distribute workload across CPU cores in two primary ways:
+
+\subsection{Shared Cores}
+
+TwinCAT and Windows share a core using the \textbf{``double-tick'' method}.
+
+\begin{itemize}[leftmargin=*]
+    \item The \textbf{Base Time} (e.g., 1ms) is a constant interrupt where the scheduler pauses Windows to allow real-time tasks to run.
+    \item There is a limit (typically \textbf{90\%}) to ensure the OS always has time to execute its own tasks.
+\end{itemize}
+
+\subsection{Isolated Cores}
+
+A core is exclusively reserved for TwinCAT; Windows ``cannot see'' this core. This provides \textbf{100\%} of the core's computing time to real-time tasks, offering high performance and low jitter.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Mode} & \textbf{CPU Usage} & \textbf{Jitter} & \textbf{Use Case} \\
+\midrule
+Shared Core & Up to 90\% & Higher & General automation \\
+Isolated Core & 100\% & Minimal & Motion control, high-speed \\
+\bottomrule
+\end{tabular}
+\caption{CPU Core Allocation Strategies}
+\end{table}
+
+\begin{tipbox}
+For applications requiring cycle times below 1ms or precise motion control, use isolated cores. For typical PLC logic with cycle times of 10ms or more, shared cores provide adequate performance while maintaining Windows responsiveness.
+\end{tipbox}
+
+% ============================================================
+\section{Hardware and BIOS Requirements}
+% ============================================================
+
+To run TwinCAT 3 on a 64-bit machine, \textbf{Intel Virtualization Technology (VT-x)} must be enabled in the computer's BIOS. This allows the kernel-mode scheduler to function correctly next to the operating system.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Requirement} & \textbf{Setting} \\
+\midrule
+Intel VT-x & Enabled \\
+Hyper-Threading & Typically disabled for RT \\
+C-States & Disabled for consistent timing \\
+SpeedStep & Disabled for consistent timing \\
+\bottomrule
+\end{tabular}
+\caption{Recommended BIOS Settings for TwinCAT 3}
+\end{table}
+
+\begin{warningbox}
+If Intel VT-x is not enabled, TwinCAT 3 will fail to start or display licensing errors. Access your system BIOS/UEFI settings and ensure virtualization technology is enabled before installing TwinCAT.
+\end{warningbox}
+
+% ============================================================
+\section{TwinCAT Project Structure}
+% ============================================================
+
+A TwinCAT solution is divided into several configurations/modules:
+
+\subsection{SYSTEM}
+
+Handles real-time settings (core allocation, base time), task definitions, and license management.
+
+\subsection{PLC}
+
+The primary area for code development.
+
+\subsection{I/O}
+
+Manages fieldbus communication (e.g., EtherCAT, Profinet) with the outside world.
+
+\subsection{PLC Project Folders}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{POUs (Program Organization Units):} Contains the bulk of the code, including function blocks and programs.
+    \item \textbf{GVLs (Global Variable Lists):} Used for global variables, which are standard in automation.
+    \item \textbf{DUTs (Data Unit Types):} Used to define structures or alias types.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Folder} & \textbf{Contents} & \textbf{Purpose} \\
+\midrule
+POUs & Programs, FBs, Functions & Executable code \\
+GVLs & Global variables & Shared data \\
+DUTs & Structures, Enums, Aliases & Custom data types \\
+VISUs & Visualizations & HMI screens \\
+\bottomrule
+\end{tabular}
+\caption{PLC Project Folder Structure}
+\end{table}
+
+% ============================================================
+\section{Real-Time Tasks and Cycle Time}
+% ============================================================
+
+A \textbf{TwinCAT Task} is a ``time container'' for an IEC program, defined by a name, priority, and \textbf{cycle time}.
+
+\begin{itemize}[leftmargin=*]
+    \item The \textbf{cycle time} specifies the interval at which code is executed.
+    \item Execution is effectively an \textbf{endless while-loop}.
+    \item The PLC developer must ensure all code within a task finishes before the cycle time expires to avoid \textbf{cycle-time overruns}.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Cycle 1 & Cycle 2 & Cycle 3 & Cycle 4 & $\cdots$ \\
+\hline
+10ms & 10ms & 10ms & 10ms & \\
+\hline
+\end{tabular}
+\caption{Cyclic Task Execution Model}
+\end{figure}
+
+\begin{notebox}
+Common cycle times range from 1ms for motion control to 100ms for slow processes like temperature control. Choose the shortest cycle time that meets your application requirements---shorter cycles consume more CPU resources.
+\end{notebox}
+
+% ============================================================
+\section{Hands-on: ``Hello World'' with ADSLOGSTR}
+% ============================================================
+
+In TwinCAT, printing a message is done via the \textbf{ADSLOGSTR()} function, which sends a message from the real-time context to the non-real-time context (the Visual Studio logger or a Windows popup).
+
+\subsection{ADSLOGSTR Function}
+
+\begin{lstlisting}
+// PROGRAM: MAIN
+// Demonstrates the ADSLOGSTR function for logging messages
+// Messages are sent from RT context to Visual Studio output window
+
+PROGRAM MAIN
+VAR
+    // Variables for demonstration
+    sUserName   : STRING := 'Operator1';
+    nErrorCode  : INT := 42;
+END_VAR
+
+// =====================================================
+// ADSLOGSTR Function Call
+// =====================================================
+// Syntax: ADSLOGSTR(msgCtrlMask, formatString, stringArgument)
+//
+// Parameters:
+//   msgCtrlMask   : DWORD - Controls message type and destination
+//   formatString  : STRING - The message text (can include %s placeholder)
+//   stringArgument: STRING - Optional string to replace %s in format
+// =====================================================
+
+// Example 1: Simple log message (informational)
+// ADSLOG_MSGTYPE_LOG sends to the TwinCAT logger
+ADSLOGSTR(
+    ADSLOG_MSGTYPE_LOG,           // Message type: Log entry
+    'Hello World from TwinCAT!',  // Message format string
+    ''                            // No additional argument
+);
+
+// Example 2: Log message with string parameter
+// The %s in the format string is replaced by the third argument
+ADSLOGSTR(
+    ADSLOG_MSGTYPE_LOG,           // Message type: Log entry
+    'User logged in: %s',         // Format string with placeholder
+    sUserName                     // String argument replaces %s
+);
+
+// Example 3: Warning message
+// ADSLOG_MSGTYPE_WARN creates a warning-level entry
+ADSLOGSTR(
+    ADSLOG_MSGTYPE_WARN,          // Message type: Warning
+    'Low pressure detected in Zone %s',
+    'A3'                          // Zone identifier
+);
+
+// Example 4: Error message with popup
+// Combining ADSLOG_MSGTYPE_ERROR with ADSLOG_MSGTYPE_LOG
+// ADSLOG_MSGTYPE_ERROR can trigger a Windows popup notification
+ADSLOGSTR(
+    ADSLOG_MSGTYPE_ERROR OR ADSLOG_MSGTYPE_LOG,  // Combined flags
+    'Critical fault in module %s - immediate attention required',
+    'Conveyor_01'
+);
+
+// Example 5: Hint/Information message
+ADSLOGSTR(
+    ADSLOG_MSGTYPE_HINT,          // Message type: Hint
+    'System startup complete at %s',
+    'Station_Main'
+);
+\end{lstlisting}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Message Type Constant} & \textbf{Value} & \textbf{Purpose} \\
+\midrule
+ADSLOG\_MSGTYPE\_HINT & 16\#01 & Informational hint \\
+ADSLOG\_MSGTYPE\_WARN & 16\#02 & Warning message \\
+ADSLOG\_MSGTYPE\_ERROR & 16\#04 & Error message \\
+ADSLOG\_MSGTYPE\_LOG & 16\#10 & Log to output window \\
+ADSLOG\_MSGTYPE\_MSGBOX & 16\#20 & Show Windows popup \\
+\bottomrule
+\end{tabular}
+\caption{ADSLOGSTR Message Type Constants}
+\end{table}
+
+\subsection{Single-Run Logic}
+
+Because the code runs cyclically (e.g., every 10ms), a direct call to \texttt{ADSLOGSTR} would flood the logger with 100 messages per second. A \textbf{boolean trigger} is required to ensure it only runs once.
+
+\begin{lstlisting}
+// PROGRAM: MAIN
+// Demonstrates single-run logic to prevent message flooding
+// Without this protection, ADSLOGSTR would execute every cycle!
+
+PROGRAM MAIN
+VAR
+    // =====================================================
+    // Boolean flag to ensure code runs only once
+    // Initialized to FALSE so the IF block executes on first scan
+    // =====================================================
+    bRunOnlyOnce    : BOOL := FALSE;
+    
+    // Alternative: Use for triggering on button press
+    bTriggerMessage : BOOL := FALSE;
+    bTriggerDone    : BOOL := FALSE;
+    
+    // For demonstration
+    sMessage        : STRING := 'System initialized successfully';
+END_VAR
+
+// =====================================================
+// SINGLE-RUN PATTERN: Execute Once at Startup
+// =====================================================
+// This pattern ensures ADSLOGSTR is called exactly once
+// when the PLC starts, not every cycle
+
+IF NOT bRunOnlyOnce THEN
+    // This block executes only on the first PLC scan
+    // because bRunOnlyOnce starts as FALSE
+    
+    ADSLOGSTR(
+        ADSLOG_MSGTYPE_LOG,
+        'Hello World - This message appears only once!',
+        ''
+    );
+    
+    // Additional startup initialization can go here
+    ADSLOGSTR(
+        ADSLOG_MSGTYPE_LOG,
+        'PLC Program Version 1.0 Started',
+        ''
+    );
+    
+    // Set the flag to TRUE to prevent re-execution
+    // On all subsequent cycles, the IF condition is FALSE
+    bRunOnlyOnce := TRUE;
+    
+END_IF
+
+// =====================================================
+// TRIGGERED PATTERN: Execute on External Command
+// =====================================================
+// Use this pattern when you want to log based on a trigger
+// such as a button press or event detection
+
+IF bTriggerMessage AND NOT bTriggerDone THEN
+    // Execute when trigger goes TRUE (rising edge behavior)
+    
+    ADSLOGSTR(
+        ADSLOG_MSGTYPE_LOG,
+        'Triggered message: %s',
+        sMessage
+    );
+    
+    // Mark as done to prevent re-triggering
+    bTriggerDone := TRUE;
+    
+END_IF
+
+// Reset the done flag when trigger is released
+// This allows re-triggering when bTriggerMessage goes TRUE again
+IF NOT bTriggerMessage THEN
+    bTriggerDone := FALSE;
+END_IF
+\end{lstlisting}
+
+\begin{lstlisting}
+// Advanced Example: Using R_TRIG for edge detection
+// This is the professional approach for triggered actions
+
+PROGRAM MAIN
+VAR
+    bLogButton      : BOOL;              // Input: Button to trigger log
+    rtLogTrigger    : R_TRIG;            // Rising edge detector
+    nMessageCount   : INT := 0;          // Count of messages sent
+    sCountStr       : STRING;            // For number formatting
+END_VAR
+
+// Rising edge detection - cleaner than manual flag management
+rtLogTrigger(CLK := bLogButton);
+
+IF rtLogTrigger.Q THEN
+    // This executes exactly once per button press
+    // Q is TRUE only on the rising edge of CLK
+    
+    nMessageCount := nMessageCount + 1;
+    
+    // Convert count to string for logging
+    // (In practice, use INT_TO_STRING or format functions)
+    
+    ADSLOGSTR(
+        ADSLOG_MSGTYPE_LOG,
+        'Button pressed - message number logged',
+        ''
+    );
+END_IF
+\end{lstlisting}
+
+\begin{warningbox}
+Never call ADSLOGSTR unconditionally in cyclic code! With a 10ms cycle time, you would generate 100 messages per second, quickly filling logs and potentially impacting system performance. Always use single-run logic or edge detection.
+\end{warningbox}
+
+\begin{tipbox}
+The R\_TRIG (rising edge trigger) function block from the Tc2\_Standard library is the preferred method for detecting button presses or event transitions. It automatically handles the edge detection logic and is more readable than manual boolean flag management.
+\end{tipbox}
+
+% ============================================================
+\section{Licensing and Debugging}
+% ============================================================
+
+\subsection{Licensing}
+
+Development is \textbf{free}. For the runtime, you can generate \textbf{7-day trial licenses} indefinitely using a \textbf{CAPTCHA}. Permanent licenses are priced based on the \textbf{performance class} of the target PLC.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{License Type} & \textbf{Duration} & \textbf{Use Case} \\
+\midrule
+Development & Unlimited & XAE on dev PC \\
+Trial & 7 days (renewable) & Testing, evaluation \\
+Production & Permanent & Deployed systems \\
+\bottomrule
+\end{tabular}
+\caption{TwinCAT 3 License Types}
+\end{table}
+
+\subsection{Online Monitoring}
+
+One of TwinCAT's most powerful features is the ability to \textbf{``login''} to the PLC. This allows developers to:
+
+\begin{itemize}[leftmargin=*]
+    \item Watch variable values in real-time
+    \item Change data on-the-fly
+    \item ``Force'' values to debug logic without restarting the system
+\end{itemize}
+
+\begin{notebox}
+Online monitoring is invaluable for commissioning and troubleshooting. You can observe actual I/O states, step through logic mentally by watching variables change, and temporarily override values to test different scenarios---all without stopping the PLC.
+\end{notebox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{CPU Rings}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Ring} & \textbf{Mode} & \textbf{Contents} \\
+\midrule
+Ring 0 & Kernel & TwinCAT RT, EtherCAT \\
+Ring 3 & User & Windows apps, HMI \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Project Structure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Folder} & \textbf{Purpose} \\
+\midrule
+SYSTEM & RT settings, tasks, licenses \\
+PLC & Code development \\
+I/O & Fieldbus configuration \\
+POUs & Programs, FBs, Functions \\
+GVLs & Global variables \\
+DUTs & Custom data types \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{ADSLOGSTR Quick Reference}
+
+\begin{lstlisting}
+// Basic usage
+ADSLOGSTR(ADSLOG_MSGTYPE_LOG, 'Message', '');
+
+// With parameter
+ADSLOGSTR(ADSLOG_MSGTYPE_LOG, 'Value: %s', sParam);
+
+// Single-run pattern
+IF NOT bDone THEN
+    ADSLOGSTR(...);
+    bDone := TRUE;
+END_IF
+\end{lstlisting}
+
+\subsection*{Message Type Flags}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Constant} & \textbf{Effect} \\
+\midrule
+ADSLOG\_MSGTYPE\_LOG & Log to output \\
+ADSLOG\_MSGTYPE\_WARN & Warning level \\
+ADSLOG\_MSGTYPE\_ERROR & Error level \\
+ADSLOG\_MSGTYPE\_MSGBOX & Windows popup \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

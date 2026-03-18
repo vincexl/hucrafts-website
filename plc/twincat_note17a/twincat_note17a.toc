@@ -1,0 +1,13 @@
+\contentsline {section}{\numberline {1}Introduction to Current Industry Practices}{2}{section.1}%
+\contentsline {section}{\numberline {2}What is Test-Driven Development (TDD)?}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The TDD Cycle: ``Red-Green-Refactor''}{2}{subsection.2.1}%
+\contentsline {section}{\numberline {3}Advantages of TDD}{3}{section.3}%
+\contentsline {section}{\numberline {4}Unit Testing with TcUnit}{3}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Core Components of TcUnit}{3}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Practical Implementation: The Event Buffer}{5}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Interface Design (The ``What'')}{5}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Refined Design through Testing}{6}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Writing the Test}{9}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Execution and Results}{13}{section.6}%
+\contentsline {section}{\numberline {7}Integration with Continuous Integration (CI)}{13}{section.7}%
+\contentsline {section}{Quick Reference Card}{14}{figure.3}%

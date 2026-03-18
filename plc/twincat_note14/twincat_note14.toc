@@ -1,0 +1,9 @@
+\contentsline {section}{\numberline {1}The Challenge of Version Management}{2}{section.1}%
+\contentsline {section}{\numberline {2}TwinCAT Installation Components}{2}{section.2}%
+\contentsline {section}{\numberline {3}The Problem: Automatic Updates}{3}{section.3}%
+\contentsline {section}{\numberline {4}How to ``Freeze'' a Project for Long-Term Maintenance}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}A. Freezing Library Placeholders}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}B. Pinning the Compiler and Project Version}{5}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Professional Workflow and Build Integrity}{6}{section.5}%
+\contentsline {section}{\numberline {6}Industry Context}{9}{section.6}%
+\contentsline {section}{Quick Reference Card}{9}{figure.2}%

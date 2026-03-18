@@ -1,0 +1,1008 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+\definecolor{redbg}{rgb}{1.0,0.9,0.9}
+\definecolor{redborder}{rgb}{0.8,0.2,0.2}
+\definecolor{greenbg}{rgb}{0.9,1.0,0.9}
+\definecolor{greenborder}{rgb}{0.2,0.7,0.2}
+
+% ===== IEC 61131-3 CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TON, TOF, TP, CTU, CTD, CTUD, R_TRIG, F_TRIG,
+                 FB_TestSuite, FB_EventBuffer, ST_Event, PVOID},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, ABS, TEST, TEST_FINISHED, 
+                 AssertTrue, AssertFalse, AssertEquals, AssertEquals_STRING,
+                 AssertEquals_INT, AssertEquals_DINT, AssertEquals_REAL,
+                 TcUnit, RUN, AddEvent, GetAndRemoveEvent, GetNumberOfEvents,
+                 FB_init, MEMCPY, MEMSET},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+\newtcolorbox{redphasebox}{
+    colback=redbg,
+    colframe=redborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faTimesCircle\ \textbf{Red Phase:} }
+}
+
+\newtcolorbox{greenphasebox}{
+    colback=greenbg,
+    colframe=greenborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faCheckCircle\ \textbf{Green Phase:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Test-Driven Development (TDD)},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Test-Driven Development (TDD)
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to Current Industry Practices}
+% ============================================================
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{The Problem:} In industrial automation, code is often deployed to live systems (costing millions of euros) with a ``let's see if it works'' attitude and very little automated testing.
+    \item \textbf{The Opportunity:} Adopting practices from traditional software development, such as \textbf{Test-Driven Development (TDD)}, can vastly increase code quality and reliability.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Approach} & \textbf{Traditional PLC} & \textbf{TDD Approach} \\
+\midrule
+Testing & Manual, on real hardware & Automated, simulated \\
+Bug Discovery & During commissioning & During development \\
+Code Changes & High risk, avoided & Low risk, embraced \\
+Documentation & Often outdated & Tests are living docs \\
+\bottomrule
+\end{tabular}
+\caption{Traditional vs. TDD Development Approaches}
+\end{table}
+
+\begin{warningbox}
+Deploying untested code to production machinery can result in equipment damage, production losses, and safety incidents. Automated testing significantly reduces these risks.
+\end{warningbox}
+
+% ============================================================
+\section{What is Test-Driven Development (TDD)?}
+% ============================================================
+
+TDD is the practice of \textbf{writing tests before writing the implementation code}. Instead of focusing on \textit{how} to develop, TDD forces the developer to first define \textit{what} the code should do.
+
+\subsection{The TDD Cycle: ``Red-Green-Refactor''}
+
+\begin{enumerate}
+    \item \textbf{Red Phase:} Write a test for a specific behavior. Because no implementation code exists yet, the test will \textbf{fail}.
+    \item \textbf{Green Phase:} Write just enough implementation code to make the test pass. The focus is strictly on meeting the test criteria, not on making the code ``pretty''.
+    \item \textbf{Refactor Phase:} Once the tests pass, improve the code's design, rename variables, or optimize algorithms. The tests act as a safety net to ensure behavior remains unchanged.
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textcolor{red}{\textbf{RED}} & $\rightarrow$ & \textcolor{green}{\textbf{GREEN}} \\
+Write failing test & & Write minimal code \\
+\hline
+$\uparrow$ & & $\downarrow$ \\
+\hline
+\multicolumn{3}{|c|}{\textcolor{blue}{\textbf{REFACTOR}}} \\
+\multicolumn{3}{|c|}{Improve code quality} \\
+\hline
+\end{tabular}
+\caption{The TDD Red-Green-Refactor Cycle}
+\end{figure}
+
+\begin{redphasebox}
+In the Red Phase, you write a test that describes the desired behavior. The test \textbf{must fail} initially---this confirms that the test is actually testing something meaningful and that the feature doesn't already exist.
+\end{redphasebox}
+
+\begin{greenphasebox}
+In the Green Phase, write the minimum amount of code necessary to make the test pass. Don't over-engineer or add extra features---just satisfy the test requirements.
+\end{greenphasebox}
+
+% ============================================================
+\section{Advantages of TDD}
+% ============================================================
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Regression Testing:} A suite of tests allows developers to change or add functionality at any time, with the confidence that existing features haven't been broken.
+    \item \textbf{Modular Design:} TDD naturally leads to smaller, more flexible, and more modular function blocks.
+    \item \textbf{Clear Documentation:} Test cases serve as living documentation and acceptance criteria, showing exactly what a function block should provide given specific inputs.
+    \item \textbf{Lower Bug Counts:} Writing tests first encourages developers to consider edge cases they might otherwise ignore.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Benefit} & \textbf{Impact on PLC Development} \\
+\midrule
+Regression Testing & Safe to modify code during commissioning \\
+Modular Design & Easier to reuse FBs across projects \\
+Documentation & Tests explain expected behavior \\
+Edge Case Coverage & Fewer surprises with unusual inputs \\
+Faster Debugging & Pinpoint failures immediately \\
+\bottomrule
+\end{tabular}
+\caption{TDD Benefits for Industrial Automation}
+\end{table}
+
+\begin{tipbox}
+Tests serve as executable documentation. When a new developer joins the project, they can read the tests to understand exactly what each function block is supposed to do.
+\end{tipbox}
+
+% ============================================================
+\section{Unit Testing with TcUnit}
+% ============================================================
+
+\textbf{Unit testing} involves validating that individual components of software perform as expected. For TwinCAT 3, the preferred tool is \textbf{TcUnit}, an open-source framework licensed under the MIT license.
+
+\subsection{Core Components of TcUnit}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Test Suite:} A collection of related tests, defined as a function block that extends \texttt{FB\_TestSuite}.
+    \item \textbf{Test Runner:} Collects and presents results via the \texttt{TcUnit.RUN()} command.
+    \item \textbf{Assertions:} Methods used to verify the state of a unit under test (e.g., \texttt{AssertTrue}, \texttt{AssertFalse}, \texttt{AssertEquals}).
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llp{5cm}@{}}
+\toprule
+\textbf{Assertion} & \textbf{Usage} & \textbf{Description} \\
+\midrule
+AssertTrue & AssertTrue(bCondition, 'msg') & Passes if condition is TRUE \\
+AssertFalse & AssertFalse(bCondition, 'msg') & Passes if condition is FALSE \\
+AssertEquals & AssertEquals(exp, act, 'msg') & Passes if values are equal \\
+AssertEquals\_STRING & AssertEquals\_STRING(exp, act, 'msg') & String comparison \\
+AssertEquals\_INT & AssertEquals\_INT(exp, act, 'msg') & Integer comparison \\
+AssertEquals\_REAL & AssertEquals\_REAL(exp, act, delta, 'msg') & Real with tolerance \\
+\bottomrule
+\end{tabular}
+\caption{Common TcUnit Assertion Methods}
+\end{table}
+
+\subsubsection*{TcUnit Test Runner}
+
+\begin{lstlisting}
+// =====================================================
+// PROGRAM: PRG_TEST
+// Main test runner program for TcUnit
+// This program should be called from a separate test task
+// =====================================================
+
+PROGRAM PRG_TEST
+VAR
+    // =====================================================
+    // TEST SUITE INSTANCES
+    // Each test suite is a function block that extends FB_TestSuite
+    // Instantiate all test suites you want to run
+    // =====================================================
+    
+    // Test suite for the Event Buffer functionality
+    fbEventBufferTests      : FB_EventBufferTests;
+    
+    // Test suite for sensor handling
+    fbSensorHandlerTests    : FB_SensorHandlerTests;
+    
+    // Test suite for motor controller
+    fbMotorControllerTests  : FB_MotorControllerTests;
+    
+    // Test suite for string utilities
+    fbStringUtilsTests      : FB_StringUtilsTests;
+    
+    // Test suite for data validation
+    fbDataValidationTests   : FB_DataValidationTests;
+    
+END_VAR
+
+// =====================================================
+// CALL TEST SUITES
+// Each test suite must be called to execute its tests
+// TcUnit automatically discovers and runs all TEST() methods
+// =====================================================
+
+// Call each test suite - order doesn't matter
+fbEventBufferTests();
+fbSensorHandlerTests();
+fbMotorControllerTests();
+fbStringUtilsTests();
+fbDataValidationTests();
+
+// =====================================================
+// RUN TCUNIT
+// This MUST be called after all test suites
+// It collects results and outputs them to the error list
+// =====================================================
+TcUnit.RUN();
+\end{lstlisting}
+
+\begin{lstlisting}
+// =====================================================
+// ALTERNATIVE: Minimal Test Runner
+// For projects with just one or two test suites
+// =====================================================
+
+PROGRAM PRG_TEST_MINIMAL
+VAR
+    // Single test suite instance
+    fbMyTests : FB_MyFeatureTests;
+END_VAR
+
+// Call the test suite
+fbMyTests();
+
+// Run TcUnit to collect and report results
+TcUnit.RUN();
+
+// =====================================================
+// TASK CONFIGURATION NOTE:
+// =====================================================
+// Create a separate task for testing with:
+// - Lower priority than production tasks
+// - Cycle time: 10ms or slower is fine
+// - Only run during development/testing phases
+//
+// Task: Test_Task
+//   Priority: 25 (lower than main task)
+//   Cycle Time: 10 ms
+//   Program: PRG_TEST
+// =====================================================
+\end{lstlisting}
+
+\begin{notebox}
+TcUnit results appear in the Visual Studio Error List window. Filter by ``TcUnit'' to see only test-related messages. Green checkmarks indicate passing tests; red X marks indicate failures.
+\end{notebox}
+
+% ============================================================
+\section{Practical Implementation: The Event Buffer}
+% ============================================================
+
+The sources demonstrate TDD by building an \textbf{Event Buffer} to solve a limitation in a CSV logger that could only handle one event at a time.
+
+\subsection{Interface Design (The ``What'')}
+
+Before implementation, the interface for the \texttt{FB\_EventBuffer} is defined with methods such as \texttt{AddEvent}, \texttt{GetAndRemoveEvent}, and \texttt{GetNumberOfEvents}.
+
+\subsection{Refined Design through Testing}
+
+During the testing phase, it was realized that hard-coding a buffer size was too restrictive. The design was updated to use a \textbf{constructor (FB\_init)}, allowing the user to provide an external memory buffer of any size.
+
+\subsubsection*{FB\_init Constructor for Buffer}
+
+\begin{lstlisting}
+// =====================================================
+// FUNCTION BLOCK: FB_EventBuffer
+// A FIFO buffer for storing events with configurable size
+// Uses FB_init constructor for flexible memory allocation
+// =====================================================
+
+FUNCTION_BLOCK FB_EventBuffer
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+    bError          : BOOL;         // Error flag
+    nErrorID        : UDINT;        // Error code
+END_VAR
+
+VAR
+    // =====================================================
+    // INTERNAL BUFFER MANAGEMENT
+    // These are set by FB_init and used internally
+    // =====================================================
+    pBuffer         : PVOID;        // Pointer to external buffer memory
+    nBufferSize     : UDINT;        // Size of buffer in bytes
+    nEventSize      : UDINT;        // Size of one event structure
+    nMaxEvents      : UDINT;        // Maximum number of events
+    
+    // FIFO management
+    nHead           : UDINT := 0;   // Read position (oldest event)
+    nTail           : UDINT := 0;   // Write position (next free slot)
+    nCount          : UDINT := 0;   // Current number of events
+    
+    bInitialized    : BOOL := FALSE;
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// =====================================================
+// METHOD: FB_init (Constructor)
+// Called automatically when the FB is instantiated
+// Allows user to provide external buffer memory
+// =====================================================
+
+METHOD FB_init : BOOL
+VAR_INPUT
+    bInitRetains    : BOOL;     // TRUE if retain variables initialized
+    bInCopyCode     : BOOL;     // TRUE if called from copy code
+    
+    // =====================================================
+    // USER-PROVIDED BUFFER PARAMETERS
+    // The user must allocate an array of bytes and pass:
+    // - pBufferMemory: Pointer to the array (use ADR())
+    // - nBufferMemorySize: Size in bytes (use SIZEOF())
+    // =====================================================
+    pBufferMemory       : PVOID;    // Pointer to user's byte array
+    nBufferMemorySize   : UDINT;    // Size of the byte array
+    
+END_VAR
+
+// =====================================================
+// INITIALIZATION LOGIC
+// Store the buffer reference and calculate capacity
+// =====================================================
+
+// Validate inputs
+IF pBufferMemory = 0 OR nBufferMemorySize = 0 THEN
+    bError := TRUE;
+    nErrorID := 16#8001;    // Invalid parameters
+    bInitialized := FALSE;
+    FB_init := FALSE;
+    RETURN;
+END_IF
+
+// Store buffer reference
+pBuffer := pBufferMemory;
+nBufferSize := nBufferMemorySize;
+
+// Calculate event size and maximum capacity
+nEventSize := SIZEOF(ST_Event);
+nMaxEvents := nBufferSize / nEventSize;
+
+// Validate we can store at least one event
+IF nMaxEvents < 1 THEN
+    bError := TRUE;
+    nErrorID := 16#8002;    // Buffer too small
+    bInitialized := FALSE;
+    FB_init := FALSE;
+    RETURN;
+END_IF
+
+// Clear the buffer
+MEMSET(destAddr := pBuffer, fillByte := 0, n := nBufferSize);
+
+// Reset FIFO pointers
+nHead := 0;
+nTail := 0;
+nCount := 0;
+
+// Mark as successfully initialized
+bInitialized := TRUE;
+bError := FALSE;
+nErrorID := 0;
+FB_init := TRUE;
+\end{lstlisting}
+
+\begin{lstlisting}
+// =====================================================
+// USAGE EXAMPLE: Instantiating FB_EventBuffer
+// =====================================================
+
+PROGRAM MAIN
+VAR
+    // =====================================================
+    // USER-ALLOCATED BUFFER MEMORY
+    // Size determines how many events can be stored
+    // Calculate: nMaxEvents = SIZEOF(aEventMemory) / SIZEOF(ST_Event)
+    // =====================================================
+    
+    // Buffer for approximately 100 events
+    // (Adjust size based on ST_Event structure size)
+    aEventMemory    : ARRAY[0..9999] OF BYTE;
+    
+    // =====================================================
+    // EVENT BUFFER INSTANCE WITH FB_init
+    // The constructor parameters are passed at declaration
+    // =====================================================
+    fbEventBuffer   : FB_EventBuffer(
+                        pBufferMemory := ADR(aEventMemory),
+                        nBufferMemorySize := SIZEOF(aEventMemory)
+                      );
+    
+    // Alternative: Smaller buffer for testing
+    aSmallBuffer    : ARRAY[0..999] OF BYTE;
+    fbSmallEventBuffer : FB_EventBuffer(
+                        pBufferMemory := ADR(aSmallBuffer),
+                        nBufferMemorySize := SIZEOF(aSmallBuffer)
+                      );
+    
+    // Test events
+    stNewEvent      : ST_Event;
+    stReadEvent     : ST_Event;
+    bAddSuccess     : BOOL;
+    bReadSuccess    : BOOL;
+    nEventCount     : UDINT;
+    
+END_VAR
+
+// Check if initialization was successful
+IF fbEventBuffer.bError THEN
+    // Handle initialization error
+    // nErrorID contains the error code
+END_IF
+
+// Add an event
+stNewEvent.nEventID := 1001;
+stNewEvent.sDescription := 'Test event';
+stNewEvent.tTimestamp := DT#2024-01-15-10:30:00;
+bAddSuccess := fbEventBuffer.AddEvent(stEvent := stNewEvent);
+
+// Get number of events
+nEventCount := fbEventBuffer.GetNumberOfEvents();
+
+// Read and remove oldest event
+bReadSuccess := fbEventBuffer.GetAndRemoveEvent(stEvent => stReadEvent);
+\end{lstlisting}
+
+\begin{tipbox}
+Using \texttt{FB\_init} with external buffer memory allows the same function block to be used with different buffer sizes across projects. The caller controls memory allocation, making the FB more flexible and testable.
+\end{tipbox}
+
+\subsection{Writing the Test}
+
+A test suite is created to verify that if three events are added, they can be read back in the same order (\textbf{First In First Out / FIFO}) and that the data (identity, text, timestamp) remains accurate.
+
+\subsubsection*{Writing a Unit Test}
+
+\begin{lstlisting}
+// =====================================================
+// FUNCTION BLOCK: FB_EventBufferTests
+// Test suite for FB_EventBuffer
+// Extends FB_TestSuite from TcUnit library
+// =====================================================
+
+FUNCTION_BLOCK FB_EventBufferTests EXTENDS FB_TestSuite
+VAR
+    // =====================================================
+    // TEST FIXTURES
+    // Shared resources used across multiple tests
+    // =====================================================
+    
+    // Buffer memory for testing
+    aTestBuffer     : ARRAY[0..4999] OF BYTE;
+    
+    // Event buffer instance under test
+    fbBuffer        : FB_EventBuffer(
+                        pBufferMemory := ADR(aTestBuffer),
+                        nBufferMemorySize := SIZEOF(aTestBuffer)
+                      );
+    
+    // Test events
+    stEvent1        : ST_Event;
+    stEvent2        : ST_Event;
+    stEvent3        : ST_Event;
+    stReadEvent     : ST_Event;
+    
+    // Test state management
+    nTestStep       : INT := 0;
+    bTestComplete   : BOOL := FALSE;
+    
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// =====================================================
+// METHOD: Test_AddEvent_ReturnsTrue
+// Verifies that AddEvent returns TRUE on success
+// =====================================================
+
+METHOD Test_AddEvent_ReturnsTrue
+VAR
+    bResult         : BOOL;
+    stTestEvent     : ST_Event;
+END_VAR
+
+// =====================================================
+// TEST() marks the beginning of a test case
+// The string parameter is the test name shown in results
+// =====================================================
+TEST('AddEvent should return TRUE when buffer has space');
+
+// Arrange: Prepare test event
+stTestEvent.nEventID := 100;
+stTestEvent.sDescription := 'Test event for add';
+stTestEvent.tTimestamp := DT#2024-01-15-12:00:00;
+
+// Act: Call the method under test
+bResult := fbBuffer.AddEvent(stEvent := stTestEvent);
+
+// Assert: Verify the expected outcome
+AssertTrue(
+    Condition := bResult,
+    Message := 'AddEvent should return TRUE when buffer is not full'
+);
+
+// =====================================================
+// TEST_FINISHED() marks the end of the test case
+// MUST be called to complete the test
+// =====================================================
+TEST_FINISHED();
+\end{lstlisting}
+
+\begin{lstlisting}
+// =====================================================
+// METHOD: Test_FIFO_Order
+// Verifies that events are returned in FIFO order
+// =====================================================
+
+METHOD Test_FIFO_Order
+VAR
+    bAdd1, bAdd2, bAdd3 : BOOL;
+    bRead1, bRead2, bRead3 : BOOL;
+    stRead1, stRead2, stRead3 : ST_Event;
+END_VAR
+
+TEST('Events should be retrieved in FIFO order');
+
+// Arrange: Create three distinct events
+stEvent1.nEventID := 1;
+stEvent1.sDescription := 'First event';
+stEvent1.tTimestamp := DT#2024-01-15-10:00:00;
+
+stEvent2.nEventID := 2;
+stEvent2.sDescription := 'Second event';
+stEvent2.tTimestamp := DT#2024-01-15-10:01:00;
+
+stEvent3.nEventID := 3;
+stEvent3.sDescription := 'Third event';
+stEvent3.tTimestamp := DT#2024-01-15-10:02:00;
+
+// Act: Add three events in order
+bAdd1 := fbBuffer.AddEvent(stEvent := stEvent1);
+bAdd2 := fbBuffer.AddEvent(stEvent := stEvent2);
+bAdd3 := fbBuffer.AddEvent(stEvent := stEvent3);
+
+// Act: Read events back
+bRead1 := fbBuffer.GetAndRemoveEvent(stEvent => stRead1);
+bRead2 := fbBuffer.GetAndRemoveEvent(stEvent => stRead2);
+bRead3 := fbBuffer.GetAndRemoveEvent(stEvent => stRead3);
+
+// Assert: All adds succeeded
+AssertTrue(bAdd1 AND bAdd2 AND bAdd3, 
+    'All AddEvent calls should succeed');
+
+// Assert: All reads succeeded
+AssertTrue(bRead1 AND bRead2 AND bRead3,
+    'All GetAndRemoveEvent calls should succeed');
+
+// Assert: Events returned in correct FIFO order
+AssertEquals_DINT(
+    Expected := 1,
+    Actual := stRead1.nEventID,
+    Message := 'First read should return event ID 1'
+);
+
+AssertEquals_DINT(
+    Expected := 2,
+    Actual := stRead2.nEventID,
+    Message := 'Second read should return event ID 2'
+);
+
+AssertEquals_DINT(
+    Expected := 3,
+    Actual := stRead3.nEventID,
+    Message := 'Third read should return event ID 3'
+);
+
+// Assert: Event data integrity
+AssertEquals_STRING(
+    Expected := 'First event',
+    Actual := stRead1.sDescription,
+    Message := 'First event description should match'
+);
+
+TEST_FINISHED();
+\end{lstlisting}
+
+\begin{lstlisting}
+// =====================================================
+// METHOD: Test_GetNumberOfEvents
+// Verifies the count of events in buffer
+// =====================================================
+
+METHOD Test_GetNumberOfEvents
+VAR
+    nCount      : UDINT;
+    stTestEvent : ST_Event;
+END_VAR
+
+TEST('GetNumberOfEvents should return correct count');
+
+// Arrange: Start with empty buffer (after reset)
+stTestEvent.nEventID := 999;
+stTestEvent.sDescription := 'Count test';
+
+// Assert: Initially empty
+nCount := fbBuffer.GetNumberOfEvents();
+AssertEquals_UDINT(
+    Expected := 0,
+    Actual := nCount,
+    Message := 'Empty buffer should have 0 events'
+);
+
+// Act: Add one event
+fbBuffer.AddEvent(stEvent := stTestEvent);
+
+// Assert: Count is 1
+nCount := fbBuffer.GetNumberOfEvents();
+AssertEquals_UDINT(
+    Expected := 1,
+    Actual := nCount,
+    Message := 'Buffer should have 1 event after adding'
+);
+
+// Act: Add another event
+fbBuffer.AddEvent(stEvent := stTestEvent);
+
+// Assert: Count is 2
+nCount := fbBuffer.GetNumberOfEvents();
+AssertEquals_UDINT(
+    Expected := 2,
+    Actual := nCount,
+    Message := 'Buffer should have 2 events after adding second'
+);
+
+TEST_FINISHED();
+\end{lstlisting}
+
+\begin{lstlisting}
+// =====================================================
+// METHOD: Test_BufferFull_ReturnsFalse
+// Verifies behavior when buffer is full
+// =====================================================
+
+METHOD Test_BufferFull_ReturnsFalse
+VAR
+    i           : INT;
+    bResult     : BOOL;
+    stTestEvent : ST_Event;
+    nMaxEvents  : UDINT;
+END_VAR
+
+TEST('AddEvent should return FALSE when buffer is full');
+
+// Arrange: Fill the buffer to capacity
+nMaxEvents := SIZEOF(aTestBuffer) / SIZEOF(ST_Event);
+stTestEvent.nEventID := 0;
+stTestEvent.sDescription := 'Fill event';
+
+FOR i := 1 TO UDINT_TO_INT(nMaxEvents) DO
+    stTestEvent.nEventID := i;
+    fbBuffer.AddEvent(stEvent := stTestEvent);
+END_FOR
+
+// Act: Try to add one more event
+stTestEvent.nEventID := 9999;
+bResult := fbBuffer.AddEvent(stEvent := stTestEvent);
+
+// Assert: Should return FALSE (buffer full)
+AssertFalse(
+    Condition := bResult,
+    Message := 'AddEvent should return FALSE when buffer is full'
+);
+
+TEST_FINISHED();
+\end{lstlisting}
+
+\begin{warningbox}
+Each test should be independent and not rely on the state left by previous tests. Use setup and teardown logic if needed, or create fresh instances of the unit under test for each test method.
+\end{warningbox}
+
+% ============================================================
+\section{Execution and Results}
+% ============================================================
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Environment:} Tests can be executed locally within the TwinCAT development environment.
+    \item \textbf{Reporting:} Results are displayed in the \textbf{Error List} of Visual Studio or TcXaeShell.
+    \item \textbf{Failure Analysis:} If an assertion fails, TcUnit provides the name of the test, the expected value, and the actual value to help locate the bug.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Result} & \textbf{Icon} & \textbf{Meaning} & \textbf{Action} \\
+\midrule
+PASS & \textcolor{green}{\faCheckCircle} & Test assertion succeeded & None required \\
+FAIL & \textcolor{red}{\faTimesCircle} & Test assertion failed & Fix code or test \\
+ERROR & \textcolor{orange}{\faExclamationCircle} & Test threw exception & Debug test setup \\
+\bottomrule
+\end{tabular}
+\caption{TcUnit Test Result Indicators}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Test Name} & \textbf{Result} & \textbf{Message} \\
+\hline
+AddEvent should return TRUE... & \textcolor{green}{PASS} & --- \\
+Events should be retrieved in FIFO... & \textcolor{green}{PASS} & --- \\
+GetNumberOfEvents should return... & \textcolor{red}{FAIL} & Expected: 2, Actual: 1 \\
+AddEvent should return FALSE... & \textcolor{green}{PASS} & --- \\
+\hline
+\end{tabular}
+\caption{Example TcUnit Error List Output}
+\end{figure}
+
+\begin{notebox}
+When a test fails, TcUnit displays: (1) the test name, (2) the expected value, (3) the actual value, and (4) your custom message. This information helps quickly identify the root cause of the failure.
+\end{notebox}
+
+% ============================================================
+\section{Integration with Continuous Integration (CI)}
+% ============================================================
+
+TDD is often a component of \textbf{Continuous Integration (CI)}, where tests are executed automatically every time a developer commits code to version control. This ensures that the ``shared mainline'' of code remains stable.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{CI Tool} & \textbf{TwinCAT Support} & \textbf{Notes} \\
+\midrule
+Jenkins & Via TcUnit scripts & Most common in industry \\
+Azure DevOps & Via build agents & Good for Microsoft shops \\
+GitLab CI & Via Docker/scripts & Open source option \\
+GitHub Actions & Via custom runners & Modern, cloud-based \\
+\bottomrule
+\end{tabular}
+\caption{CI Tools Compatible with TcUnit}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Developer} & $\rightarrow$ & \textbf{Git Push} & $\rightarrow$ & \textbf{CI Server} \\
+Writes code & & Commits changes & & Runs tests \\
+\hline
+\multicolumn{5}{c}{$\downarrow$} \\
+\hline
+\multicolumn{2}{|c|}{\textcolor{green}{Tests Pass}} & $\rightarrow$ & \multicolumn{2}{c|}{Deploy/Merge} \\
+\multicolumn{2}{|c|}{\textcolor{red}{Tests Fail}} & $\rightarrow$ & \multicolumn{2}{c|}{Notify Developer} \\
+\hline
+\end{tabular}
+\caption{Continuous Integration Workflow with TcUnit}
+\end{figure}
+
+\begin{tipbox}
+For CI integration, TcUnit can output results in xUnit XML format, which is compatible with most CI tools. Configure your CI pipeline to parse these results and fail the build if any tests fail.
+\end{tipbox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{TDD Cycle}
+
+\begin{enumerate}
+    \item \textcolor{red}{\textbf{RED}}: Write a failing test
+    \item \textcolor{green}{\textbf{GREEN}}: Write minimal code to pass
+    \item \textcolor{blue}{\textbf{REFACTOR}}: Improve code quality
+    \item Repeat
+\end{enumerate}
+
+\subsection*{TcUnit Test Structure}
+
+\begin{lstlisting}
+// Test Suite (extends FB_TestSuite)
+FUNCTION_BLOCK FB_MyTests EXTENDS FB_TestSuite
+
+// Test Method
+METHOD Test_MyFeature
+    TEST('Description of what is being tested');
+    
+    // Arrange - set up test conditions
+    // Act - call the code under test
+    // Assert - verify results
+    AssertTrue(bCondition, 'Error message');
+    
+    TEST_FINISHED();
+END_METHOD
+\end{lstlisting}
+
+\subsection*{Common Assertions}
+
+\begin{lstlisting}
+AssertTrue(bCondition, 'message');
+AssertFalse(bCondition, 'message');
+AssertEquals(nExpected, nActual, 'message');
+AssertEquals_STRING(sExpected, sActual, 'message');
+AssertEquals_INT(nExpected, nActual, 'message');
+AssertEquals_REAL(fExpected, fActual, fDelta, 'message');
+\end{lstlisting}
+
+\subsection*{Test Runner}
+
+\begin{lstlisting}
+PROGRAM PRG_TEST
+VAR
+    fbTests : FB_MyTestSuite;
+END_VAR
+
+fbTests();
+TcUnit.RUN();
+\end{lstlisting}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

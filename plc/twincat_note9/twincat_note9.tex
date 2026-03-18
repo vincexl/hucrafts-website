@@ -1,0 +1,908 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== IEC 61131-3 CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TON, TOF, TP, CTU, CTD, CTUD, R_TRIG, F_TRIG,
+                 FB_MemRingBuffer, PROFILER, PROFILERSTRUCT, NT_StartProcess,
+                 ST_Event, T_MaxString},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, ABS, SQRT, SIN, COS, TAN, LN, LOG, EXP,
+                 SEL, MUX, LIMIT, MAX, MIN, MOVE, ADSLOGSTR, A_AddTail, A_RemoveHead},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Tc2_Utilities Library},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Tc2\_Utilities Library
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+% ============================================================
+
+The \textbf{Tc2\_Utilities} library is a comprehensive ``toolbox'' for PLC developers, containing functionality that spans from operating system commands to specialized mathematical regulators. Unlike the standard library, this one is updated frequently with new tools to assist in daily software development.
+
+\begin{notebox}
+The Tc2\_Utilities library must be added as a reference to your PLC project. Right-click on ``References'' in your PLC project, select ``Add library...'', and search for ``Tc2\_Utilities''.
+\end{notebox}
+
+% ============================================================
+\section{Overview of Library Categories}
+% ============================================================
+
+The library is divided into several functional areas, including:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Operating System (OS):} Shutdowns, reboots, starting processes, and retrieving local system time.
+    \item \textbf{STRING Functions:} Character conversion (upper/lower case) and substring searches.
+    \item \textbf{System Functions:} Stopping/restarting TwinCAT, switching to Config Mode, and monitoring CPU usage.
+    \item \textbf{Conversion Functions:} Tools for converting between various data types.
+    \item \textbf{PLC Functions:} Handling persistent variables and measuring code execution.
+    \item \textbf{Other:} PID regulators, real-time clocks, and memory buffers.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Category} & \textbf{Key Function Blocks} & \textbf{Purpose} \\
+\midrule
+OS Functions & NT\_StartProcess, NT\_Shutdown & Windows integration \\
+System & TC\_Restart, TC\_Stop & TwinCAT control \\
+Memory & FB\_MemRingBuffer, FB\_MemBufferSplit & Data buffering \\
+Timing & PROFILER, NT\_GetTime & Performance analysis \\
+Conversion & LREAL\_TO\_STRING, STRING\_TO\_LREAL & Type conversion \\
+Regulators & FB\_CTRL\_PID & Process control \\
+\bottomrule
+\end{tabular}
+\caption{Tc2\_Utilities Library Categories}
+\end{table}
+
+% ============================================================
+\section{Memory Ring Buffer (FB\_MemRingBuffer)}
+% ============================================================
+
+This function block facilitates the storage of data records of varying lengths using the \textbf{FIFO (First In First Out)} principle.
+
+\subsection{Operating Logic}
+
+It uses read and write pointers. When data is added, the write pointer moves forward; when data is read, the read pointer follows. If the buffer reaches capacity and a new entry is added, the \textbf{oldest entry is automatically deleted} to make room.
+
+\subsection{Implementation Note}
+
+This block uses ``Actions'' (an older TwinCAT 2 convention) rather than modern Methods. For professional code, it is recommended to \textbf{wrap these actions} inside descriptive methods like \texttt{AddEvent()} or \texttt{GetAndRemove()} to improve readability.
+
+\subsection{Buffer Allocation}
+
+You must allocate a ``chunk of memory'' (an array of bytes) for the storage. Using the \texttt{SIZEOF} operator on your data structure allows you to calculate the exact buffer size needed for a specific number of entries.
+
+\subsubsection*{Example: Buffer Size Calculation}
+
+\begin{lstlisting}
+// Data Unit Type (DUT): ST_Event
+// Define a structure for the events we want to store in the buffer
+// This structure can contain any data relevant to your application
+
+TYPE ST_Event :
+STRUCT
+    // Timestamp when the event occurred
+    tTimestamp      : DATE_AND_TIME;    // 4 bytes
+    
+    // Event identification
+    nEventID        : UDINT;            // 4 bytes
+    nSeverity       : INT;              // 2 bytes (1=Info, 2=Warning, 3=Error)
+    
+    // Event description
+    sDescription    : STRING(80);       // 81 bytes (80 chars + null terminator)
+    
+    // Source information
+    sSourceModule   : STRING(30);       // 31 bytes
+    
+    // Associated values
+    fValue          : REAL;             // 4 bytes
+    bAcknowledged   : BOOL;             // 1 byte
+    
+END_STRUCT
+END_TYPE
+// Total size: approximately 127 bytes per event
+\end{lstlisting}
+
+\begin{lstlisting}
+// PROGRAM: EventBufferDemo
+// Demonstrates proper buffer size calculation using SIZEOF
+// The buffer will store a fixed maximum number of events
+
+PROGRAM EventBufferDemo
+VAR CONSTANT
+    // =====================================================
+    // BUFFER SIZE CALCULATION
+    // Use SIZEOF to get the exact size of your structure
+    // This ensures the buffer is correctly sized regardless
+    // of structure changes or compiler padding
+    // =====================================================
+    
+    // Maximum number of events to store in the buffer
+    MAX_EVENTS      : UDINT := 100;
+    
+    // Calculate the size of one event structure
+    // SIZEOF returns the size in bytes
+    EVENT_SIZE      : UDINT := SIZEOF(ST_Event);
+    
+    // Calculate total buffer size needed
+    // Add extra bytes for internal management overhead
+    // FB_MemRingBuffer needs ~8 bytes per entry for pointers
+    OVERHEAD_PER_ENTRY : UDINT := 8;
+    
+    // Total buffer size calculation
+    // (Structure size + overhead) * number of entries
+    BUFFER_SIZE     : UDINT := (SIZEOF(ST_Event) + OVERHEAD_PER_ENTRY) * MAX_EVENTS;
+    
+    // Alternative: Simple calculation for demonstration
+    // MAX_BUFFER_SIZE : UDINT := 20000;  // 20KB fixed buffer
+    
+END_VAR
+
+VAR
+    // =====================================================
+    // BUFFER ARRAY ALLOCATION
+    // The actual memory storage for the ring buffer
+    // Must be an ARRAY OF BYTE with calculated size
+    // =====================================================
+    
+    // Allocate buffer memory based on calculated size
+    // Note: Array bounds are 0 to (SIZE-1)
+    aBufferArray    : ARRAY[0..13499] OF BYTE;  // ~13.5KB for 100 events
+    
+    // For exact sizing, use a larger fixed array:
+    // aBufferArray : ARRAY[0..19999] OF BYTE;  // 20KB buffer
+    
+    // =====================================================
+    // RING BUFFER FUNCTION BLOCK INSTANCE
+    // =====================================================
+    fbEventBuffer   : FB_MemRingBuffer;
+    
+    // Event data for adding/reading
+    stNewEvent      : ST_Event;         // Event to add
+    stReadEvent     : ST_Event;         // Event read from buffer
+    
+    // Control and status
+    bAddEvent       : BOOL;             // Trigger to add event
+    bReadEvent      : BOOL;             // Trigger to read event
+    bBufferOk       : BOOL;             // Operation success flag
+    nEntriesInBuffer: UDINT;            // Current number of entries
+    
+    // Edge detection for triggers
+    rtAddTrigger    : R_TRIG;
+    rtReadTrigger   : R_TRIG;
+    
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Buffer initialization and usage
+
+// Initialize the ring buffer with our allocated memory
+// This only needs to be done once (e.g., on first scan)
+fbEventBuffer(
+    pBuffer := ADR(aBufferArray),           // Pointer to buffer memory
+    cbBuffer := SIZEOF(aBufferArray),       // Size of buffer in bytes
+    bOverwrite := TRUE                      // Allow overwriting old entries
+);
+
+// Get current buffer statistics
+nEntriesInBuffer := fbEventBuffer.nCount;
+
+// =====================================================
+// ADDING AN EVENT TO THE BUFFER
+// Uses the A_AddTail action (FIFO - add to end)
+// =====================================================
+rtAddTrigger(CLK := bAddEvent);
+IF rtAddTrigger.Q THEN
+    // Prepare event data
+    stNewEvent.tTimestamp := DT#2024-01-15-10:30:00;
+    stNewEvent.nEventID := 1001;
+    stNewEvent.nSeverity := 2;  // Warning
+    stNewEvent.sDescription := 'Temperature exceeded threshold';
+    stNewEvent.sSourceModule := 'TempController';
+    stNewEvent.fValue := 85.5;
+    stNewEvent.bAcknowledged := FALSE;
+    
+    // Add to buffer using A_AddTail action
+    fbEventBuffer.A_AddTail(
+        pWrite := ADR(stNewEvent),          // Pointer to data to add
+        cbWrite := SIZEOF(stNewEvent)       // Size of data
+    );
+    bBufferOk := fbEventBuffer.bOk;
+END_IF
+
+// =====================================================
+// READING AN EVENT FROM THE BUFFER
+// Uses A_RemoveHead action (FIFO - read from beginning)
+// =====================================================
+rtReadTrigger(CLK := bReadEvent);
+IF rtReadTrigger.Q THEN
+    fbEventBuffer.A_RemoveHead(
+        pRead := ADR(stReadEvent),          // Pointer to receive data
+        cbRead := SIZEOF(stReadEvent)       // Size of data to read
+    );
+    bBufferOk := fbEventBuffer.bOk;
+    
+    // If bOk is TRUE, stReadEvent now contains the oldest event
+    // If bOk is FALSE, the buffer was empty
+END_IF
+\end{lstlisting}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{8}{|c|}{\textbf{Ring Buffer Memory Layout}} \\
+\hline
+Entry 0 & Entry 1 & Entry 2 & $\cdots$ & Entry N-2 & Entry N-1 & \multicolumn{2}{c|}{} \\
+\hline
+\multicolumn{3}{|c|}{$\uparrow$ Read Pointer} & & \multicolumn{2}{c|}{$\uparrow$ Write Pointer} & \multicolumn{2}{c|}{} \\
+\hline
+\end{tabular}
+\caption{FB\_MemRingBuffer FIFO Operation}
+\end{figure}
+
+\begin{warningbox}
+When using FB\_MemRingBuffer with \texttt{bOverwrite := TRUE}, old data is silently discarded when the buffer is full. If you cannot afford to lose data, set \texttt{bOverwrite := FALSE} and monitor the \texttt{bOk} flag to detect when the buffer is full.
+\end{warningbox}
+
+% ============================================================
+\section{Measuring Execution Time (PROFILER)}
+% ============================================================
+
+The \texttt{PROFILER} function block is used to measure exactly how long a specific section of PLC code takes to execute in \textbf{microseconds}.
+
+\subsection{Mechanism}
+
+It is triggered by a \textbf{rising edge} on a \texttt{START} boolean to begin timing and a \textbf{falling edge} to stop.
+
+\subsection{Outputs}
+
+It provides a \texttt{PROFILERSTRUCT} containing the \textbf{minimum, maximum, and average} execution times based on the last 10 measurements.
+
+\subsection{Utility}
+
+This is essential for identifying CPU-intensive code and optimizing software performance.
+
+\subsubsection*{Example: Using the PROFILER}
+
+\begin{lstlisting}
+// PROGRAM: PerformanceMonitor
+// Demonstrates using PROFILER to measure code execution time
+// Essential for identifying bottlenecks and optimizing performance
+
+PROGRAM PerformanceMonitor
+VAR
+    // =====================================================
+    // PROFILER FUNCTION BLOCK INSTANCE
+    // Measures execution time in microseconds
+    // =====================================================
+    fbProfiler      : PROFILER;
+    
+    // Profiler results structure
+    // Contains: tMin, tMax, tAvg (all in microseconds)
+    stProfileResults: PROFILERSTRUCT;
+    
+    // Timing results for display/logging
+    tMinTime        : TIME;             // Minimum execution time
+    tMaxTime        : TIME;             // Maximum execution time  
+    tAvgTime        : TIME;             // Average execution time (last 10)
+    nMeasurementCount : UDINT := 0;     // Number of measurements taken
+    
+    // Variables for intensive calculation demo
+    nFactorialInput : INT := 12;        // Calculate factorial of this number
+    nFactorialResult: DINT;             // Factorial result
+    i               : INT;              // Loop counter
+    
+    // Array sorting demo (CPU-intensive)
+    aSortArray      : ARRAY[0..999] OF INT;
+    nTemp           : INT;
+    j               : INT;
+    bArraySorted    : BOOL := FALSE;
+    
+    // Control
+    bRunMeasurement : BOOL := TRUE;     // Enable profiling
+    bFirstScan      : BOOL := TRUE;     // First scan flag
+    
+END_VAR
+
+// Initialize array with random-like values on first scan
+IF bFirstScan THEN
+    FOR i := 0 TO 999 DO
+        aSortArray[i] := 1000 - i;      // Reverse sorted (worst case)
+    END_FOR
+    bFirstScan := FALSE;
+END_IF
+
+// =====================================================
+// PROFILER USAGE - START TIMING
+// Call with START := TRUE to begin measurement
+// This captures the start timestamp
+// =====================================================
+fbProfiler(START := TRUE);
+
+// =====================================================
+// INTENSIVE CODE SECTION TO MEASURE
+// Place the code you want to profile between
+// the START := TRUE and START := FALSE calls
+// =====================================================
+
+// Example 1: Factorial calculation
+nFactorialResult := 1;
+FOR i := 1 TO nFactorialInput DO
+    nFactorialResult := nFactorialResult * i;
+END_FOR
+// Result: 12! = 479001600
+
+// Example 2: Simple bubble sort (intentionally slow for demo)
+// This is CPU-intensive and good for profiling
+IF bRunMeasurement AND NOT bArraySorted THEN
+    FOR i := 0 TO 998 DO
+        FOR j := 0 TO 998 - i DO
+            IF aSortArray[j] > aSortArray[j + 1] THEN
+                // Swap elements
+                nTemp := aSortArray[j];
+                aSortArray[j] := aSortArray[j + 1];
+                aSortArray[j + 1] := nTemp;
+            END_IF
+        END_FOR
+    END_FOR
+    bArraySorted := TRUE;
+END_IF
+
+// Example 3: Mathematical operations
+FOR i := 1 TO 100 DO
+    // Trigonometric calculations (CPU-intensive)
+    // fResult := SIN(INT_TO_REAL(i) * 0.01) * COS(INT_TO_REAL(i) * 0.02);
+END_FOR
+
+// =====================================================
+// PROFILER USAGE - STOP TIMING
+// Call with START := FALSE to end measurement
+// This calculates the elapsed time
+// =====================================================
+fbProfiler(START := FALSE);
+
+// =====================================================
+// RETRIEVE PROFILER RESULTS
+// The PROFILERSTRUCT contains statistics from
+// the last 10 measurements
+// =====================================================
+stProfileResults := fbProfiler.RESULT;
+
+// Extract individual timing values
+tMinTime := stProfileResults.tMin;      // Fastest execution
+tMaxTime := stProfileResults.tMax;      // Slowest execution
+tAvgTime := stProfileResults.tAvg;      // Average of last 10
+
+// Increment measurement counter
+nMeasurementCount := nMeasurementCount + 1;
+\end{lstlisting}
+
+\begin{lstlisting}
+// Extended example: Profiling multiple code sections
+
+VAR
+    fbProfiler1     : PROFILER;         // Profile section 1
+    fbProfiler2     : PROFILER;         // Profile section 2
+    fbProfiler3     : PROFILER;         // Profile section 3
+    
+    stResults1      : PROFILERSTRUCT;
+    stResults2      : PROFILERSTRUCT;
+    stResults3      : PROFILERSTRUCT;
+END_VAR
+
+// Profile Section 1: Data processing
+fbProfiler1(START := TRUE);
+    // ... data processing code ...
+fbProfiler1(START := FALSE);
+stResults1 := fbProfiler1.RESULT;
+
+// Profile Section 2: Communication handling
+fbProfiler2(START := TRUE);
+    // ... communication code ...
+fbProfiler2(START := FALSE);
+stResults2 := fbProfiler2.RESULT;
+
+// Profile Section 3: Motion calculations
+fbProfiler3(START := TRUE);
+    // ... motion calculations ...
+fbProfiler3(START := FALSE);
+stResults3 := fbProfiler3.RESULT;
+
+// Now you can compare which section takes the most time
+// and focus optimization efforts accordingly
+\end{lstlisting}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Output} & \textbf{Type} & \textbf{Description} \\
+\midrule
+RESULT.tMin & TIME & Minimum execution time (last 10) \\
+RESULT.tMax & TIME & Maximum execution time (last 10) \\
+RESULT.tAvg & TIME & Average execution time (last 10) \\
+\bottomrule
+\end{tabular}
+\caption{PROFILER Output Structure}
+\end{table}
+
+\begin{tipbox}
+Use the PROFILER during development to identify performance bottlenecks. Pay special attention to tMax---a high maximum time relative to average may indicate occasional slow paths in your code that could cause cycle overruns under certain conditions.
+\end{tipbox}
+
+% ============================================================
+\section{Starting Windows Applications (NT\_StartProcess)}
+% ============================================================
+
+This block allows the PLC to trigger applications within the Windows operating system.
+
+\subsection{Key Inputs}
+
+It requires the \texttt{PATHSTR} (complete application path) and \texttt{COMNDLINE} (optional parameters). It can also target a remote PLC via its \texttt{NETID}.
+
+\subsection{The ``Response'' Limitation}
+
+A major limitation of \texttt{NT\_StartProcess} is that it \textbf{cannot receive a response back} from the launched process.
+
+\subsection{Two-Stage Workaround}
+
+To get data back (e.g., checking if a network ``ping'' was successful), developers often use a \textbf{PowerShell script}. The PLC starts the script via \texttt{NT\_StartProcess}, and the script then writes the results back to a PLC variable using \textbf{ADS}.
+
+\subsubsection*{Example: Starting Windows Processes}
+
+\begin{lstlisting}
+// PROGRAM: WindowsIntegration
+// Demonstrates NT_StartProcess to launch Windows applications
+// Useful for system integration, reporting, and external tools
+
+PROGRAM WindowsIntegration
+VAR
+    // =====================================================
+    // NT_StartProcess FUNCTION BLOCK INSTANCE
+    // Launches Windows applications from the PLC
+    // =====================================================
+    fbStartNotepad  : NT_StartProcess;
+    fbStartCalc     : NT_StartProcess;
+    fbStartScript   : NT_StartProcess;
+    
+    // Control inputs
+    bOpenNotepad    : BOOL;             // Trigger to open Notepad
+    bOpenCalculator : BOOL;             // Trigger to open Calculator
+    bRunScript      : BOOL;             // Trigger to run PowerShell script
+    
+    // Edge detection (must use rising edge trigger)
+    rtNotepadTrigger: R_TRIG;
+    rtCalcTrigger   : R_TRIG;
+    rtScriptTrigger : R_TRIG;
+    
+    // Status outputs
+    bNotepadBusy    : BOOL;
+    bNotepadError   : BOOL;
+    nNotepadErrID   : UDINT;
+    
+    // Path configuration
+    // Note: Use double backslashes or forward slashes in paths
+    sNotepadPath    : T_MaxString := 'C:\Windows\System32\notepad.exe';
+    sFilePath       : T_MaxString := 'C:\Data\Logs\production_log.txt';
+    sCalcPath       : T_MaxString := 'C:\Windows\System32\calc.exe';
+    sScriptPath     : T_MaxString := 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe';
+    sScriptArgs     : T_MaxString := '-ExecutionPolicy Bypass -File "C:\Scripts\CheckNetwork.ps1"';
+    
+    // State machine for async operation
+    nState          : INT := 0;
+    
+END_VAR
+
+// =====================================================
+// EXAMPLE 1: Open Notepad with a specific file
+// =====================================================
+rtNotepadTrigger(CLK := bOpenNotepad);
+
+CASE nState OF
+    0:  // Idle - waiting for trigger
+        IF rtNotepadTrigger.Q THEN
+            nState := 1;
+        END_IF
+        
+    1:  // Start the process
+        fbStartNotepad(
+            NETID       := '',                  // Local machine (empty = local)
+            PATHSTR     := sNotepadPath,        // Application path
+            DIRNAME     := 'C:\Data\Logs',      // Working directory
+            COMNDLINE   := sFilePath,           // Command line: file to open
+            START       := TRUE                 // Execute on rising edge
+        );
+        nState := 2;
+        
+    2:  // Wait for completion
+        fbStartNotepad(START := FALSE);         // Reset START
+        
+        IF NOT fbStartNotepad.BUSY THEN
+            bNotepadBusy := FALSE;
+            bNotepadError := fbStartNotepad.ERR;
+            nNotepadErrID := fbStartNotepad.ERRID;
+            
+            IF fbStartNotepad.ERR THEN
+                // Handle error - log it, set alarm, etc.
+                // Common errors:
+                // - File not found
+                // - Access denied
+                // - Invalid path
+            END_IF
+            
+            nState := 0;                        // Return to idle
+        ELSE
+            bNotepadBusy := TRUE;
+        END_IF
+        
+END_CASE
+
+// =====================================================
+// EXAMPLE 2: Open Calculator (simple, no parameters)
+// =====================================================
+rtCalcTrigger(CLK := bOpenCalculator);
+
+fbStartCalc(
+    NETID       := '',
+    PATHSTR     := sCalcPath,
+    DIRNAME     := '',
+    COMNDLINE   := '',                          // No command line arguments
+    START       := rtCalcTrigger.Q              // Trigger on rising edge
+);
+
+// =====================================================
+// EXAMPLE 3: Run PowerShell script
+// Useful for tasks that need to return data via ADS
+// =====================================================
+rtScriptTrigger(CLK := bRunScript);
+
+fbStartScript(
+    NETID       := '',
+    PATHSTR     := sScriptPath,                 // PowerShell executable
+    DIRNAME     := 'C:\Scripts',                // Script directory
+    COMNDLINE   := sScriptArgs,                 // Script path and arguments
+    START       := rtScriptTrigger.Q
+);
+\end{lstlisting}
+
+\begin{lstlisting}
+// Additional examples: Various Windows integrations
+
+VAR
+    fbStartExplorer : NT_StartProcess;
+    fbStartBrowser  : NT_StartProcess;
+    fbStartBackup   : NT_StartProcess;
+    
+    sExplorerPath   : T_MaxString := 'C:\Windows\explorer.exe';
+    sFolderToOpen   : T_MaxString := 'C:\ProductionData\Reports';
+    
+    sBrowserPath    : T_MaxString := 'C:\Program Files\Mozilla Firefox\firefox.exe';
+    sWebPage        : T_MaxString := 'http://192.168.1.100/status';
+    
+    sRobocopyPath   : T_MaxString := 'C:\Windows\System32\robocopy.exe';
+    sBackupArgs     : T_MaxString := 'C:\Data D:\Backup\Data /MIR /LOG:C:\Logs\backup.log';
+END_VAR
+
+// Open Windows Explorer to a specific folder
+fbStartExplorer(
+    PATHSTR     := sExplorerPath,
+    COMNDLINE   := sFolderToOpen,
+    START       := bOpenFolder
+);
+
+// Open web browser to machine status page
+fbStartBrowser(
+    PATHSTR     := sBrowserPath,
+    COMNDLINE   := sWebPage,
+    START       := bOpenStatus
+);
+
+// Run backup using robocopy (file synchronization)
+fbStartBackup(
+    PATHSTR     := sRobocopyPath,
+    COMNDLINE   := sBackupArgs,
+    START       := bRunBackup
+);
+\end{lstlisting}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Input} & \textbf{Type} & \textbf{Description} \\
+\midrule
+NETID & T\_AmsNetId & Target system (empty = local) \\
+PATHSTR & T\_MaxString & Full path to executable \\
+DIRNAME & T\_MaxString & Working directory \\
+COMNDLINE & T\_MaxString & Command line arguments \\
+START & BOOL & Rising edge triggers execution \\
+\bottomrule
+\end{tabular}
+\caption{NT\_StartProcess Input Parameters}
+\end{table}
+
+\begin{warningbox}
+NT\_StartProcess runs applications in the Windows user space, which is not real-time. There is no guarantee when the application will start or how long it will take. Never use this for time-critical operations. Also, the PLC cannot receive any response from the launched application directly.
+\end{warningbox}
+
+\begin{notebox}
+To get responses from external processes, create a PowerShell or batch script that performs the operation and writes results back to the PLC using ADS (e.g., using the TwinCAT ADS .NET library or command-line tools).
+\end{notebox}
+
+% ============================================================
+\section{Summary and Best Practices}
+% ============================================================
+
+\subsection{Self-Descriptive Naming}
+
+When wrapping library functions, use names that reflect the actual action (e.g., \texttt{ReadAndRemove} instead of \texttt{RemoveHead}).
+
+\subsection{Error Handling}
+
+Always check the \texttt{bOk} or \texttt{bError} outputs of these blocks, especially when working with buffers that might be full or empty.
+
+\subsection{Exploration}
+
+Because the utilities library is so vast, it is highly encouraged to browse the official documentation to find specialized tools for specific problems.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Best Practice} & \textbf{Rationale} \\
+\midrule
+Use SIZEOF for buffer calculations & Adapts to structure changes automatically \\
+Check bOk/bError after operations & Prevents silent failures \\
+Use R\_TRIG for START signals & Ensures single execution per trigger \\
+Wrap actions in descriptive methods & Improves code readability \\
+Profile critical code sections & Identifies optimization opportunities \\
+\bottomrule
+\end{tabular}
+\caption{Tc2\_Utilities Best Practices}
+\end{table}
+
+\begin{tipbox}
+The Tc2\_Utilities library is extensively documented in the Beckhoff Information System. When facing a specific challenge, search the documentation---there's often a pre-built function block that solves your problem more elegantly than a custom solution.
+\end{tipbox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{FB\_MemRingBuffer}
+
+\begin{lstlisting}
+// Declaration
+fbBuffer : FB_MemRingBuffer;
+aMemory : ARRAY[0..9999] OF BYTE;
+
+// Initialize
+fbBuffer(pBuffer := ADR(aMemory), cbBuffer := SIZEOF(aMemory));
+
+// Add data (FIFO)
+fbBuffer.A_AddTail(pWrite := ADR(stData), cbWrite := SIZEOF(stData));
+
+// Read and remove data (FIFO)
+fbBuffer.A_RemoveHead(pRead := ADR(stData), cbRead := SIZEOF(stData));
+\end{lstlisting}
+
+\subsection*{PROFILER}
+
+\begin{lstlisting}
+// Declaration
+fbProfiler : PROFILER;
+stResults : PROFILERSTRUCT;
+
+// Usage
+fbProfiler(START := TRUE);
+    // Code to measure
+fbProfiler(START := FALSE);
+stResults := fbProfiler.RESULT;
+// stResults.tMin, .tMax, .tAvg contain timing data
+\end{lstlisting}
+
+\subsection*{NT\_StartProcess}
+
+\begin{lstlisting}
+// Declaration
+fbStart : NT_StartProcess;
+
+// Usage (trigger on rising edge)
+fbStart(
+    PATHSTR := 'C:\Windows\notepad.exe',
+    COMNDLINE := 'C:\file.txt',
+    START := bTrigger
+);
+\end{lstlisting}
+
+\subsection*{Common Error Codes}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Error ID} & \textbf{Hex} & \textbf{Description} \\
+\midrule
+0 & 0x0000 & No error \\
+1 & 0x0001 & Internal error \\
+2 & 0x0002 & Invalid parameter \\
+6 & 0x0006 & Target port not found \\
+1793 & 0x0701 & Buffer full \\
+1794 & 0x0702 & Buffer empty \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

@@ -1,0 +1,604 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+
+% ===== CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, __ISVALIDREF},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Data Types, Pointers, and Arrays},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Data Types, Pointers, and Arrays
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to Variables and Static Typing}
+% ============================================================
+
+\subsection{Variables as Containers}
+
+Variables label and store data in memory so programs are human-readable and data can be manipulated.
+
+\subsection{Static vs. Dynamic Typing}
+
+Unlike JavaScript or Python (dynamic), \textbf{IEC 61131-3 is statically typed}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Aspect} & \textbf{Static Typing (IEC 61131-3)} & \textbf{Dynamic Typing (JS/Python)} \\
+\midrule
+Type Checking & Compile time & Runtime \\
+Type Declaration & Required before use & Not required \\
+Type Changes & Not allowed during execution & Allowed \\
+\bottomrule
+\end{tabular}
+\caption{Static vs. Dynamic Typing Comparison}
+\end{table}
+
+\subsection{Declaration Block}
+
+In TwinCAT 3, variables are declared between the keywords \texttt{VAR} and \texttt{END\_VAR}.
+
+\subsubsection*{Example: Basic Declaration}
+
+\begin{lstlisting}
+VAR
+    fCabinetTemperature : REAL;  // Declares a 4-byte floating point variable
+END_VAR
+\end{lstlisting}
+
+% ============================================================
+\section{Standard Data Types}
+% ============================================================
+
+\subsection{Integer and Bit-Oriented Types}
+
+\subsubsection{Integer Sizes}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llllll@{}}
+\toprule
+\textbf{Type} & \textbf{Size} & \textbf{Signed Range} & \textbf{Unsigned Type} & \textbf{Unsigned Range} \\
+\midrule
+SINT/USINT & 1 byte & -128 to 127 & USINT & 0 to 255 \\
+INT/UINT & 2 bytes & -32,768 to 32,767 & UINT & 0 to 65,535 \\
+DINT/UDINT & 4 bytes & $-2^{31}$ to $2^{31}-1$ & UDINT & 0 to $2^{32}-1$ \\
+LINT/ULINT & 8 bytes & $-2^{63}$ to $2^{63}-1$ & ULINT & 0 to $2^{64}-1$ \\
+\bottomrule
+\end{tabular}
+\caption{Integer Data Types}
+\end{table}
+
+\subsubsection{Base Notation}
+
+You can define integers using different bases:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Base} & \textbf{Prefix} & \textbf{Example} \\
+\midrule
+Binary & \texttt{2\#} & \texttt{2\#1011} \\
+Octal & \texttt{8\#} & \texttt{8\#17} \\
+Hexadecimal & \texttt{16\#} & \texttt{16\#FF} \\
+\bottomrule
+\end{tabular}
+\caption{Base Notation Prefixes}
+\end{table}
+
+\subsubsection{Bit Accessing}
+
+Access individual bits using dot notation: \texttt{nVariable.0} (first bit)
+
+\subsubsection*{Example: Integer Bases and Bit Access}
+
+\begin{lstlisting}
+VAR
+    byBinaryValue  : BYTE := 2#11001010;   // Binary notation (decimal 202)
+    wHexValue      : WORD := 16#FF0A;      // Hexadecimal notation (decimal 65290)
+    nStatusFlags   : BYTE;
+    bBitThree      : BOOL;
+END_VAR
+
+// Accessing the 4th bit (index 3) of nStatusFlags
+bBitThree := nStatusFlags.3;
+\end{lstlisting}
+
+\subsection{Floating Point and Strings}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Type} & \textbf{Size} & \textbf{Equivalent} & \textbf{Description} \\
+\midrule
+\texttt{REAL} & 4 bytes & Float & Single precision \\
+\texttt{LREAL} & 8 bytes & Double & Double precision \\
+\texttt{STRING} & 81 bytes (default) & --- & ASCII-coded, 80 chars + null terminator \\
+\texttt{WSTRING} & Variable & --- & UNICODE/UTF-16, 2--4 bytes per character \\
+\bottomrule
+\end{tabular}
+\caption{Floating Point and String Types}
+\end{table}
+
+\subsection{Time and Date}
+
+TwinCAT provides specific types to handle time in human-readable formats:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Type} & \textbf{Resolution} & \textbf{Prefix} & \textbf{Example} \\
+\midrule
+\texttt{TIME} & 1ms & \texttt{T\#} & \texttt{T\#2s}, \texttt{T\#100ms} \\
+\texttt{LTIME} & 1ns & \texttt{LTIME\#} & \texttt{LTIME\#500us} \\
+\texttt{DATE} & 1 day & \texttt{D\#} & \texttt{D\#2024-01-15} \\
+\texttt{TIME\_OF\_DAY} & 1ms & \texttt{TOD\#} & \texttt{TOD\#14:30:00} \\
+\texttt{DATE\_AND\_TIME} & 1ms & \texttt{DT\#} & \texttt{DT\#2024-01-15-14:30:00} \\
+\bottomrule
+\end{tabular}
+\caption{Time and Date Types}
+\end{table}
+
+% ============================================================
+\section{User-Defined Types: Enumerations (ENUMs)}
+% ============================================================
+
+\subsection{Definition}
+
+A set of named integral constants used to make code self-explanatory.
+
+\subsection{Key Points}
+
+\begin{itemize}
+    \item \textbf{Scope:} ENUMs are \textbf{globally accessible} in TwinCAT
+    \item \textbf{Risk:} Can lead to ``namespace pollution'' if multiple libraries use the same ENUM names
+    \item \textbf{Creation:} Created as a \textbf{DUT (Data Unit Type)} in the project tree
+\end{itemize}
+
+\subsubsection*{Example: DUT Definition}
+
+\begin{lstlisting}
+// DUT Definition (created as a separate DUT file in the project tree)
+{attribute 'qualified_only'}
+TYPE E_TrafficLight :
+(
+    Red    := 0,
+    Yellow := 1,
+    Green  := 2
+);
+END_TYPE
+\end{lstlisting}
+
+\subsubsection*{Example: Usage in Program}
+
+\begin{lstlisting}
+// Usage in a Program or Function Block
+VAR
+    eCurrentLight : E_TrafficLight;
+END_VAR
+
+// Assigning using the dot identifier (required with 'qualified_only' attribute)
+eCurrentLight := E_TrafficLight.Green;
+\end{lstlisting}
+
+\begin{tipbox}
+Use the \texttt{\{attribute 'qualified\_only'\}} pragma to require the full enum name (e.g., \texttt{E\_TrafficLight.Green}) and avoid namespace conflicts.
+\end{tipbox}
+
+% ============================================================
+\section{Memory Operations and SIZEOF}
+% ============================================================
+
+\subsection{Memory Allocation}
+
+\begin{itemize}
+    \item Memory is generally allocated \textbf{upfront} at compile time
+    \item Dynamic allocation is typically \textbf{discouraged} in PLC programming
+\end{itemize}
+
+\subsection{SIZEOF Operator}
+
+Used to determine the memory size (in bytes) of a variable or type.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Target} & \textbf{Returns} \\
+\midrule
+\texttt{STRING} (default) & 81 bytes \\
+Reference & Size of the \textbf{referenced object} \\
+Pointer & Size of the \textbf{pointer itself} (e.g., 8 bytes on 64-bit) \\
+\bottomrule
+\end{tabular}
+\caption{SIZEOF Operator Behavior}
+\end{table}
+
+% ============================================================
+\section{Pointers vs. References}
+% ============================================================
+
+\subsection{Pointers}
+
+Pointers represent a memory address.
+
+\subsubsection{Operators}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Operator} & \textbf{Purpose} & \textbf{Example} \\
+\midrule
+\texttt{ADR()} & Get address of variable & \texttt{pVar := ADR(nValue)} \\
+\texttt{\^{}} & Dereference (access value) & \texttt{pVar\^{} := 100} \\
+\bottomrule
+\end{tabular}
+\caption{Pointer Operators}
+\end{table}
+
+\subsubsection{Risks}
+
+\begin{warningbox}
+Pointers are \textbf{not type-safe}. You can accidentally point a STRING pointer at an INT variable, resulting in ``garbage'' data.
+\end{warningbox}
+
+\subsubsection*{Example: Pointer Usage}
+
+\begin{lstlisting}
+VAR
+    nMyValue    : INT := 100;
+    pnMyPointer : POINTER TO INT;
+END_VAR
+
+// Assign the address of nMyValue to the pointer
+pnMyPointer := ADR(nMyValue);
+
+// Dereference the pointer to update the value
+pnMyPointer^ := 250;  // nMyValue is now 250
+\end{lstlisting}
+
+\subsection{References}
+
+References act as an \textbf{alias} for an object.
+
+\subsubsection{Operators}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Operator} & \textbf{Purpose} \\
+\midrule
+\texttt{REFERENCE TO} & Declare a reference \\
+\texttt{REF=} & Assign a reference \\
+\bottomrule
+\end{tabular}
+\caption{Reference Operators}
+\end{table}
+
+\subsubsection{Advantages}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Feature} & \textbf{Benefit} \\
+\midrule
+\textbf{Type Safety} & Compiler prevents assigning to wrong data type \\
+\textbf{Syntax} & No special dereferencing (\texttt{\^{}}) needed \\
+\bottomrule
+\end{tabular}
+\caption{Reference Advantages}
+\end{table}
+
+\subsubsection{Safety Check}
+
+Use \texttt{\_\_ISVALIDREF()} to check if a reference points to a valid memory location before use.
+
+\begin{lstlisting}
+IF __ISVALIDREF(refMyVariable) THEN
+    // Safe to use the reference
+END_IF
+\end{lstlisting}
+
+% ============================================================
+\section{Arrays}
+% ============================================================
+
+\subsection{Definition}
+
+A series of elements of the \textbf{same type} in \textbf{contiguous memory}.
+
+\subsection{Key Features}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Feature} & \textbf{Description} \\
+\midrule
+\textbf{Flexible Indices} & Can start/end at any integer (e.g., \texttt{ARRAY [1..5]}, \texttt{ARRAY [-1..1]}) \\
+\textbf{Multi-Dimensional} & Support for 2D, 3D, etc. arrays \\
+\bottomrule
+\end{tabular}
+\caption{Array Features}
+\end{table}
+
+\subsubsection*{Example: Array Declaration and Access}
+
+\begin{lstlisting}
+VAR
+    // 1D Array: 5 integers with indices 0 through 4
+    anValues : ARRAY [0..4] OF INT := [10, 20, 30, 40, 50];
+    
+    // 2D Array - Alternative #1: Explicit row and column indices
+    anMatrix1 : ARRAY [0..2, 0..3] OF INT;  // 3 rows, 4 columns
+    
+    // 2D Array - Alternative #2: Array of arrays
+    anMatrix2 : ARRAY [0..2] OF ARRAY [0..3] OF INT;  // 3 rows, 4 columns
+END_VAR
+
+// Accessing elements
+anValues[2] := 35;           // Set the 3rd element to 35
+anMatrix1[1, 2] := 99;       // Set row 1, column 2 to 99
+anMatrix2[1][2] := 99;       // Equivalent access for array of arrays
+\end{lstlisting}
+
+\subsection{2D Array Declaration Comparison}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Style} & \textbf{Syntax} & \textbf{Access Pattern} \\
+\midrule
+Alternative \#1 & \texttt{ARRAY [0..2, 0..3] OF INT} & \texttt{arr[row, col]} \\
+Alternative \#2 & \texttt{ARRAY [0..2] OF ARRAY [0..3] OF INT} & \texttt{arr[row][col]} \\
+\bottomrule
+\end{tabular}
+\caption{2D Array Declaration Styles}
+\end{table}
+
+% ============================================================
+\section{Type Conversion}
+% ============================================================
+
+\subsection{Implicit vs. Explicit Conversion}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Direction} & \textbf{Type} & \textbf{Example} & \textbf{Operator Required} \\
+\midrule
+Smaller $\rightarrow$ Larger & Implicit & USINT $\rightarrow$ UINT & No \\
+Larger $\rightarrow$ Smaller & Explicit & UINT $\rightarrow$ USINT & Yes (\texttt{UINT\_TO\_USINT}) \\
+\bottomrule
+\end{tabular}
+\caption{Type Conversion Rules}
+\end{table}
+
+\subsection{Data Loss Warning}
+
+\begin{warningbox}
+Converting a large value to a smaller type truncates the high bytes.
+\end{warningbox}
+
+\textbf{Example:}
+
+\begin{verbatim}
+Decimal 259 = Binary 00000001 00000011 (2 bytes)
+                            |
+                            v
+Truncated to USINT = Binary 00000011 = Decimal 3
+\end{verbatim}
+
+\subsection{Common Conversion Operators}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{From} & \textbf{To} & \textbf{Operator} \\
+\midrule
+INT & REAL & \texttt{INT\_TO\_REAL()} \\
+REAL & INT & \texttt{REAL\_TO\_INT()} \\
+UINT & USINT & \texttt{UINT\_TO\_USINT()} \\
+STRING & INT & \texttt{STRING\_TO\_INT()} \\
+\bottomrule
+\end{tabular}
+\caption{Common Type Conversion Operators}
+\end{table}
+
+% ============================================================
+\newpage
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Declaration Syntax}
+
+\begin{lstlisting}
+VAR
+    <name> : <TYPE>;                           // Basic
+    <name> : <TYPE> := <initial_value>;        // With initialization
+    <name> : ARRAY [<start>..<end>] OF <TYPE>; // Array
+    <name> : POINTER TO <TYPE>;                // Pointer
+    <name> : REFERENCE TO <TYPE>;              // Reference
+END_VAR
+\end{lstlisting}
+
+\subsection*{Common Prefixes (Hungarian Notation)}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Prefix} & \textbf{Type} & \textbf{Example} \\
+\midrule
+\texttt{b} & BOOL & \texttt{bIsRunning} \\
+\texttt{n} & INT/UINT/etc. & \texttt{nCounter} \\
+\texttt{f} & REAL/LREAL & \texttt{fTemperature} \\
+\texttt{s} & STRING & \texttt{sMessage} \\
+\texttt{a} & ARRAY & \texttt{anValues} \\
+\texttt{p} & POINTER & \texttt{pnData} \\
+\texttt{ref} & REFERENCE & \texttt{refMotor} \\
+\texttt{e} & ENUM & \texttt{eState} \\
+\bottomrule
+\end{tabular}
+\caption{Hungarian Notation Prefixes}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

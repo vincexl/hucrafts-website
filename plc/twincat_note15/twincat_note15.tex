@@ -1,0 +1,781 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== C# CODE LISTING STYLE =====
+\lstdefinelanguage{CSharp}{
+    keywords={abstract,as,base,bool,break,byte,case,catch,char,checked,class,const,continue,decimal,default,delegate,do,double,else,enum,event,explicit,extern,false,finally,fixed,float,for,foreach,goto,if,implicit,in,int,interface,internal,is,lock,long,namespace,new,null,object,operator,out,override,params,private,protected,public,readonly,ref,return,sbyte,sealed,short,sizeof,stackalloc,static,string,struct,switch,this,throw,true,try,typeof,uint,ulong,unchecked,unsafe,ushort,using,var,virtual,void,volatile,while,async,await},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{Console,AdsClient,AmsNetId,AmsPort,ReadValue,WriteValue,Connect,Disconnect,Exception,Task,CancellationToken},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]",
+    morestring=[b]',
+}
+
+\lstdefinestyle{csharpstyle}{
+    language=CSharp,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+% ===== C++ CODE LISTING STYLE =====
+\lstdefinelanguage{CPP}{
+    keywords={auto,break,case,char,const,continue,default,do,double,else,enum,extern,float,for,goto,if,int,long,register,return,short,signed,sizeof,static,struct,switch,typedef,union,unsigned,void,volatile,while,class,private,protected,public,virtual,new,delete,this,try,catch,throw,using,namespace,template,typename,bool,true,false,nullptr,constexpr,override,final,noexcept,inline,explicit,mutable,friend},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{AdsDevice,AdsVariable,AmsNetId,std,string,cout,endl,uint32_t,int32_t,uint16_t},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]",
+    morestring=[b]',
+}
+
+\lstdefinestyle{cppstyle}{
+    language=CPP,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - ADS Communication},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large ADS (Automation Device Specification)
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to ADS}
+% ============================================================
+
+\textbf{Automation Device Specification (ADS)} is Beckhoff's standardized interface for communication between various software modules within the TwinCAT environment. It utilizes a \textbf{client-server architecture}, where a connection is always initiated by a client to a server.
+
+\subsection{Internal Uses}
+
+ADS facilitates communication between the development environment (XAE) and the runtime (XAR) for reading/writing variables, and it is used internally by the TwinCAT scheduler to coordinate different modules.
+
+\subsection{External Uses}
+
+It allows external devices, such as a Raspberry Pi, Linux machines, or other TwinCAT runtimes, to exchange data with a target PLC.
+
+\subsection{Protocol Details}
+
+ADS can be \textbf{cyclic} (polling) or \textbf{event-based} (subscriptions). It typically uses \textbf{TCP ports 8016 and 48898} for communication and \textbf{UDP port 48899} for broadcasting device searches.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Port} & \textbf{Protocol} & \textbf{Purpose} \\
+\midrule
+48898 & TCP & ADS communication \\
+8016 & TCP & Secure ADS (TLS) \\
+48899 & UDP & Device discovery broadcast \\
+\bottomrule
+\end{tabular}
+\caption{ADS Network Ports}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Client} & $\xrightarrow{\text{ADS Request}}$ & \textbf{Server} \\
+(HMI, C\# App, Python) & $\xleftarrow{\text{ADS Response}}$ & (TwinCAT PLC) \\
+\hline
+\end{tabular}
+\caption{ADS Client-Server Architecture}
+\end{figure}
+
+% ============================================================
+\section{Addressing: AmsNetId and Ports}
+% ============================================================
+
+To communicate via ADS, you must identify both the host device and the specific service running on that device.
+
+\subsection{AmsNetId}
+
+This is the unique address of a computer within the TwinCAT network. It consists of \textbf{six octets} (e.g., \texttt{192.168.4.200.1.1}). While often derived from the system's IP address by default, \textbf{the AmsNetId is not an IP address} and can be changed independently.
+
+\begin{notebox}
+The AmsNetId format \texttt{x.x.x.x.1.1} is common, where the first four octets match the IP address and the last two are typically \texttt{1.1}. However, this is just a convention---the AmsNetId can be any six-octet value and does not need to correlate with the IP address.
+\end{notebox}
+
+\subsection{ADS Ports}
+
+Within a host, different services are assigned specific ports.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Port} & \textbf{Service} & \textbf{Description} \\
+\midrule
+10000 & System Service & Logger, Router \\
+300 & Real-time I/O & EtherCAT Master/Slaves \\
+301 & NC & Numerical Control \\
+350 & NC Interpolation & Path interpolation \\
+500 & CNC & Computer Numerical Control \\
+801--804 & Reserved & Legacy ports \\
+851 & PLC Runtime 1 & First PLC instance \\
+852 & PLC Runtime 2 & Second PLC instance \\
+853 & PLC Runtime 3 & Third PLC instance \\
+854 & PLC Runtime 4 & Fourth PLC instance \\
+\bottomrule
+\end{tabular}
+\caption{Common ADS Port Assignments}
+\end{table}
+
+\subsection{ADS Message Router}
+
+This component defines communication channels (routes) between different TwinCAT devices. On Windows, you must manually add a route to a remote PLC to establish communication.
+
+\begin{warningbox}
+Before an external client can communicate with a TwinCAT PLC, a \textbf{route must be established on both sides}. The Windows TwinCAT system uses the AMS Router GUI, while Linux systems require manual configuration or reverse routing from the PLC side.
+\end{warningbox}
+
+% ============================================================
+\section{ADS Packet Structure}
+% ============================================================
+
+An AMS packet consists of several layers:
+
+\subsection{Packet Layers}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{AMS TCP Header:} Contains the length of the subsequent data.
+    
+    \item \textbf{AMS Header:} Contains the \textbf{Target/Source AmsNetId}, \textbf{Target/Source Port}, State Flags (request vs. response), and the \textbf{Command ID} (e.g., Read, Write).
+    
+    \item \textbf{ADS Data:} The payload, which varies by command. For a ``Read'' command, this includes the \textbf{Index Group}, \textbf{Index Offset}, and length of data.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Command ID} & \textbf{Name} & \textbf{Description} \\
+\midrule
+0x0001 & Read Device Info & Get device name and version \\
+0x0002 & Read & Read data from server \\
+0x0003 & Write & Write data to server \\
+0x0004 & Read State & Get ADS/device state \\
+0x0005 & Write Control & Change ADS state \\
+0x0006 & Add Notification & Subscribe to variable changes \\
+0x0007 & Delete Notification & Unsubscribe from notifications \\
+0x0008 & Device Notification & Notification data from server \\
+0x0009 & Read Write & Combined read and write \\
+\bottomrule
+\end{tabular}
+\caption{ADS Command IDs}
+\end{table}
+
+\subsection{Index Groups for PLC Access}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Index Group} & \textbf{Hex} & \textbf{Description} \\
+\midrule
+16384 & 0x4000 & PLC Memory Area (\%M) \\
+16416 & 0x4020 & PLC Data Area (variables) \\
+16432 & 0x4030 & Retain Data \\
+61443 & 0xF003 & Read by symbol name \\
+61449 & 0xF009 & Get symbol handle \\
+61450 & 0xF00A & Release symbol handle \\
+61451 & 0xF00B & Read by handle \\
+61452 & 0xF00C & Write by handle \\
+\bottomrule
+\end{tabular}
+\caption{Common Index Groups for PLC Access}
+\end{table}
+
+% ============================================================
+\section{Practical Implementation: .NET / C\# (Windows)}
+% ============================================================
+
+For Windows-based applications, Beckhoff provides official libraries, including support for \textbf{.NET 6}, which offers cross-platform compatibility.
+
+\subsection{Library Integration}
+
+The easiest method is using the \textbf{NuGet package manager} to install \texttt{Beckhoff.TwinCAT.ADS}.
+
+\subsection{Symbolic Access}
+
+While you can read data via Index Groups (e.g., \textbf{4020} for PLC memory), it is recommended to use \textbf{symbolic paths} (e.g., \texttt{MAIN.nCounter}). This ensures the code remains functional even if variable memory addresses change after recompilation.
+
+\subsubsection*{Example: C\# Symbolic Read}
+
+\begin{lstlisting}[style=csharpstyle]
+// C# Console Application: Reading a PLC Variable via ADS
+// Required NuGet Package: Beckhoff.TwinCAT.Ads
+
+using System;
+using TwinCAT.Ads;
+
+namespace AdsReadExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create an ADS client instance
+            // This is the main object for ADS communication
+            using (AdsClient adsClient = new AdsClient())
+            {
+                try
+                {
+                    // Connect to the local TwinCAT runtime on port 851
+                    // AmsNetId.Local represents the local machine (127.0.0.1.1.1)
+                    // Port 851 is the default port for the first PLC runtime
+                    adsClient.Connect(AmsNetId.Local, AmsPort.PlcRuntime_851);
+                    
+                    Console.WriteLine("Connected to TwinCAT PLC on port 851");
+                    
+                    // Read a variable using its symbolic path
+                    // This is the RECOMMENDED approach as it survives recompilation
+                    // The symbol path corresponds to: PROGRAM MAIN, variable nIntToRead
+                    short valueRead = (short)adsClient.ReadValue(
+                        "MAIN.nIntToRead",  // Symbolic variable path
+                        typeof(short)        // Expected data type (INT = short in C#)
+                    );
+                    
+                    Console.WriteLine($"Value of MAIN.nIntToRead: {valueRead}");
+                    
+                    // Alternative: Read using generic method for type safety
+                    // This approach avoids casting and is more robust
+                    int nCounter = adsClient.ReadValue<int>("MAIN.nCounter");
+                    Console.WriteLine($"Value of MAIN.nCounter: {nCounter}");
+                    
+                    // Read a REAL (float) value
+                    float fTemperature = adsClient.ReadValue<float>("MAIN.fTemperature");
+                    Console.WriteLine($"Temperature: {fTemperature:F2} C");
+                    
+                    // Read a BOOL value
+                    bool bMotorRunning = adsClient.ReadValue<bool>("MAIN.bMotorRunning");
+                    Console.WriteLine($"Motor Running: {bMotorRunning}");
+                    
+                    // Read a STRING value (note: TwinCAT strings have fixed length)
+                    string sMessage = adsClient.ReadValue<string>("MAIN.sStatusMessage");
+                    Console.WriteLine($"Status: {sMessage}");
+                }
+                catch (AdsException ex)
+                {
+                    // Handle ADS-specific errors
+                    Console.WriteLine($"ADS Error: {ex.Message}");
+                    Console.WriteLine($"Error Code: {ex.ErrorCode}");
+                }
+                catch (Exception ex)
+                {
+                    // Handle general errors
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+                finally
+                {
+                    // Disconnect is handled by 'using' statement
+                    Console.WriteLine("Disconnected from PLC");
+                }
+            }
+            
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=csharpstyle]
+// Extended Example: Reading from a Remote PLC
+
+using System;
+using TwinCAT.Ads;
+
+namespace AdsRemoteReadExample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using (AdsClient adsClient = new AdsClient())
+            {
+                // For remote PLC, specify the AmsNetId explicitly
+                // This requires a route to be configured in TwinCAT Router
+                string remoteAmsNetId = "192.168.1.100.1.1";
+                
+                // Parse the AmsNetId string to an AmsNetId object
+                AmsNetId targetNetId = AmsNetId.Parse(remoteAmsNetId);
+                
+                // Connect to remote PLC runtime 1 (port 851)
+                adsClient.Connect(targetNetId, AmsPort.PlcRuntime_851);
+                
+                Console.WriteLine($"Connected to remote PLC: {remoteAmsNetId}");
+                
+                // Read values from the remote PLC
+                int nValue = adsClient.ReadValue<int>("MAIN.nIntToRead");
+                Console.WriteLine($"Remote value: {nValue}");
+                
+                // Write a value to the remote PLC
+                adsClient.WriteValue("MAIN.nIntToWrite", 12345);
+                Console.WriteLine("Wrote value 12345 to MAIN.nIntToWrite");
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{tipbox}
+Always use symbolic access (\texttt{ReadValue<T>("MAIN.nVariable")}) instead of raw Index Group/Offset access. Symbolic access automatically resolves variable addresses at runtime, so your application continues to work even after the PLC program is recompiled and variable addresses change.
+\end{tipbox}
+
+% ============================================================
+\section{Practical Implementation: C++ (Linux)}
+% ============================================================
+
+Beckhoff provides an \textbf{open-source ADS client library} on GitHub for non-Windows environments.
+
+\subsection{Compilation}
+
+On Linux (e.g., Debian), the library is compiled from source using tools like \textbf{Meson and Ninja}.
+
+\begin{verbatim}
+# Clone the repository
+git clone https://github.com/Beckhoff/ADS.git
+cd ADS
+
+# Build using Meson and Ninja
+meson setup build
+ninja -C build
+
+# Install (optional)
+sudo ninja -C build install
+\end{verbatim}
+
+\subsection{Reverse Routing}
+
+Since Linux lacks the standard TwinCAT AMS Router GUI, you must \textbf{authorize the connection on the PLC side}. This involves adding a route on the target PLC pointing back to the Linux client's IP address and its generated AmsNetId.
+
+\begin{notebox}
+On Linux, the ADS library generates an AmsNetId based on the system's hostname. You can find this ID in the library output or specify a custom one. The Windows TwinCAT PLC must have a route configured to this AmsNetId for communication to work.
+\end{notebox}
+
+\subsection{C++ API}
+
+The C++ library allows for high-performance reading and writing. It supports overloading assignment operators, making the code very concise.
+
+\subsubsection*{Example: C++ Write Operation}
+
+\begin{lstlisting}[style=cppstyle]
+// C++ ADS Client Example: Writing to a TwinCAT PLC Variable
+// Requires: Beckhoff ADS open-source library from GitHub
+// https://github.com/Beckhoff/ADS
+
+#include <iostream>
+#include <string>
+#include "AdsLib.h"
+#include "AdsVariable.h"
+
+int main()
+{
+    // Define the target PLC's AmsNetId (six octets)
+    // This must match the AmsNetId configured on the TwinCAT system
+    static const AmsNetId remoteNetId { 192, 168, 1, 100, 1, 1 };
+    
+    // Define the target PLC's IP address
+    // This is the actual network IP, separate from the AmsNetId
+    static const char remoteIpAddress[] = "192.168.1.100";
+    
+    try
+    {
+        // Create an ADS device connection
+        // Parameters: IP Address, AmsNetId, ADS Port (851 for PLC Runtime 1)
+        AdsDevice adsDevice {
+            remoteIpAddress,
+            remoteNetId,
+            AMSPORT_R0_PLC_TC3  // Port 851
+        };
+        
+        std::cout << "Connected to PLC at " << remoteIpAddress << std::endl;
+        
+        // Create an ADS variable handle for writing
+        // Template parameter specifies the data type (int32_t = DINT)
+        // The string parameter is the symbolic path in the PLC
+        AdsVariable<int32_t> nIntToWrite {
+            adsDevice,
+            "MAIN.nIntToWrite"
+        };
+        
+        // Write a value to the PLC variable
+        // The library overloads the assignment operator for clean syntax
+        // This single line performs the entire ADS write operation
+        nIntToWrite = 42;
+        
+        std::cout << "Successfully wrote value 42 to MAIN.nIntToWrite" << std::endl;
+        
+        // Create another variable for reading back
+        AdsVariable<int32_t> nIntToRead {
+            adsDevice,
+            "MAIN.nIntToRead"
+        };
+        
+        // Read the value - implicit conversion via overloaded operator
+        int32_t readValue = nIntToRead;
+        std::cout << "Read value from MAIN.nIntToRead: " << readValue << std::endl;
+        
+        // Example with different data types
+        
+        // REAL (float)
+        AdsVariable<float> fTemperature { adsDevice, "MAIN.fTemperature" };
+        float tempValue = fTemperature;
+        std::cout << "Temperature: " << tempValue << " C" << std::endl;
+        
+        // BOOL
+        AdsVariable<bool> bMotorRunning { adsDevice, "MAIN.bMotorRunning" };
+        bMotorRunning = true;  // Start the motor
+        std::cout << "Motor started" << std::endl;
+        
+        // Writing multiple values in sequence
+        AdsVariable<int32_t> nSetpoint { adsDevice, "MAIN.nSetpoint" };
+        for (int i = 0; i <= 100; i += 10)
+        {
+            nSetpoint = i;
+            std::cout << "Setpoint: " << i << "%" << std::endl;
+            // In real application, add delay here
+        }
+        
+    }
+    catch (const AdsException& ex)
+    {
+        // Handle ADS-specific errors
+        std::cerr << "ADS Error: " << ex.what() << std::endl;
+        std::cerr << "Error Code: " << ex.errorCode << std::endl;
+        return 1;
+    }
+    catch (const std::exception& ex)
+    {
+        // Handle general errors
+        std::cerr << "Error: " << ex.what() << std::endl;
+        return 1;
+    }
+    
+    std::cout << "Program completed successfully" << std::endl;
+    return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[style=cppstyle]
+// Alternative C++ Example: Using Low-Level API
+// For cases where you need more control over the ADS operations
+
+#include <iostream>
+#include "AdsLib.h"
+
+int main()
+{
+    // Add a route to the remote PLC
+    // This is necessary on Linux since there's no AMS Router GUI
+    long nPort = AdsPortOpenEx();
+    
+    if (nPort == 0)
+    {
+        std::cerr << "Failed to open ADS port" << std::endl;
+        return 1;
+    }
+    
+    // Define remote address
+    AmsAddr remoteAddr;
+    remoteAddr.netId = { 192, 168, 1, 100, 1, 1 };
+    remoteAddr.port = AMSPORT_R0_PLC_TC3;  // 851
+    
+    // Add route (IP address of remote PLC)
+    AdsAddRoute(remoteAddr.netId, "192.168.1.100");
+    
+    // Write a DINT value using Index Group and Offset
+    // Index Group 0x4020 = PLC data area
+    // Index Offset = memory offset of variable (from symbol info)
+    int32_t valueToWrite = 42;
+    long nResult = AdsSyncWriteReqEx(
+        nPort,
+        &remoteAddr,
+        0x4020,           // Index Group: PLC Memory
+        0x0000,           // Index Offset: variable offset
+        sizeof(valueToWrite),
+        &valueToWrite
+    );
+    
+    if (nResult != ADSERR_NOERR)
+    {
+        std::cerr << "Write failed with error: " << nResult << std::endl;
+    }
+    else
+    {
+        std::cout << "Write successful" << std::endl;
+    }
+    
+    // Clean up
+    AdsPortCloseEx(nPort);
+    
+    return 0;
+}
+\end{lstlisting}
+
+\begin{warningbox}
+When using the C++ ADS library on Linux, ensure that:
+\begin{enumerate}
+    \item A route is added on the Windows TwinCAT PLC pointing to your Linux machine's IP and AmsNetId
+    \item The firewall allows TCP port 48898 and UDP port 48899
+    \item The AmsNetId used in your code matches what's configured in the route
+\end{enumerate}
+\end{warningbox}
+
+% ============================================================
+\section{Summary of Benefits}
+% ============================================================
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Open System:} ADS allows TwinCAT to communicate with almost any language (C\#, C++, Java, Python, Node.js) and platform.
+    
+    \item \textbf{No Licensing Fees:} Using ADS client libraries is \textbf{free} and does not require additional TwinCAT licenses.
+    
+    \item \textbf{Full Access:} ADS provides access not just to PLC variables, but also to motion control, I/O, vision, and system analytics.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Platform} & \textbf{Library} & \textbf{Source} & \textbf{License} \\
+\midrule
+Windows/.NET & Beckhoff.TwinCAT.Ads & NuGet & Free \\
+Linux/C++ & ADS Library & GitHub & MIT \\
+Python & pyads & PyPI & MIT \\
+Node.js & ads-client & npm & MIT \\
+Java & AdsToJava & GitHub & Free \\
+\bottomrule
+\end{tabular}
+\caption{ADS Client Libraries by Platform}
+\end{table}
+
+\begin{tipbox}
+ADS provides a unified interface to access all TwinCAT subsystems. Beyond PLC variables, you can use ADS to:
+\begin{itemize}
+    \item Read/write NC axis parameters (Port 500/501)
+    \item Access I/O terminals directly (Port 300)
+    \item Query system diagnostics and logs (Port 10000)
+    \item Interface with TwinCAT Vision (Port 2400)
+\end{itemize}
+\end{tipbox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{ADS Addressing Format}
+
+\begin{verbatim}
+AmsNetId: x.x.x.x.x.x (six octets, e.g., 192.168.1.100.1.1)
+ADS Port: 851 (PLC Runtime 1), 852 (Runtime 2), etc.
+Full Address: 192.168.1.100.1.1:851
+\end{verbatim}
+
+\subsection*{Common ADS Ports}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Port} & \textbf{Service} \\
+\midrule
+300 & I/O (EtherCAT) \\
+851--854 & PLC Runtimes 1--4 \\
+500 & NC/CNC \\
+10000 & System Service \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{C\# Quick Reference}
+
+\begin{lstlisting}[style=csharpstyle]
+// Connect
+using AdsClient client = new AdsClient();
+client.Connect(AmsNetId.Local, AmsPort.PlcRuntime_851);
+
+// Read
+int value = client.ReadValue<int>("MAIN.nVariable");
+
+// Write
+client.WriteValue("MAIN.nVariable", 42);
+\end{lstlisting}
+
+\subsection*{C++ Quick Reference}
+
+\begin{lstlisting}[style=cppstyle]
+// Connect
+AdsDevice device { "192.168.1.100", {192,168,1,100,1,1}, 851 };
+
+// Create variable handle
+AdsVariable<int32_t> myVar { device, "MAIN.nVariable" };
+
+// Read
+int32_t value = myVar;
+
+// Write
+myVar = 42;
+\end{lstlisting}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

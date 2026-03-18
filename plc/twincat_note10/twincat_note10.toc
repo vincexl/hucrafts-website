@@ -1,0 +1,14 @@
+\contentsline {section}{\numberline {1}Fundamentals of Industrial I/O}{2}{section.1}%
+\contentsline {section}{\numberline {2}EtherCAT Architecture}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}EtherCAT Master}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}EtherCAT Slave}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}The ``Train'' Analogy}{2}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Software to Hardware Mapping}{3}{section.3}%
+\contentsline {section}{\numberline {4}Practical Implementation: IO-Link Distance Sensor}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Step 1: Connecting and Scanning}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Step 2: Creating the Function Block}{6}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Data Conversion and Bit Manipulation}{7}{section.5}%
+\contentsline {section}{\numberline {6}Testing and Online Monitoring}{11}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Linking Variables to Hardware}{11}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Online Monitoring Features}{11}{subsection.6.2}%
+\contentsline {section}{Quick Reference Card}{11}{subsection.6.2}%

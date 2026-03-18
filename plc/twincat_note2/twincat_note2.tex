@@ -1,0 +1,616 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== IEC 61131-3 CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TON, TOF, TP, CTU, CTD, CTUD, R_TRIG, F_TRIG},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, ABS, SQRT, SIN, COS, TAN, LN, LOG, EXP,
+                 SEL, MUX, LIMIT, MAX, MIN, MOVE},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Basics and Installation},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Basics and Installation
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{The Evolution of PLCs}
+% ============================================================
+
+\subsection{Pre-PLC Era}
+
+Industrial processes were automated using \textbf{relay-based control systems}. These systems required significant space and cabling, were difficult to maintain, and a single wire breakage could disable the entire system.
+
+\subsection{The First PLCs}
+
+In the late 1960s, General Motors and Allen-Bradley developed electronic replacements for relays. The \textbf{Modicon 084} (1969) was the first PLC, though the \textbf{Modicon 184} (1973) became the first mass-market success.
+
+\subsection{PC-Based Control}
+
+Founded in 1980, Beckhoff introduced the shift from proprietary hardware to \textbf{standard PC-based control}. \textbf{TwinCAT} (The Windows Control and Automation Technology) was released in 1996, allowing standard Windows PCs to function as real-time controllers.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Year} & \textbf{Milestone} & \textbf{Company} & \textbf{Significance} \\
+\midrule
+1969 & Modicon 084 & Modicon & First PLC \\
+1973 & Modicon 184 & Modicon & First commercial success \\
+1980 & Company Founded & Beckhoff & PC-based control pioneer \\
+1996 & TwinCAT 1 & Beckhoff & Windows-based PLC runtime \\
+2010 & TwinCAT 3 & Beckhoff & Visual Studio integration \\
+\bottomrule
+\end{tabular}
+\caption{Key Milestones in PLC History}
+\end{table}
+
+\begin{notebox}
+TwinCAT stands for ``The Windows Control and Automation Technology.'' Unlike traditional PLCs with proprietary hardware, TwinCAT transforms any standard Windows PC into a real-time controller, significantly reducing hardware costs and increasing flexibility.
+\end{notebox}
+
+% ============================================================
+\section{TwinCAT 3 Architecture}
+% ============================================================
+
+TwinCAT 3 consists of two primary components that communicate via the \textbf{ADS protocol}:
+
+\subsection{XAE (eXtended Automation Engineering)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Role:} The development environment used to create, edit, and compile projects.
+    \item \textbf{Platform:} Must be installed on a \textbf{Windows machine}.
+    \item \textbf{IDE:} Based on \textbf{Microsoft Visual Studio}. It includes the \textbf{CODESYS compiler}, which is a standard in the automation industry.
+\end{itemize}
+
+\subsection{XAR (eXtended Automation Runtime)}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Role:} The software that actually executes the code in \textbf{real-time}.
+    \item \textbf{Components:} Includes the real-time kernel for deterministic behavior and drivers for fieldbus protocols like \textbf{EtherCAT}.
+    \item \textbf{Platform:} Can run on Windows or Beckhoff's \textbf{Tc/BSD} (FreeBSD-based) operating system.
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{XAE} & $\xleftrightarrow{\text{ADS Protocol}}$ & \textbf{XAR} \\
+(Engineering) & & (Runtime) \\
+\hline
+Visual Studio IDE & & Real-time Kernel \\
+CODESYS Compiler & & EtherCAT Drivers \\
+Project Configuration & & I/O Processing \\
+\hline
+\multicolumn{3}{|c|}{Windows PC / Beckhoff IPC} \\
+\hline
+\end{tabular}
+\caption{TwinCAT 3 Architecture Overview}
+\end{figure}
+
+\begin{tipbox}
+The XAE and XAR can run on the same machine (common during development) or on separate machines (typical in production). The ADS protocol handles all communication between them, regardless of whether they are local or networked.
+\end{tipbox}
+
+% ============================================================
+\section{Installation and Development Environment}
+% ============================================================
+
+\subsection{TcXaeShell}
+
+If you do not have Visual Studio installed, the TwinCAT installer bundles \textbf{TcXaeShell}, a version of Visual Studio dedicated to PLC programming.
+
+\subsection{Visual Studio Integration}
+
+If you already have Visual Studio (Community, Professional, or Enterprise), TwinCAT can integrate directly into those versions. This is necessary if you plan to program in other languages like \textbf{C\# or C++} alongside your PLC code.
+
+\subsection{Licensing}
+
+TwinCAT 3 is \textbf{free for development and testing}. You can generate \textbf{7-day trial licenses} indefinitely by entering a CAPTCHA.
+
+\subsection{Local Execution}
+
+Because the XAE installation includes a local XAR, you can test and run your software directly on your development PC or a virtual machine without needing physical PLC hardware.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Installation Option} & \textbf{Use Case} & \textbf{Requirements} \\
+\midrule
+TcXaeShell Only & PLC development only & None \\
+VS Integration & Mixed PLC + IT development & Visual Studio installed \\
+XAR Only & Production runtime & Licensed for deployment \\
+\bottomrule
+\end{tabular}
+\caption{TwinCAT Installation Options}
+\end{table}
+
+\subsubsection*{Example: Basic Variable Declaration}
+
+\begin{lstlisting}
+// PROGRAM: MAIN
+// Basic variable declaration example for TwinCAT 3
+// This code is created within the XAE IDE (TcXaeShell or Visual Studio)
+
+PROGRAM MAIN
+VAR
+    // =====================================================
+    // BOOLEAN Variables
+    // Used for digital I/O, flags, and logical operations
+    // Can only be TRUE or FALSE
+    // =====================================================
+    bStartButton    : BOOL;              // Input: Start pushbutton
+    bStopButton     : BOOL;              // Input: Stop pushbutton
+    bMotorRunning   : BOOL := FALSE;     // Status flag with initial value
+    bAlarmActive    : BOOL := FALSE;     // Alarm indicator
+    bSafetyOK       : BOOL := TRUE;      // Safety circuit status
+    
+    // =====================================================
+    // INTEGER Variables
+    // Used for counters, setpoints, and whole numbers
+    // INT is 16-bit signed: -32768 to 32767
+    // =====================================================
+    nCounter        : INT := 0;          // Part counter
+    nSetpoint       : INT := 100;        // Speed setpoint
+    nErrorCode      : INT;               // Error code storage
+    nBatchSize      : INT := 50;         // Batch quantity
+    
+    // =====================================================
+    // Additional common types for reference
+    // =====================================================
+    fTemperature    : REAL := 20.0;      // 32-bit floating point
+    tCycleTime      : TIME := T#100MS;   // Time duration
+    sProductName    : STRING := 'Widget';// Text string
+    
+END_VAR
+
+// Program logic would follow here...
+\end{lstlisting}
+
+\begin{lstlisting}
+// Extended example showing variable organization
+
+PROGRAM MAIN
+VAR
+    // Group related variables with comments for clarity
+    
+    // === INPUTS (from field devices) ===
+    bSensor1        : BOOL;     // Proximity sensor 1
+    bSensor2        : BOOL;     // Proximity sensor 2
+    nAnalogInput    : INT;      // 0-10V analog input (0-32767)
+    
+    // === OUTPUTS (to field devices) ===
+    bValve1         : BOOL;     // Solenoid valve 1
+    bValve2         : BOOL;     // Solenoid valve 2
+    nAnalogOutput   : INT;      // 0-10V analog output
+    
+    // === INTERNAL VARIABLES ===
+    nState          : INT := 0; // State machine variable
+    bFirstScan      : BOOL := TRUE;  // First scan flag
+    
+END_VAR
+
+// Variables are now accessible in the program code
+\end{lstlisting}
+
+\begin{notebox}
+Variable declarations in Structured Text follow the pattern: \texttt{VariableName : DataType := InitialValue;}. The initial value is optional---if omitted, variables default to zero (for numbers) or FALSE (for BOOL).
+\end{notebox}
+
+% ============================================================
+\section{System States and Operating Modes}
+% ============================================================
+
+The state of the TwinCAT runtime is indicated by the color of the TwinCAT icon in the Windows taskbar:
+
+\subsection{Blue (CONFIG Mode)}
+
+Used when making changes to the system configuration, adding hardware, or upgrading software.
+
+\subsection{Green (RUN Mode)}
+
+The active state where TwinCAT executes all PLC tasks and programs.
+
+\subsection{Yellow (STOP/EXCEPTION Mode)}
+
+Indicates the runtime has stopped, often due to a software error like a \textbf{null pointer exception} or \textbf{stack overflow}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Icon Color} & \textbf{Mode} & \textbf{State} & \textbf{Typical Action} \\
+\midrule
+Blue & CONFIG & Configuring & Add hardware, modify settings \\
+Green & RUN & Executing & Normal operation \\
+Yellow & STOP & Stopped & Debug, check for errors \\
+Red & ERROR & Exception & Investigate crash cause \\
+\bottomrule
+\end{tabular}
+\caption{TwinCAT Runtime States}
+\end{table}
+
+\subsubsection*{Example: Simple Logic Assignment}
+
+\begin{lstlisting}
+// Simple logic assignment examples
+// This code executes cyclically when TwinCAT is in RUN mode (green icon)
+
+PROGRAM MAIN
+VAR
+    // Input variables (typically linked to physical inputs)
+    bInput1         : BOOL;     // Digital input 1
+    bInput2         : BOOL;     // Digital input 2
+    bInput3         : BOOL;     // Digital input 3
+    bEnableSwitch   : BOOL;     // Enable/disable switch
+    
+    // Output variables (typically linked to physical outputs)
+    bOutput1        : BOOL;     // Digital output 1
+    bOutput2        : BOOL;     // Digital output 2
+    bAlarmLight     : BOOL;     // Alarm indicator lamp
+    
+    // Internal variables
+    bConditionMet   : BOOL;     // Internal logic flag
+END_VAR
+
+// =====================================================
+// BASIC AND LOGIC
+// Output is TRUE only when BOTH inputs are TRUE
+// Similar to series-connected relay contacts
+// =====================================================
+bOutput1 := bInput1 AND bInput2;
+
+// =====================================================
+// BASIC OR LOGIC  
+// Output is TRUE when EITHER input is TRUE
+// Similar to parallel-connected relay contacts
+// =====================================================
+bOutput2 := bInput1 OR bInput2;
+
+// =====================================================
+// COMBINED LOGIC WITH ENABLE
+// Output requires enable switch AND both inputs
+// =====================================================
+bConditionMet := bEnableSwitch AND (bInput1 AND bInput2);
+
+// =====================================================
+// NOT LOGIC (INVERSION)
+// Alarm is active when enable is ON but condition NOT met
+// =====================================================
+bAlarmLight := bEnableSwitch AND NOT bConditionMet;
+
+// =====================================================
+// PRACTICAL EXAMPLE: Motor Start Circuit
+// Motor runs when: Start pressed AND Stop not pressed AND Safety OK
+// =====================================================
+// bMotorRunning := bStartButton AND (NOT bStopButton) AND bSafetyOK;
+\end{lstlisting}
+
+\begin{lstlisting}
+// More complex logic examples
+
+VAR
+    bPumpEnable     : BOOL;
+    bLevelHigh      : BOOL;
+    bLevelLow       : BOOL;
+    bPressureOK     : BOOL;
+    
+    bRunPump        : BOOL;
+    bDrainValve     : BOOL;
+    nOperatingMode  : INT;
+END_VAR
+
+// XOR logic - exclusive OR (one or the other, but not both)
+bDrainValve := bLevelHigh XOR bLevelLow;
+
+// Parentheses for complex expressions
+// Pump runs if: enabled AND (level is low OR pressure is not OK)
+bRunPump := bPumpEnable AND (bLevelLow OR NOT bPressureOK);
+
+// Assignment with arithmetic
+nOperatingMode := 1 + 2;  // nOperatingMode = 3
+
+// Combined comparison
+// bCondition := (nCounter > 10) AND (nCounter < 100);
+\end{lstlisting}
+
+\begin{warningbox}
+When the TwinCAT icon turns yellow or red, the runtime has stopped executing. Check the error log in the XAE for details. Common causes include division by zero, null pointer access, or stack overflow from infinite recursion.
+\end{warningbox}
+
+% ============================================================
+\section{Connectivity and Actuation}
+% ============================================================
+
+Through fieldbus interfaces, TwinCAT communicates with various hardware components:
+
+\subsection{Sensors}
+
+Reads data from temperature, pressure, and position sensors.
+
+\subsection{Actuators}
+
+Controls devices such as \textbf{relays, valves, and electric motors}.
+
+\subsection{Communication}
+
+Users can read or write variables between the XAE and XAR (e.g., for HMI displays or data logging) using the ADS interface.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Category} & \textbf{Device Type} & \textbf{Signal Type} & \textbf{Data Type} \\
+\midrule
+Sensor & Proximity switch & Digital Input & BOOL \\
+Sensor & Temperature probe & Analog Input & INT/REAL \\
+Sensor & Encoder & Counter Input & DINT \\
+Actuator & Solenoid valve & Digital Output & BOOL \\
+Actuator & VFD (Motor drive) & Analog Output & INT \\
+Actuator & Servo motor & Motion axis & Complex \\
+\bottomrule
+\end{tabular}
+\caption{Common I/O Device Types}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Field Devices} & $\xleftrightarrow{\text{EtherCAT}}$ & \textbf{TwinCAT XAR} \\
+\hline
+Sensors & & PLC Program \\
+Actuators & & Motion Control \\
+Drives & & Safety Logic \\
+\hline
+\end{tabular}
+\caption{TwinCAT Connectivity Architecture}
+\end{figure}
+
+\begin{tipbox}
+EtherCAT is Beckhoff's high-performance fieldbus protocol. It provides deterministic communication with cycle times as low as 100 microseconds, making it ideal for motion control and high-speed applications.
+\end{tipbox}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{TwinCAT Components}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Component} & \textbf{Full Name} & \textbf{Purpose} \\
+\midrule
+XAE & eXtended Automation Engineering & Development environment \\
+XAR & eXtended Automation Runtime & Real-time execution \\
+ADS & Automation Device Specification & Communication protocol \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Runtime States}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Color} & \textbf{Mode} & \textbf{Description} \\
+\midrule
+Blue & CONFIG & Configuration/editing \\
+Green & RUN & Normal operation \\
+Yellow & STOP & Stopped (check errors) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Basic Data Types}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Type} & \textbf{Size} & \textbf{Range} & \textbf{Example} \\
+\midrule
+BOOL & 1 bit & TRUE/FALSE & \texttt{bFlag : BOOL := TRUE;} \\
+INT & 16 bits & -32768 to 32767 & \texttt{nCount : INT := 0;} \\
+DINT & 32 bits & $\pm$2.1 billion & \texttt{nLarge : DINT;} \\
+REAL & 32 bits & Floating point & \texttt{fTemp : REAL := 25.5;} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Logic Operators}
+
+\begin{lstlisting}
+// AND - both must be TRUE
+bResult := bA AND bB;
+
+// OR - either can be TRUE  
+bResult := bA OR bB;
+
+// NOT - inverts the value
+bResult := NOT bA;
+
+// XOR - exclusive OR
+bResult := bA XOR bB;
+\end{lstlisting}
+
+\subsection*{Variable Declaration Syntax}
+
+\begin{lstlisting}
+VAR
+    VariableName : DataType;              // No initial value
+    VariableName : DataType := Value;     // With initial value
+END_VAR
+\end{lstlisting}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

@@ -1,0 +1,775 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+
+% ===== COLORS =====
+\definecolor{codegreen}{rgb}{0.25,0.49,0.48}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.13,0.29,0.53}
+\definecolor{codeorange}{rgb}{0.8,0.4,0.0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{warningbg}{rgb}{1.0,0.95,0.85}
+\definecolor{warningborder}{rgb}{0.9,0.6,0.2}
+\definecolor{tipbg}{rgb}{0.9,0.97,0.9}
+\definecolor{tipborder}{rgb}{0.3,0.7,0.3}
+\definecolor{notebg}{rgb}{0.9,0.93,1.0}
+\definecolor{noteborder}{rgb}{0.3,0.4,0.7}
+
+% ===== CODE LISTING STYLE =====
+\lstdefinelanguage{IEC61131}{
+    keywords={VAR, END_VAR, VAR_INPUT, VAR_OUTPUT, VAR_IN_OUT, VAR_GLOBAL, 
+              TYPE, END_TYPE, STRUCT, END_STRUCT, FUNCTION, END_FUNCTION,
+              FUNCTION_BLOCK, END_FUNCTION_BLOCK, PROGRAM, END_PROGRAM,
+              IF, THEN, ELSE, ELSIF, END_IF, CASE, OF, END_CASE,
+              FOR, TO, BY, DO, END_FOR, WHILE, END_WHILE, REPEAT, UNTIL, END_REPEAT,
+              TRUE, FALSE, AND, OR, NOT, XOR, MOD, RETURN,
+              ARRAY, OF, POINTER, REFERENCE, TO, AT, EXTENDS, IMPLEMENTS,
+              METHOD, END_METHOD, PROPERTY, END_PROPERTY,
+              INTERFACE, END_INTERFACE,
+              PUBLIC, PRIVATE, PROTECTED, INTERNAL, FINAL, ABSTRACT,
+              THIS, SUPER, VAR_STAT, CONSTANT, VAR_INST},
+    keywordstyle=\color{codeblue}\bfseries,
+    keywords=[2]{BOOL, BYTE, WORD, DWORD, LWORD, SINT, USINT, INT, UINT, 
+                 DINT, UDINT, LINT, ULINT, REAL, LREAL, STRING, WSTRING,
+                 TIME, LTIME, DATE, TIME_OF_DAY, TOD, DATE_AND_TIME, DT,
+                 TcEventSeverity, T_FILETIME, E_Color},
+    keywordstyle=[2]\color{codepurple}\bfseries,
+    keywords=[3]{ADR, SIZEOF, REF, FILETIME_TO_DT, GETSYSTEMTIME, FB_init},
+    keywordstyle=[3]\color{codeorange}\bfseries,
+    sensitive=false,
+    morecomment=[l]{//},
+    morecomment=[s]{(*}{*)},
+    commentstyle=\color{codegreen}\itshape,
+    stringstyle=\color{codeorange},
+    morestring=[b]',
+    morestring=[b]",
+}
+
+\lstdefinestyle{iecstyle}{
+    language=IEC61131,
+    backgroundcolor=\color{backcolour},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    numberstyle=\tiny\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{codegray},
+    xleftmargin=15pt,
+    framexleftmargin=15pt,
+}
+
+\lstset{style=iecstyle}
+
+% ===== TCOLORBOX STYLES =====
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faExclamationTriangle\ \textbf{Warning:} }
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faLightbulb\ \textbf{Tip:} }
+}
+
+\newtcolorbox{notebox}{
+    colback=notebg,
+    colframe=noteborder,
+    boxrule=1pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    breakable,
+    before upper={\faInfoCircle\ \textbf{Note:} }
+}
+
+% ===== HEADER/FOOTER =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{TwinCAT 3 Lecture Notes}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ===== HYPERREF SETUP =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=codeblue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={TwinCAT 3 - Interfaces and Polymorphism},
+    pdfauthor={},
+    bookmarks=true,
+}
+
+% ===== TITLE FORMATTING =====
+\titleformat{\section}
+    {\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+\titleformat{\subsection}
+    {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+% ===== DOCUMENT INFO =====
+\title{
+    \vspace{-1cm}
+    \textbf{Lecture Notes: TwinCAT 3}\\
+    \Large Interfaces and Polymorphism
+}
+\author{}
+\date{\today}
+
+% ===== BEGIN DOCUMENT =====
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Introduction to Interfaces}
+% ============================================================
+
+Interfaces represent a significant step into professional \textbf{Object-Oriented Programming (OOP)} in TwinCAT 3. While inheritance (using \texttt{EXTENDS}) focuses on sharing functionality, interfaces are a mechanism for \textbf{abstraction} and \textbf{polymorphism}.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Definition:} An interface specifies \textbf{what} a function block (FB) must do, but not \textbf{how} it does it. It acts as a ``blueprint'' or a ``binding contract''.
+    
+    \item \textbf{The Contract:} Any FB that implements an interface is legally bound to implement all the methods defined within that interface.
+    
+    \item \textbf{Analogy:} Think of a chessboard where every piece (King, Pawn) is an object. They might all implement a \texttt{Move()} interface, but the actual implementation of how they move is unique to each piece.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Aspect} & \textbf{Inheritance (EXTENDS)} & \textbf{Interface (IMPLEMENTS)} \\
+\midrule
+Purpose & Share functionality & Define contract \\
+Contains & Code implementation & Method signatures only \\
+Multiple & Single inheritance only & Multiple interfaces allowed \\
+Focus & ``How'' things work & ``What'' must be done \\
+\bottomrule
+\end{tabular}
+\caption{Inheritance vs. Interfaces}
+\end{table}
+
+\subsection*{Example: Interface Definition}
+
+\begin{lstlisting}
+// Interface: I_LightTower
+// Defines the contract for any light tower implementation
+// Note: Interfaces contain ONLY method signatures - NO implementation code
+INTERFACE I_LightTower
+\end{lstlisting}
+
+\begin{lstlisting}
+// Method: PowerOn
+// Turns the light tower on or off
+// Note: No code body - just the method signature
+METHOD PowerOn
+VAR_INPUT
+    bEnable : BOOL;    // TRUE = power on, FALSE = power off
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Method: SetColor
+// Sets the active color of the light tower
+METHOD SetColor
+VAR_INPUT
+    eColor : E_Color;  // Enumeration: Red, Yellow, Green, Blue, etc.
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Method: EnableBuzzer
+// Enables or disables the audible buzzer
+METHOD EnableBuzzer
+VAR_INPUT
+    bEnable    : BOOL;    // TRUE = buzzer on, FALSE = buzzer off
+    nFrequency : UINT;    // Buzzer frequency in Hz (optional parameter)
+END_VAR
+\end{lstlisting}
+
+\begin{notebox}
+Interface methods have \textbf{no code bodies}. They only declare the method name, return type, and parameters. The actual implementation is provided by the function blocks that implement the interface.
+\end{notebox}
+
+% ============================================================
+\section{Implementing Interfaces}
+% ============================================================
+
+To use an interface, a function block must explicitly state that it follows that interface's contract.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Syntax:} Use the \texttt{IMPLEMENTS} keyword in the FB declaration.
+    
+    \item \textbf{Implementation Details:} The actual work (the code) is written inside the FB's methods. For example, one light tower might be controlled by simple 24V digital outputs, while another uses complex protocols like \textbf{EtherCAT} or \textbf{IO-Link}, yet both follow the same interface.
+    
+    \item \textbf{Multiple Interfaces:} Unlike inheritance---where an FB can only \texttt{EXTEND} one other FB---an FB can implement \textbf{as many interfaces as it wants}, separated by commas.
+\end{itemize}
+
+\subsection*{Example: Implementing an Interface}
+
+\begin{lstlisting}
+// Function Block: FB_Balluff_LightTower
+// Implements the I_LightTower interface for Balluff hardware
+// Uses IO-Link communication protocol
+FUNCTION_BLOCK FB_Balluff_LightTower IMPLEMENTS I_LightTower
+VAR
+    // Internal variables specific to Balluff implementation
+    bPowerState     : BOOL;           // Current power state
+    eCurrentColor   : E_Color;        // Currently displayed color
+    bBuzzerActive   : BOOL;           // Buzzer state
+    stIOLinkData    : ST_IOLinkData;  // IO-Link communication structure
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Method Implementation: PowerOn
+// Balluff-specific implementation of the PowerOn method
+METHOD PowerOn
+VAR_INPUT
+    bEnable : BOOL;
+END_VAR
+
+// Balluff-specific IO-Link command to control power
+bPowerState := bEnable;
+stIOLinkData.nCommand := 16#01;  // Power control command
+stIOLinkData.bValue := bEnable;
+
+// Send command via IO-Link (implementation details hidden)
+THIS^.SendIOLinkCommand();
+\end{lstlisting}
+
+\begin{lstlisting}
+// Method Implementation: SetColor
+// Balluff-specific implementation of the SetColor method
+METHOD SetColor
+VAR_INPUT
+    eColor : E_Color;
+END_VAR
+
+// Store the color and send to hardware
+eCurrentColor := eColor;
+stIOLinkData.nCommand := 16#02;  // Color control command
+
+CASE eColor OF
+    E_Color.Red:
+        stIOLinkData.nValue := 1;
+    E_Color.Yellow:
+        stIOLinkData.nValue := 2;
+    E_Color.Green:
+        stIOLinkData.nValue := 3;
+END_CASE
+
+THIS^.SendIOLinkCommand();
+\end{lstlisting}
+
+\begin{lstlisting}
+// Method Implementation: EnableBuzzer
+// Balluff-specific implementation of the EnableBuzzer method
+METHOD EnableBuzzer
+VAR_INPUT
+    bEnable    : BOOL;
+    nFrequency : UINT;
+END_VAR
+
+bBuzzerActive := bEnable;
+stIOLinkData.nCommand := 16#03;  // Buzzer control command
+stIOLinkData.bValue := bEnable;
+stIOLinkData.nValue := nFrequency;
+
+THIS^.SendIOLinkCommand();
+\end{lstlisting}
+
+\begin{lstlisting}
+// Alternative Implementation: FB_Sick_LightTower
+// Same interface, completely different hardware and protocol
+FUNCTION_BLOCK FB_Sick_LightTower IMPLEMENTS I_LightTower
+VAR
+    // Sick-specific variables (different from Balluff)
+    bPowerState      : BOOL;
+    eCurrentColor    : E_Color;
+    stEtherCATFrame  : ST_EtherCATFrame;  // Uses EtherCAT instead of IO-Link
+    nNodeAddress     : UINT;               // EtherCAT node address
+END_VAR
+
+// Methods would have completely different implementation
+// but fulfill the same interface contract
+\end{lstlisting}
+
+\begin{tipbox}
+When implementing multiple interfaces, separate them with commas:\\
+\texttt{FUNCTION\_BLOCK FB\_AdvancedTower IMPLEMENTS I\_LightTower, I\_Diagnostic, I\_Configurable}
+\end{tipbox}
+
+% ============================================================
+\section{Why Use Interfaces? (Key Advantages)}
+% ============================================================
+
+Interfaces provide a layer of abstraction that allows developers to write code that is ``ignorant of unnecessary details''.
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Flexibility at Runtime:} You can declare an interface variable and assign different concrete FBs to it while the PLC is running. This allows for swapping hardware or logic dynamically.
+    
+    \item \textbf{Modularization and Teamwork:} Different teams (e.g., Team A for machine logic and Team B for file logging) only need to agree on an interface ``contract''. They can then develop their parts independently without knowing the internal details of the other's code.
+    
+    \item \textbf{Testability (Mocking):} Interfaces allow you to ``mock'' dependencies. For example, if a function block depends on a database, you can create a ``mock'' interface for testing that doesn't require a real database connection.
+\end{enumerate}
+
+\subsection*{Example: Runtime Flexibility}
+
+\begin{lstlisting}
+// Program: MAIN
+// Demonstrates polymorphism - same interface, different implementations
+PROGRAM MAIN
+VAR
+    // Interface variable - can hold ANY FB that implements I_LightTower
+    iActiveLightTower : I_LightTower;
+    
+    // Concrete implementations (different hardware manufacturers)
+    fbBalluffTower    : FB_Balluff_LightTower;   // Balluff hardware
+    fbSickTower       : FB_Sick_LightTower;      // Sick hardware
+    fbSimulatedTower  : FB_Simulated_LightTower; // For testing without hardware
+    
+    // Selection variable
+    nSelectedTower    : INT := 1;
+END_VAR
+
+// Assign the appropriate implementation based on configuration
+// This can be changed at runtime!
+CASE nSelectedTower OF
+    1:  // Use Balluff hardware
+        iActiveLightTower := fbBalluffTower;
+        
+    2:  // Use Sick hardware
+        iActiveLightTower := fbSickTower;
+        
+    3:  // Use simulation for testing
+        iActiveLightTower := fbSimulatedTower;
+END_CASE
+
+// Now use the interface - the calling code doesn't care which 
+// implementation is actually being used!
+// This is POLYMORPHISM in action
+iActiveLightTower.PowerOn(bEnable := TRUE);
+iActiveLightTower.SetColor(eColor := E_Color.Green);
+iActiveLightTower.EnableBuzzer(bEnable := FALSE, nFrequency := 0);
+\end{lstlisting}
+
+\begin{lstlisting}
+// Example: Switching hardware at runtime
+// Scenario: Primary tower fails, switch to backup
+VAR
+    fbPrimaryTower  : FB_Balluff_LightTower;
+    fbBackupTower   : FB_Sick_LightTower;
+    iCurrentTower   : I_LightTower;
+    bPrimaryFailed  : BOOL;
+END_VAR
+
+// Dynamic reassignment based on hardware status
+IF bPrimaryFailed THEN
+    iCurrentTower := fbBackupTower;    // Seamless switch to backup
+ELSE
+    iCurrentTower := fbPrimaryTower;   // Use primary
+END_IF
+
+// Code continues to work regardless of which tower is active
+iCurrentTower.SetColor(eColor := E_Color.Red);
+\end{lstlisting}
+
+\begin{warningbox}
+Always check that an interface reference is valid before using it. An unassigned interface reference will cause a runtime error if methods are called on it.
+\end{warningbox}
+
+% ============================================================
+\section{Advanced Pattern: Dependency Injection}
+% ============================================================
+
+The sources introduce \textbf{Dependency Injection}, a technique where an object receives its dependencies (other objects it needs) from the outside rather than creating them itself.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{FB\_init (The Constructor):} In TwinCAT, dependency injection is often handled via the \texttt{FB\_init} method, which is called implicitly when an object is instantiated.
+    
+    \item \textbf{Mechanism:} You pass a reference to an interface into \texttt{FB\_init} and store that reference locally within the FB. This decouples the ``client'' FB from the specific ``service'' implementation.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lp{5cm}p{5cm}@{}}
+\toprule
+\textbf{Aspect} & \textbf{Without Dependency Injection} & \textbf{With Dependency Injection} \\
+\midrule
+Coupling & Tight - FB creates its own dependencies & Loose - dependencies passed in \\
+Testing & Difficult - real dependencies required & Easy - mock objects can be injected \\
+Flexibility & Low - hard-coded implementations & High - swap implementations easily \\
+Reusability & Limited & High \\
+\bottomrule
+\end{tabular}
+\caption{Benefits of Dependency Injection}
+\end{table}
+
+\subsection*{Example: Dependency Injection via FB\_init}
+
+\begin{lstlisting}
+// Interface: I_PersistentEventStorage
+// Contract for any event storage mechanism
+INTERFACE I_PersistentEventStorage
+\end{lstlisting}
+
+\begin{lstlisting}
+// Method signature for storing an event
+METHOD StoreEvent : BOOL
+VAR_INPUT
+    stEvent : REFERENCE TO ST_Event;  // Event to be stored
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Function Block: FB_EventLogger
+// Uses dependency injection to receive its storage mechanism
+FUNCTION_BLOCK FB_EventLogger
+VAR CONSTANT
+    MAXIMUM_BUFFER_SIZE : UDINT := 100;
+END_VAR
+VAR
+    // Internal event buffer
+    astEventBuffer : ARRAY[0..(MAXIMUM_BUFFER_SIZE - 1)] OF ST_Event;
+    nCurrentIndex  : UDINT := 0;
+    
+    // INJECTED DEPENDENCY - stored as interface reference
+    // This allows any storage implementation to be used
+    iPersistentStorage : I_PersistentEventStorage;
+    bStorageAvailable  : BOOL := FALSE;
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// FB_init Method: Constructor for FB_EventLogger
+// This is where dependency injection happens
+// Called automatically when the FB is instantiated
+METHOD FB_init : BOOL
+VAR_INPUT
+    bInitRetains : BOOL;  // Required parameter (system)
+    bInCopyCode  : BOOL;  // Required parameter (system)
+    
+    // INJECTED DEPENDENCY: Reference to storage interface
+    iStorage : I_PersistentEventStorage;
+END_VAR
+
+// Store the injected dependency for later use
+// Now the EventLogger can use ANY storage implementation
+iPersistentStorage := iStorage;
+
+// Verify that a valid storage was provided
+IF iPersistentStorage <> 0 THEN
+    bStorageAvailable := TRUE;
+ELSE
+    bStorageAvailable := FALSE;
+END_IF
+
+FB_init := TRUE;
+\end{lstlisting}
+
+\begin{lstlisting}
+// Usage: Instantiating FB_EventLogger with dependency injection
+// The storage implementation is "injected" at instantiation time
+PROGRAM MAIN
+VAR
+    // Different storage implementations
+    fbXmlStorage  : FB_XmlStorage;      // Stores events to XML file
+    fbJsonStorage : FB_JsonStorage;     // Stores events to JSON file
+    fbDbStorage   : FB_DatabaseStorage; // Stores events to database
+    fbMockStorage : FB_MockStorage;     // For unit testing
+    
+    // Event logger with XML storage injected
+    fbEventLoggerXml : FB_EventLogger(iStorage := fbXmlStorage);
+    
+    // Event logger with database storage injected
+    fbEventLoggerDb  : FB_EventLogger(iStorage := fbDbStorage);
+    
+    // Event logger with mock storage for testing
+    fbEventLoggerTest : FB_EventLogger(iStorage := fbMockStorage);
+END_VAR
+\end{lstlisting}
+
+\begin{tipbox}
+Dependency injection makes your code more testable. During testing, inject a mock storage that doesn't actually write to disk or database, allowing fast and isolated unit tests.
+\end{tipbox}
+
+% ============================================================
+\section{Practical Use Case: Persistent Event Logging}
+% ============================================================
+
+The tutorial refines an \texttt{EventLogger} to separate its core logic (managing an event array) from the logic of storing those events (XML, JSON, or Database).
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Separation of Concerns:} The \texttt{EventLogger} doesn't care \textit{how} an event is stored; it only cares that a storage service exists.
+    
+    \item \textbf{The Workflow:}
+    \begin{enumerate}
+        \item Create an interface \texttt{I\_PersistentEventStorage} with a \texttt{StoreEvent()} method.
+        \item Create specific FBs (e.g., \texttt{FB\_XmlStorage}) that implement this interface.
+        \item Inject the storage FB into the \texttt{EventLogger} during instantiation.
+    \end{enumerate}
+\end{itemize}
+
+\subsection*{Example: Calling the Interface Method}
+
+\begin{lstlisting}
+// Method: AddEvent (Public method of FB_EventLogger)
+// Adds an event to the buffer and persists it via the injected storage
+METHOD PUBLIC AddEvent : BOOL
+VAR_INPUT
+    nEventId    : UDINT;
+    sEventText  : STRING(255);
+    eSeverity   : TcEventSeverity;
+END_VAR
+VAR
+    fbGetSystemTime : GETSYSTEMTIME;
+    stFileTime      : T_FILETIME;
+    bStoreResult    : BOOL;
+END_VAR
+
+// Check if buffer is full
+IF THIS^.IsEventBufferFull() THEN
+    AddEvent := FALSE;
+    RETURN;
+END_IF
+
+// Populate the event structure
+astEventBuffer[nCurrentIndex].nIdentity      := nEventId;
+astEventBuffer[nCurrentIndex].sText          := sEventText;
+astEventBuffer[nCurrentIndex].eEventSeverity := eSeverity;
+
+// Get timestamp
+fbGetSystemTime(timeLoDW => stFileTime.dwLowDateTime,
+                timeHiDW => stFileTime.dwHighDateTime);
+astEventBuffer[nCurrentIndex].dtTimestamp := FILETIME_TO_DT(stFileTime);
+
+// ========================================================
+// CALL THE INJECTED INTERFACE METHOD
+// The EventLogger doesn't know or care HOW the event is stored
+// It just calls the interface method - polymorphism handles the rest
+// ========================================================
+IF bStorageAvailable THEN
+    // Call StoreEvent on whatever storage implementation was injected
+    // Could be XML, JSON, Database, or Mock - we don't care here!
+    bStoreResult := iPersistentStorage.StoreEvent(
+        stEvent := astEventBuffer[nCurrentIndex]
+    );
+    
+    IF NOT bStoreResult THEN
+        // Handle storage failure (log warning, retry, etc.)
+        // Event is still in buffer even if persistence fails
+    END_IF
+END_IF
+
+// Update index
+nCurrentIndex := nCurrentIndex + 1;
+
+AddEvent := TRUE;
+\end{lstlisting}
+
+\begin{lstlisting}
+// Example Storage Implementation: FB_XmlStorage
+// Implements I_PersistentEventStorage for XML file storage
+FUNCTION_BLOCK FB_XmlStorage IMPLEMENTS I_PersistentEventStorage
+VAR
+    sFilePath    : STRING(255) := 'C:\EventLogs\events.xml';
+    fbFileWrite  : FB_FileWrite;  // File writing function block
+    bBusy        : BOOL;
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Implementation of StoreEvent for XML storage
+METHOD StoreEvent : BOOL
+VAR_INPUT
+    stEvent : REFERENCE TO ST_Event;
+END_VAR
+VAR
+    sXmlContent : STRING(1000);
+END_VAR
+
+// Format event as XML
+sXmlContent := CONCAT('<Event>');
+sXmlContent := CONCAT(sXmlContent, '<ID>');
+sXmlContent := CONCAT(sXmlContent, UDINT_TO_STRING(stEvent.nIdentity));
+sXmlContent := CONCAT(sXmlContent, '</ID>');
+sXmlContent := CONCAT(sXmlContent, '<Text>');
+sXmlContent := CONCAT(sXmlContent, stEvent.sText);
+sXmlContent := CONCAT(sXmlContent, '</Text>');
+sXmlContent := CONCAT(sXmlContent, '</Event>');
+
+// Write to file (simplified - actual implementation would be more complex)
+// fbFileWrite(sFilePath := sFilePath, sContent := sXmlContent);
+
+StoreEvent := TRUE;
+\end{lstlisting}
+
+\begin{lstlisting}
+// Example Storage Implementation: FB_MockStorage
+// Implements I_PersistentEventStorage for unit testing
+// Does NOT actually store anything - just records that it was called
+FUNCTION_BLOCK FB_MockStorage IMPLEMENTS I_PersistentEventStorage
+VAR
+    nStoreEventCallCount : UDINT := 0;  // Count method calls
+    stLastStoredEvent    : ST_Event;     // Record last event
+    bSimulateFailure     : BOOL := FALSE; // For testing error handling
+END_VAR
+\end{lstlisting}
+
+\begin{lstlisting}
+// Mock implementation of StoreEvent
+METHOD StoreEvent : BOOL
+VAR_INPUT
+    stEvent : REFERENCE TO ST_Event;
+END_VAR
+
+// Record that this method was called (for test verification)
+nStoreEventCallCount := nStoreEventCallCount + 1;
+stLastStoredEvent := stEvent;
+
+// Optionally simulate failure for testing error handling
+IF bSimulateFailure THEN
+    StoreEvent := FALSE;
+ELSE
+    StoreEvent := TRUE;
+END_IF
+\end{lstlisting}
+
+% ============================================================
+\section*{Quick Reference Card}
+\addcontentsline{toc}{section}{Quick Reference Card}
+% ============================================================
+
+\subsection*{Interface Declaration Syntax}
+
+\begin{lstlisting}
+INTERFACE <InterfaceName>
+
+// Method signatures (no implementation)
+METHOD <MethodName> : <ReturnType>
+VAR_INPUT
+    <param> : <DataType>;
+END_VAR
+\end{lstlisting}
+
+\subsection*{Implementing Interfaces Syntax}
+
+\begin{lstlisting}
+// Single interface
+FUNCTION_BLOCK <FBName> IMPLEMENTS <InterfaceName>
+
+// Multiple interfaces
+FUNCTION_BLOCK <FBName> IMPLEMENTS <Interface1>, <Interface2>, <Interface3>
+
+// Combined with inheritance
+FUNCTION_BLOCK <FBName> EXTENDS <ParentFB> IMPLEMENTS <Interface1>, <Interface2>
+\end{lstlisting}
+
+\subsection*{Dependency Injection via FB\_init}
+
+\begin{lstlisting}
+METHOD FB_init : BOOL
+VAR_INPUT
+    bInitRetains : BOOL;
+    bInCopyCode  : BOOL;
+    iDependency  : <InterfaceType>;  // Injected dependency
+END_VAR
+
+// Store the dependency
+THIS^.iLocalReference := iDependency;
+\end{lstlisting}
+
+\subsection*{OOP Keywords Summary}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Keyword} & \textbf{Purpose} \\
+\midrule
+\texttt{INTERFACE} & Define an interface contract \\
+\texttt{END\_INTERFACE} & End interface definition \\
+\texttt{IMPLEMENTS} & Declare that FB follows an interface \\
+\texttt{EXTENDS} & Inherit from parent FB \\
+\texttt{FB\_init} & Constructor method for dependency injection \\
+\texttt{THIS\^{}} & Reference to current instance \\
+\bottomrule
+\end{tabular}
+\caption{Interface-Related Keywords}
+\end{table}
+
+\subsection*{Common Naming Conventions}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Prefix} & \textbf{Type} & \textbf{Example} \\
+\midrule
+\texttt{I\_} & Interface & \texttt{I\_LightTower}, \texttt{I\_Storage} \\
+\texttt{FB\_} & Function Block & \texttt{FB\_EventLogger} \\
+\texttt{i} & Interface variable & \texttt{iActiveTower}, \texttt{iStorage} \\
+\texttt{fb} & FB instance & \texttt{fbXmlStorage} \\
+\bottomrule
+\end{tabular}
+\caption{Naming Conventions for Interfaces}
+\end{table}
+
+\vfill
+
+\begin{center}
+\textit{Last Updated: \today}
+\end{center}
+
+\end{document}

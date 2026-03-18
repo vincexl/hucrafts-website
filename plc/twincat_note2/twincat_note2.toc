@@ -1,0 +1,21 @@
+\contentsline {section}{\numberline {1}The Evolution of PLCs}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Pre-PLC Era}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}The First PLCs}{2}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}PC-Based Control}{2}{subsection.1.3}%
+\contentsline {section}{\numberline {2}TwinCAT 3 Architecture}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}XAE (eXtended Automation Engineering)}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}XAR (eXtended Automation Runtime)}{2}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Installation and Development Environment}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}TcXaeShell}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Visual Studio Integration}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Licensing}{3}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Local Execution}{3}{subsection.3.4}%
+\contentsline {section}{\numberline {4}System States and Operating Modes}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Blue (CONFIG Mode)}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Green (RUN Mode)}{5}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Yellow (STOP/EXCEPTION Mode)}{5}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Connectivity and Actuation}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Sensors}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Actuators}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Communication}{7}{subsection.5.3}%
+\contentsline {section}{Quick Reference Card}{8}{figure.2}%
