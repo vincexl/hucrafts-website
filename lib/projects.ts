@@ -42,7 +42,7 @@ export const PROJECTS: Project[] = [
         blurb: 'Playful photoreal rendering exploration with three-point lighting and stylized backgrounds.',
         category: 'Design',
         tags: ['Rendering', '3D Modeling'],
-        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/proj-fortunecookie.png',
         link: '/projects/fortune-cookie-render'
     },
     {
