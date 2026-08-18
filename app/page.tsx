@@ -32,7 +32,7 @@ export default function Page() {
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Hero />
         <section id="projects" className="py-10 sm:py-16">
-          <div className="flex items-end justify-between gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Projects</h2>
               <p className="text-zinc-600 mt-2">
@@ -51,7 +51,7 @@ export default function Page() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by keyword, tech, or tag…"
-              className="w-full rounded-xl border border-zinc-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300 bg-white"
+              className="w-full rounded-xl border border-zinc-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
             />
           </div>
 

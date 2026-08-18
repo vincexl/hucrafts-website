@@ -19,9 +19,12 @@ export default function KnowledgeSharing() {
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
-          className="group rounded-3xl overflow-hidden bg-white border border-zinc-200 shadow-sm hover:shadow-md focus-within:shadow-md transition"
+          className="group rounded-2xl overflow-hidden bg-white border border-zinc-200 shadow-sm hover:shadow-md focus-within:shadow-md transition-shadow"
         >
-          <Link href="/projects/product-management-course" className="block p-6">
+          <Link
+            href="/projects/product-management-course"
+            className="block p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-2xl"
+          >
             <div className="flex items-start gap-4">
               <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-amber-100 text-amber-900 flex-shrink-0">
                 <GraduationCap className="h-7 w-7" />

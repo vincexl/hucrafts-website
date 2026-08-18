@@ -74,7 +74,7 @@ export default function ProductManagementCourse() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.1 * idx }}
-                className="group rounded-3xl overflow-hidden bg-white border border-zinc-200 shadow-sm hover:shadow-md transition"
+                className="group rounded-2xl overflow-hidden bg-white border border-zinc-200 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-4">
@@ -99,10 +99,10 @@ export default function ProductManagementCourse() {
                   <Link
                     href={resource.link}
                     target="_blank"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-zinc-900 hover:text-amber-600 transition-colors group"
+                    className="group/link inline-flex items-center gap-2 text-sm font-medium text-zinc-900 hover:text-amber-600 transition-colors rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                   >
                     Open Resource
-                    <ExternalLink className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    <ExternalLink className="h-4 w-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
                   </Link>
                 </div>
               </motion.article>
@@ -113,7 +113,7 @@ export default function ProductManagementCourse() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-16 rounded-3xl border border-zinc-200 bg-gradient-to-br from-amber-50 to-white p-8"
+            className="mt-16 rounded-2xl border border-zinc-200 bg-gradient-to-br from-amber-50 to-white p-8"
           >
             <h2 className="text-2xl font-bold tracking-tight mb-3">Continuous Learning</h2>
             <p className="text-zinc-600 mb-6 max-w-2xl">

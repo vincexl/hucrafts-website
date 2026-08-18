@@ -11,6 +11,8 @@ const __dirname = path.dirname(__filename);
 const SOURCE_DIR = path.resolve(__dirname, '..');
 const OUTPUT_DIR = path.join(SOURCE_DIR, 'public');
 const MD_PATTERN = /\.md$/;
+// Internal docs that must not be published to public/
+const EXCLUDED_FILES = ['CLAUDE.md'];
 
 // HTML template
 const htmlTemplate = (title, content) => `<!DOCTYPE html>
@@ -108,7 +110,7 @@ function convertMarkdownToHTML(mdFilePath) {
 function findMarkdownFiles() {
   const files = fs.readdirSync(SOURCE_DIR);
   return files
-    .filter(file => MD_PATTERN.test(file))
+    .filter(file => MD_PATTERN.test(file) && !EXCLUDED_FILES.includes(file))
     .map(file => path.join(SOURCE_DIR, file));
 }
 

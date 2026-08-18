@@ -12,7 +12,7 @@ export const PROJECTS: Project[] = [
         blurb: 'Vertical lift + overhead shuttle system integrating PLC and Mechanical Design.',
         category: 'Engineering',
         tags: ['PLC', 'GD&T', 'Facility'],
-        image: '/images/proj-skyslide.jpg',
+        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80',
         link: '/projects/skyslide-automated-dna-sample-shuttle'
     },
     {
@@ -22,7 +22,7 @@ export const PROJECTS: Project[] = [
         blurb: 'Migrated 2k+ CAD files with metadata to Arena PLM, established workflows and user training.',
         category: 'Engineering',
         tags: ['PLM', 'Jupyter Notebook', 'Naive Bayes'],
-        image: '/images/proj-arena.jpg',
+        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80',
         link: '/projects/arena-plm-implementation'
     },
     {
@@ -32,7 +32,7 @@ export const PROJECTS: Project[] = [
         blurb: 'SiLA-based Python GUI with multi-threaded event handling and SOAP bindings.',
         category: 'Engineering',
         tags: ['Python', 'SiLA', 'GUI'],
-        image: '/images/proj-odtc.jpg',
+        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
         link: '/projects/odtc-thermal-cycler-ui'
     },
     {
@@ -42,7 +42,7 @@ export const PROJECTS: Project[] = [
         blurb: 'Playful photoreal rendering exploration with three-point lighting and stylized backgrounds.',
         category: 'Design',
         tags: ['Rendering', '3D Modeling'],
-        image: '/images/proj-fortunecookie.jpg',
+        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
         link: '/projects/fortune-cookie-render'
     },
     {
@@ -52,7 +52,7 @@ export const PROJECTS: Project[] = [
         blurb: 'A fun baking competition to foster human connection through culinary creativity.',
         category: 'Events',
         tags: ['Creativity', 'Experiential Design'],
-        image: '/images/mini-bake-off.jpg',
+        image: '/images/bakeoff/apple-crumble-pie.jpg',
         link: '/projects/mini-bake-off-summer-2025/polls'
     },
     // {
