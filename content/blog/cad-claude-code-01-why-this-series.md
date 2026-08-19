@@ -32,7 +32,7 @@ In this framework, one-off scripting becomes a defined and reusable human-in-the
 
 ## What's coming in the series
 
-That last sentence is why this series exists. Nobody knows yet what an AI-native CAD workflow should look like — not the CAD vendors, not the AI labs, and not me. So I'm going to find out the way engineers do: by experiment. This blog series is my lab notebook. Each entry designs one AI-assisted CAD workflow, runs it against real design work, and reports what held up and what didn't.
+That last sentence is why this series exists. The building blocks are arriving fast — Onshape now ships an MCP server that lets a coding agent drive the CAD system directly, and that's what convinced me the timing is right. But a protocol isn't a workflow: what AI-native CAD practice looks like in real, day-to-day design work is still an open question. So I'm going to find out the way engineers do: by experiment. This blog series is my lab notebook. Each entry designs one AI-assisted CAD workflow, runs it against real design work, and reports what held up and what didn't.
 
 Each part is a written walkthrough of one experimental workflow, end to end, with an accompanying video (this intro's video is on the way). At the beginning of each session, I will explain the guiding principles for every critical design choice:
 
