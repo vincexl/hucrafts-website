@@ -22,13 +22,13 @@ Two stories shaped how I work.
 
 **The Arena PLM migration.** Later I had to bring 2,000+ BOM line items, with their metadata, into Arena PLM. The files carried years of inconsistent naming and half-filled properties. I ended up in a Jupyter notebook with a machine-learning model, sorting hundreds of .csv BOMs and extracting metadata into two spreadsheets (Master Part List and BOM List) clean enough to import — then built the workflows and trained the users on the PLM side.
 
-The pattern held both times: where the manual path was measured in weeks, a script cut it to days. Scripting became the biggest lever in both my CAD work and my admin roles across MCAD and PLM. But writing those scripts was its own skill with its own cost — unlike electro-mechanical products that operates for years, data migration scripting is contingent.
+The pattern held both times: where the manual path was measured in weeks, a script cut it to days. Scripting became the biggest lever in both my CAD work and my admin roles across MCAD and PLM. But writing those scripts was its own skill with its own cost — unlike electro-mechanical products that operate for years, data migration scripting is contingent.
 
 ## What a coding agent changes
 
-Claude Code explores the folder structure, finds the naming inconsistencies twenty revisions deep, writes the batch job, runs it, and shows me what didn't fit the pattern. "I should script this" turns from a weekend project into a conversation of communicating requirements. The guiding principles stay mine — numbering schemes, stackup assumptions, what metadata matters, naming conventions— and the administrative efforts move to the machine, which is the right division of labor.
+Where I see the true value of agentic AI is enforcement of guiding principles. Every CAD and PLM library drifts: part names slip out of convention, the same external partner gets logged as a manufacturer in one record and a vendor in another, and third-party models get downloaded fresh into each new assembly document instead of referenced from the shared model bank — breeding duplicate models and, eventually, redundant internal item numbers for the same off-the-shelf part. An agent can patrol for that drift: explore the folder structure, flag what violates the rules twenty revisions deep, write the batch job that fixes it, and show me what didn't fit the pattern. "I should script this" turns from a weekend project into a conversation of communicating requirements. The guiding principles stay mine — numbering schemes, stackup assumptions, what metadata matters, naming conventions — and the administrative efforts move to the machine, which is the right division of labor.
 
-In this framework, one-off scripting becomes a defined and reusable human-in-the-loop workflow. "I should script this procedure" evolves into "I should design an AI native workflow."
+In this framework, one-off scripting becomes a defined and reusable human-in-the-loop workflow. "I should script this procedure" evolves into "I should design an AI-native workflow."
 
 ## What's coming in the series
 
