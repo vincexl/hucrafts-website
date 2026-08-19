@@ -5,6 +5,7 @@ import { Sparkles, ChevronRight, Menu, X } from 'lucide-react';
 
 const LINKS = [
   { href: '/#projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
   { href: '/#knowledge', label: 'Knowledge' },
   { href: '/#about', label: 'About' },
   { href: '/#contact', label: 'Contact' },
