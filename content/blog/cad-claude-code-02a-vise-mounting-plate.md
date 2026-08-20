@@ -130,3 +130,7 @@ The recipe is already getting longer.
 | Recipe lines that produced conventions violations | the lines I never wrote |
 
 Stay tuned for Part 2B, where I fold these lessons back into the recipe and re-attempt the end-to-end workflow.
+
+---
+
+*Table vise CAD model: [Precision Bench Vise Assembly](https://grabcad.com/library/precision-bench-vise-assembly-1) via the GrabCAD Community Library.*
