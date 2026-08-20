@@ -35,7 +35,9 @@ export default function BlogIndex() {
                 {seriesNames.map((name) => {
                     const episodes = posts
                         .filter((p) => p.series === name)
-                        .sort((a, b) => (a.part ?? 0) - (b.part ?? 0));
+                        .sort((a, b) =>
+                            String(a.part ?? 0).localeCompare(String(b.part ?? 0), undefined, { numeric: true }),
+                        );
                     return (
                         <section key={name} className="mt-12">
                             <div className="flex items-center gap-2">

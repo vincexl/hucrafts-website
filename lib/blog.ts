@@ -11,7 +11,7 @@ export type PostMeta = {
     date: string; // YYYY-MM-DD
     description: string;
     series?: string;
-    part?: number;
+    part?: number | string;
     youtube?: string; // YouTube video ID
     video?: string; // local video path, e.g. /videos/foo.mp4
     readingMinutes: number;
@@ -37,7 +37,7 @@ function parseFile(filename: string): { meta: PostMeta; content: string; draft: 
             date: String(data.date ?? ''),
             description: String(data.description ?? ''),
             series: data.series ? String(data.series) : undefined,
-            part: typeof data.part === 'number' ? data.part : undefined,
+            part: typeof data.part === 'number' || typeof data.part === 'string' ? data.part : undefined,
             youtube: data.youtube ? String(data.youtube) : undefined,
             video: data.video ? String(data.video) : undefined,
             readingMinutes: Math.max(1, Math.round(words / 200)),
