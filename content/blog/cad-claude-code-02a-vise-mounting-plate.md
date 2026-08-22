@@ -10,7 +10,7 @@ video: "/videos/part2a-mounting-hardware-replay.mp4"
 
 When I was a new hardware automation engineer, one of my early assignments was to redesign an automation cart that housed multiple instruments. Every instrument arrived as a vendor model, and each one needed a carrier to bolt it into the cart. The first carrier was a satisfying little puzzle: import the vendor model, find its mounting interface, design a carrier around it, document the new parts. Then came the next instrument, and the next. The workflow never changed — only the hole patterns did — and the carrier design tasks quickly turned repetitive.
 
-That memory picked the first experiment for this series. The task: a custom aluminum mounting plate for an off-the-shelf table vise, standing in for any instrument on that cart. Deliberately entry-level, deliberately repetitive — exactly the kind of work an agentic workflow should take off an engineer's plate.
+That memory is why I picked this task for the first experiment. The task: a custom aluminum mounting plate for an off-the-shelf table vise, standing in for any instrument on that cart. Entry-level and repetitive on purpose — exactly the kind of work an agentic workflow should take off an engineer's plate.
 
 So instead of modeling it myself, I wrote a one-page **workflow recipe** and told Claude to execute it end to end.
 
@@ -50,16 +50,16 @@ This is the entire specification I gave the agent — `mounting_hardware.md`, ve
 - Mounting Hole Strength safety factor is at least 1.3
 ```
 
-Note what the recipe does *not* say: no plate dimensions, no hole positions, no part numbering scheme, and no folder conventions beyond one destination URL. The experiment is meant to reveal which of those gaps the agent fills well — and where its reasonable defaults diverge from mine.
+Note what the recipe does *not* say: no plate dimensions, no hole positions, no part numbering scheme, and no folder conventions beyond one destination URL. I wanted to see which of those gaps the agent fills well — and where its defaults diverge from mine.
 
 ## What happened
 
-The run had exactly one human touchpoint. My original vendor file was a SolidWorks assembly (`.SLDASM`), and Claude hit two dead ends trying to import it: Onshape rejected the standalone file, then rejected a zipped version, because a `.SLDASM` references part geometry but does not contain it. Claude diagnosed the problem correctly, reported back, and I handed it `table_vise.step` instead. From that STEP file through the final strength report, the agent ran the entire recipe without me touching the mouse or keyboard.
+The run needed me exactly once. My original vendor file was a SolidWorks assembly (`.SLDASM`), and Claude hit two dead ends trying to import it: Onshape rejected the standalone file, then rejected a zipped version, because a `.SLDASM` references part geometry but does not contain it. Claude diagnosed the problem correctly, reported back, and I handed it `table_vise.step` instead. From that STEP file through the final strength report, the agent ran the entire recipe without me touching the mouse or keyboard.
 
 Here is what that pass produced:
 
 - **Import**: the STEP translated into an assembly and a part studio containing the vise's six bodies, all in the folder named by the recipe.
-- **Geometry interrogation**: rather than eyeballing dimensions, Claude wrote throwaway FeatureScript queries against the imported solids — first using bounding boxes to identify the base casting, then scanning the base for vertical cylindrical faces. The result: four Ø11 thru-holes on a 190 × 185 mm pattern through the base flange. The plate geometry was then anchored to those measurements.
+- **Geometry interrogation**: rather than eyeballing dimensions, Claude wrote throwaway FeatureScript queries against the imported solids — first using bounding boxes to identify the base casting, then scanning the base for vertical cylindrical faces. The result: four Ø11 thru-holes on a 190 × 185 mm pattern through the base flange. Every plate dimension came from those measurements.
 - **The plate**: a 300 × 270 × 6 mm AL 6061 plate with matching holes, rounded corners, and a 25 mm perimeter margin reserved for the future parent-assembly holes requested by the recipe — built as a parametric FeatureScript custom feature and tested in a sandbox before anything touched the document.
 
 ![The mounting plate part studio: one custom feature builds the entire part](/images/blog/part2a-mounting-plate-part-studio.jpg)
@@ -68,7 +68,7 @@ Here is what that pass produced:
 
 ![Final assembly: the table vise seated on its new mounting plate](/images/blog/part2a-final-assembly.jpg)
 
-- **Bookkeeping**: the part was named "Mounting Plate - Table Vise V33450" and assigned item number **MP-V33450-01**; the assembly was renamed and numbered **ASM-V33450-01**; descriptions, material, and density were applied — all through Onshape's metadata API.
+- **Bookkeeping**: Claude named the part "Mounting Plate - Table Vise V33450" and gave it item number **MP-V33450-01**, renamed and numbered the assembly (**ASM-V33450-01**), and filled in descriptions, material, and density through Onshape's metadata API.
 - **Test pipeline**: Onshape Simulation isn't available on the education tier, so Claude did what an engineer without a simulation seat would do: a classical bolted-joint hand calculation covering bearing, tear-out, pull-through, bolt shear and tension for four M10 class 8.8 fasteners under a conservative bench-use load envelope. The governing mode was bearing at the hole, with a safety factor ≈ 44 against the required 1.3, documented in a markdown report with formulas and assumptions.
 
 ## Two channels: Onshape MCP and Claude in Chrome
@@ -91,15 +91,15 @@ FeatureScript deserves its own aside. Onshape made its modeling language somethi
 
 ## What went well
 
-**One pass, end to end.** After the STEP handoff, there was no intervention — not a nudge, not a correction. Import, measure, design, assemble, document, verify: this was a genuinely end-to-end AI workflow, the kind of workflow Part 1 argued should exist.
+**One pass, end to end.** After the STEP handoff, I never intervened. Import, measure, design, assemble, document, verify: this was a genuinely end-to-end AI workflow — the thing Part 1 argued should exist.
 
-**Semantic understanding of the mounting interface.** Claude didn't just find four cylinders; it understood that they were the vise's *mounting holes*, and that "Instrument Mounting Holes: As designed in the 3rd party model" meant the plate had to match them — position for position, on the measured 190 × 185 mm pattern. One sentence of intent in the recipe became fully anchored geometry.
+**Semantic understanding of the mounting interface.** Claude found four cylinders and understood what they were: the vise's *mounting holes*. It also understood that "Instrument Mounting Holes: As designed in the 3rd party model" meant the plate had to match them — position for position, on the measured 190 × 185 mm pattern. One sentence of intent in the recipe became fully anchored geometry.
 
 **All bookkeeping automated.** Names, item numbers, descriptions, material — the metadata entry that Part 1 called the invisible time sink happened as a matter of course. Some of it was stamped by the custom feature itself, so it survives resizing; the rest was written through the metadata API.
 
 ![Part properties, filled in by the agent: name, description, item number MP-V33450-01](/images/blog/part2a-part-properties.jpg)
 
-**Graceful degradation on the test pipeline.** The recipe demanded a safety factor, but the subscription tier has no simulation. Instead of failing the step or inventing a simulation result, Claude fell back to an analytical method and showed its work. That's the judgment call I'd want from a junior engineer in the same situation.
+**A sensible fallback on the test pipeline.** The recipe demanded a safety factor, but the subscription tier has no simulation. Instead of failing the step or inventing a simulation result, Claude fell back to an analytical method and showed its work. That's the judgment call I'd want from a junior engineer in the same situation.
 
 ## What could be improved
 
@@ -111,7 +111,7 @@ All three of my complaints share the same root cause — and it is the thesis of
 
 **Drilled holes where I wanted threads.** The plate's instrument mounting holes came out as Ø11 drilled clearance holes — mirroring the vise's own — with M10 bolts and nyloc nuts recommended underneath. On my bench, I'd tap the plate M10 so the vise can bolt down without loose hardware below. Again: the recipe never specified that.
 
-**Parametric, but not configurable.** Every dimension of the plate is programmed into the custom feature, and the feature exposes nine editable parameters. But Claude never made the judgment call a CAD lead would make: deciding which parameters should be promoted to document variables or a configuration so the *next* engineer can resize the plate without reading FeatureScript. The configurability decision — when to extract, what to expose — remained unmade.
+**Parametric, but not configurable.** Every dimension of the plate is programmed into the custom feature, and the feature exposes nine editable parameters. But Claude never made the judgment call a CAD lead would make: deciding which parameters should be promoted to document variables or a configuration so the *next* engineer can resize the plate without reading FeatureScript.
 
 ![Nine parameters in the feature dialog — but none extracted as document variables or configurations](/images/blog/part2a-custom-feature-dialog.jpg)
 
