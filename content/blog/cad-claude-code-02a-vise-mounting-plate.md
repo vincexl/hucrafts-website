@@ -79,12 +79,13 @@ The most instructive part of this experiment is *how* the work split across tool
 
 **Claude in Chrome** became the everything-else channel. Using my logged-in browser session, the agent uploaded the STEP file through Onshape's hidden file input, drove the import dialog, called Onshape's REST API directly from the page for element enumeration, part insertion, and metadata writes, clicked through the assembly UI to create the Group mate, and took screenshots to visually verify each stage.
 
-I did not design this split — the MCP server's narrow tool roster forced it — but the agent routed each task to the appropriate channel on its own. The resulting division of labor is telling:
+I did not design this split. The MCP server offers nothing beyond FeatureScript, so the agent had to decide, task by task, which channel could do the job. The division of labor it settled on is telling.
 
-- **MCP got the engineering core.** Geometry authoring was test-driven: FeatureScript ran in a scratch context first, checking solid counts, bounding boxes, and hole-face counts before anything was committed to my document. The sandbox made iteration both safe and fast.
-- **The browser got the bureaucracy.** Import quirks, REST endpoints that demand an `X-XSRF-TOKEN` header, a feature-insertion API that only accepts version-pinned paths, a toolbar whose accessibility labels lie — all the messy, undocumented surface area of a real web application. The agent hovered to verify tooltips before clicking and zoomed into screenshots to check its own work.
+**The MCP channel got the engineering core.** Before any code touched my document, the agent ran it in a sandbox and checked the result: one solid produced? Bounding box the right size? Exactly four hole faces? Only after those checks passed did the feature get written into the real model. That made iteration fast, because nothing could break anything.
 
-FeatureScript deserves its own aside here. Onshape's decision to make its modeling language a first-class, testable citizen is what makes an agent-driven workflow this clean: the plate isn't a pile of recorded UI clicks; it's code that was unit-tested before it shipped. My VBA macros from Part 1 never had that luxury.
+**The browser channel got the bureaucracy.** Uploading files, driving the import dialog, calling Onshape's web API, clicking through the assembly toolbar — the unglamorous work of operating a web application. This turned out to be the messier half: some API calls need extra security headers, some only accept a specific version of the endpoint, and one toolbar button was mislabeled under the hood. The agent worked around each of these — at one point hovering over a button and reading its tooltip to confirm what it actually was before clicking.
+
+FeatureScript deserves its own aside. Onshape made its modeling language something you can write, run, and test like real code — and that is what makes this workflow clean. The plate isn't a recording of UI clicks; it's a program that was tested before it shipped. My VBA macros from Part 1 never had that luxury.
 
 ![The custom feature's FeatureScript: annotated parameters with bounds, written and sandbox-tested by the agent](/images/blog/part2a-featurescript.jpg)
 
