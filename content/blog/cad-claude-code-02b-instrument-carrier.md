@@ -50,6 +50,10 @@ These conventions now sit at the top of the procedure (`instrument_carrier.md`) 
 
 I then repeated the complete procedure from a clean start and recorded the run as Take 2. The revised instructions resolved every issue from Part 2A. The STEP file was imported into a dedicated vendor document, while the plate was created in a separate carrier document. Seven feature-tree variables controlled the geometry, the four mounting holes were native M10×1.5 tapped holes, and a Fastened hole-to-hole mate joined the vise to the plate. The workflow also assigned part numbers and verified internal-thread pull-out strength in the 6 mm aluminum plate, producing a safety factor of approximately 2.0. The final model was correct.
 
+![Isometric close-up of a tapped mounting hole showing the modeled M10x1.5 thread inside the bore](/images/blog/part2b-tapped-hole.jpg)
+
+*A mounting hole in the corrected plate. The M10×1.5 thread is modeled inside the bore, not the plain Ø11 clearance hole of Part 2A.*
+
 The unexpected result was the execution cost: 45 minutes and 37 seconds and approximately 111,000 tokens. More importantly, the delay was not distributed across the workflow. It was dominated by a single operation.
 
 <svg viewBox="0 0 640 132" role="img" aria-label="Bar chart: one mate was 52 percent of Take 2's 45 minute 37 second run" style="width:100%;height:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
