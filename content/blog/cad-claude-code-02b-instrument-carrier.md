@@ -24,6 +24,28 @@ Third, the plate was parametric but not readily configurable. The custom feature
 
 Claude made reasonable choices given an incomplete specification. For Part 2B, I updated the procedure to remove that ambiguity: custom parts must be created in a separate document; mounting holes must use Onshape's native metric tapped-hole feature; critical dimensions must appear as Variable features in the feature tree; and a requested "mate" must be implemented as an actual Onshape mate, not a Group. A Group preserves the relative positions of instances, but it does not define a mechanical relationship between them.
 
+These conventions now sit at the top of the procedure (`instrument_carrier.md`) as explicit preconditions:
+
+```markdown
+## 1. Preconditions
+
+- All 3rd-party models live in the designated Onshape folder.
+- All newly created parts and assemblies live in a separate
+  document, segregated from the 3rd-party model folder.
+- All mounting holes default to metric dimensioning unless
+  otherwise specified.
+- Critical dimensions are parameterized as Variable features in
+  the feature tree, not hardcoded in the FeatureScript.
+- "Mate" in any instruction means coupling two entities with
+  Onshape's native mating features (Fastened, Revolute, …).
+  Group is not a mate.
+- Mate type and mated entities follow how the components are
+  physically joined: screws into threaded holes → mate the holes.
+- Prioritize the MCP for feature creation over Claude-in-Chrome;
+  use the browser only for what the MCP cannot do (import,
+  assemblies, mates, properties).
+```
+
 ## The corrected workflow worked, but required forty-five minutes
 
 I then repeated the complete procedure from a clean start and recorded the run as Take 2. The revised instructions resolved every issue from Part 2A. The STEP file was imported into a dedicated vendor document, while the plate was created in a separate carrier document. Seven feature-tree variables controlled the geometry, the four mounting holes were native M10×1.5 tapped holes, and a Fastened hole-to-hole mate joined the vise to the plate. The workflow also assigned part numbers and verified internal-thread pull-out strength in the 6 mm aluminum plate, producing a safety factor of approximately 2.0. The final model was correct.
@@ -86,6 +108,31 @@ The mate required a structural change rather than a faster method of issuing the
 A Fastened mate requires one mate connector on each component. In Take 2, both connectors were created manually in the assembly, which introduced the view manipulation, feature selection, and offset correction described above. Fundamentally, however, a mate connector is a coordinate frame attached to a body. FeatureScript can define that frame directly with `opMateConnector`. I therefore moved connector creation from the assembly into the two Part Studios.
 
 For the vise, a small custom feature calls `opMateConnector` on the base casting at the mounting hole. For the plate, the existing plate-generation feature creates a connector at the corresponding hole. Both connectors use the same frame convention: the origin is at the hole center, the Z-axis points upward, and the X-axis follows the global +X direction. Because the frames are defined consistently, the components align as soon as they are inserted into the assembly. No offset calculation, orientation flip, or bottom-view selection is required. The remaining assembly work is reduced to one Mate dialog and one Fix operation.
+
+In the procedure, the same idea is three steps: define each connector in its Part Studio, then mate the two named connectors in the assembly.
+
+```markdown
+### 3.1 Import the 3rd-party model
+5. Add the instrument's mate connector in its Part Studio, via
+   FeatureScript (no UI): a small feature calls opMateConnector
+   on the base casting at the mounting hole, inserted into the
+   vendor Part Studio via REST. Frame convention for every
+   connector: origin at the hole center on the mounting plane
+   (the base underside, Z = −8), zAxis = +Z, xAxis = +X.
+
+### 3.4 Parameterize and build the plate
+2. The plate feature also creates its mate connector with
+   opMateConnector at the same hole, on the identical frame as
+   3.1.5 (origin at the hole center on the plate top; zAxis = +Z,
+   xAxis = +X), and names it "MC hole A".
+
+### 3.5 Build the carrier assembly
+2. Fastened mate between the plate's and the instrument's
+   part-level connectors, both created in the Part Studios
+   (3.1.5, 3.4.2). Remaining UI: m → Mate, select the two
+   connectors (alt+] to expand each instance to its named
+   connector), Enter; then Fix the plate instance.
+```
 
 I recorded this revised workflow as Take 3, shown in the video at the beginning of the article.
 
