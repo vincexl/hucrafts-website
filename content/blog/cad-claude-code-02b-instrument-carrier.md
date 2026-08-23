@@ -4,31 +4,31 @@ series: "CAD × Claude Code"
 part: "2B"
 date: "2026-08-23"
 author: "Vincent (Xiaolei) Hu"
-description: "I folded Part 2A's lessons into the recipe and the corrected build came out right, but it took forty-five minutes. Almost all of it was one assembly mate the agent had to build by hand, so I moved the mate connectors upstream into FeatureScript and the same build dropped to ten."
+description: "Applying the lessons from Part 2A produced the correct model, but the build still took forty-five minutes. More than half of that time was spent creating a single assembly mate through the Onshape interface. By defining the mate connectors in FeatureScript instead, I reduced the same build to ten and a half minutes."
 video: "/videos/part2b-take3-instrument-carrier.mp4"
 ---
 
-In [Part 2A](/blog/cad-claude-code-02a-vise-mounting-plate) I gave Claude a one-page recipe and let it build an aluminum carrier plate for a vendor table vise, end to end in Onshape. It worked on one pass. But the run broke three of my conventions, so I promised to fold those lessons back into the recipe and try again.
+In [Part 2A](/blog/cad-claude-code-02a-vise-mounting-plate), I gave Claude a one-page procedure for building an aluminum carrier plate for a commercial bench vise in Onshape. Claude completed the model in one pass, but the result violated three of my engineering conventions. Part 2B began with a simple objective: make those conventions explicit, update the procedure, and repeat the build.
 
-I did. The corrected build came out right. It also took forty-five minutes, and I did not expect that. When I looked at where the time went, almost all of it was one step: a single mate that the agent had to build by clicking through the assembly UI. I tried the cheaper fix first and had Claude bind every Onshape command to a keyboard shortcut, which helped the routine steps but not that mate. So I moved the mate work into a channel the agent can script instead, and the same build dropped to ten and a half minutes with no corrections. This post is about that step, why it was slow, and the two changes that fixed it.
+The revised procedure produced the correct result, but the run took 45 minutes and 37 seconds. A review of the recording showed that the delay was highly concentrated: one assembly mate accounted for more than half of the total time because Claude had to construct it through the graphical interface. Keyboard shortcuts reduced some routine interface overhead, but they did not address the underlying bottleneck. The effective solution was to define the mate connectors in FeatureScript, where they could be created deterministically in code. With that change, the same build completed in 10 minutes and 32 seconds without corrections. This article explains why the mate was so expensive and how the workflow was redesigned around it.
 
-## Part 2A's gaps were conventions I never wrote down
+## Part 2A exposed three undocumented design conventions
 
-Part 2A did not fail on capability. It failed on three conventions that lived only in my head, because the recipe never stated them.
+The problems in Part 2A were not failures of CAD capability. They were specification failures: three important conventions were never included in the instructions.
 
-The plate ended up in the wrong document. Claude built the plate and the assembly inside the imported vendor document, which sits in my third-party models folder. My rule is the opposite: vendor models stay pristine in their own library, and my parts live in a separate document.
+First, Claude created the plate and assembly inside the imported vendor document in my third-party model library. My standard practice is to keep vendor models unchanged and create custom parts in a separate design document.
 
-The holes were drilled, not tapped. The instrument mounting holes came out as Ø11 clearance holes mirroring the vise, with bolts and nuts underneath. On my bench I tap the plate M10 so the vise bolts down with no loose hardware below.
+Second, the instrument mounting holes were modeled as Ø11 clearance holes matching the vise, which required bolts and nuts beneath the plate. The intended design uses M10 tapped holes so the vise can be fastened directly to the plate without loose hardware underneath.
 
-The plate was parametric but not configurable. Every dimension was programmed into the custom feature, but none of the nine parameters were promoted to document variables. The next engineer would have to read FeatureScript to resize it.
+Third, the plate was parametric but not readily configurable. The custom feature contained all nine dimensions, but none were exposed as document variables. Resizing the plate would therefore require the next engineer to inspect and modify FeatureScript rather than edit clearly named values in the feature tree.
 
-None of these were the agent's mistakes. It made defensible choices where the recipe was silent. So for Part 2B I closed the gaps: the recipe now says custom parts go in a separate document, mounting holes are native metric tapped holes, critical dimensions become Variable features in the feature tree, and "mate" means a real Onshape mate on the joined geometry, not a Group. A Group only freezes relative position; it is not a mate.
+Claude made reasonable choices given an incomplete specification. For Part 2B, I updated the procedure to remove that ambiguity: custom parts must be created in a separate document; mounting holes must use Onshape's native metric tapped-hole feature; critical dimensions must appear as Variable features in the feature tree; and a requested "mate" must be implemented as an actual Onshape mate, not a Group. A Group preserves the relative positions of instances, but it does not define a mechanical relationship between them.
 
-## Folding the three fixes in produced a correct build that took forty-five minutes
+## The corrected workflow worked, but required forty-five minutes
 
-I replayed the whole recipe from a clean start and recorded it. Call this Take 2. Every gap from 2A was closed. The STEP imported into its own vendor document, the plate landed in a separate carrier document, the four holes were native M10×1.5 tapped holes, seven tree variables drove the geometry, and the vise was joined to the plate with a Fastened hole-to-hole mate. Part numbers and a strength check were in place, with a safety factor around 2.0 on internal-thread pull-out in 6 mm aluminum. The output was correct.
+I then repeated the complete procedure from a clean start and recorded the run as Take 2. The revised instructions resolved every issue from Part 2A. The STEP file was imported into a dedicated vendor document, while the plate was created in a separate carrier document. Seven feature-tree variables controlled the geometry, the four mounting holes were native M10×1.5 tapped holes, and a Fastened hole-to-hole mate joined the vise to the plate. The workflow also assigned part numbers and verified internal-thread pull-out strength in the 6 mm aluminum plate, producing a safety factor of approximately 2.0. The final model was correct.
 
-The number that surprised me was the clock: 45 minutes and 37 seconds, and about 111,000 tokens. A correct build, but a slow one, and the slowness was not spread evenly across the run. It was concentrated in one place.
+The unexpected result was the execution cost: 45 minutes and 37 seconds and approximately 111,000 tokens. More importantly, the delay was not distributed across the workflow. It was dominated by a single operation.
 
 <svg viewBox="0 0 640 132" role="img" aria-label="Bar chart: one mate was 52 percent of Take 2's 45 minute 37 second run" style="width:100%;height:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
   <text x="20" y="34" font-size="15" font-weight="700" fill="#18181b">Where Take 2's 45:37 went</text>
@@ -43,13 +43,13 @@ The number that surprised me was the clock: 45 minutes and 37 seconds, and about
   <text x="20" y="121" font-size="12" fill="#71717a">One assembly mate was more than half the run.</text>
 </svg>
 
-*One assembly mate was 52% of Take 2. That is the beat the rest of this post is about.*
+*A single assembly mate consumed 52% of Take 2 and became the primary target for optimization.*
 
-## Half the run was one mate the agent had to build by clicking
+## One manually constructed mate consumed half of the run
 
-To see why, it helps to know how the work splits across tools, because the split is forced, not chosen.
+Understanding the delay requires a clear view of how the workflow is divided among Onshape's automation interfaces. This division is imposed by the capabilities of the tools rather than by preference.
 
-The Onshape MCP server exposes exactly one thing: FeatureScript. It can write and test code that runs inside a Part Studio, so it can make parts, holes, and geometry queries. Everything else lives outside FeatureScript's reach. Imports, documents, versions, tree variables, assembly instances, and metadata go through REST calls from the logged-in browser tab. And mates are assembly features, which FeatureScript cannot create at all, so a mate can only be built by clicking through the assembly UI.
+The Onshape MCP server exposes FeatureScript, which can create and test Part Studio features such as solids, holes, and geometry queries. It cannot manage document-level or assembly-level objects. Imports, documents, versions, tree variables, assembly instances, and metadata therefore use REST calls issued from the authenticated browser session. Mates are assembly features and cannot be created with FeatureScript, so in this workflow they must be constructed through the assembly interface.
 
 | Task | Channel |
 |---|---|
@@ -57,37 +57,37 @@ The Onshape MCP server exposes exactly one thing: FeatureScript. It can write an
 | Import, documents, versions, variables, instances, metadata | Browser REST |
 | Mates, Fix, visual checks | Browser UI |
 
-That last row is the expensive one. In Take 2 the hole-to-hole mate ran to 52 percent of the take, and it was slow for reasons that have nothing to do with CAD reasoning:
+The browser interface is the most expensive channel. In Take 2, the hole-to-hole mate consumed 52 percent of the total run for reasons largely unrelated to engineering analysis:
 
-- The mate had to be built by hand in the assembly. The agent had to hide and show parts, find a bottom view, and pick the right hole edge by pixel, with the two parts overlapping in the same view.
-- It cost two corrections on camera. The first mate connector landed on a hole that another body was covering, so it had to be redone. Then the offset sign was backwards: +16 mm sank the vise into the plate, and it took a second attempt at −16 to seat it.
-- Click targeting is fragile. Coordinates go stale, one toolbar button is mislabeled under the hood, and open dialogs cover the tree rows you need to click.
+- Claude had to construct the mate manually in the assembly. This required hiding and showing components, orienting the model to a bottom view, and selecting the correct hole edge by screen coordinates while the components overlapped.
+- The operation required two corrections. The first connector was placed on a hole obscured by another body and had to be recreated. The initial +16 mm offset also moved the vise into the plate; changing the offset to −16 mm seated it correctly.
+- Coordinate-based interaction is inherently fragile. Click locations change with window size, one toolbar control has an incorrect internal label, and open dialogs can obscure the feature-tree rows needed for the next action.
 
-So the bottleneck was not the agent thinking about geometry. The agent did that part quickly. The bottleneck was doing an invisible, fiddly UI task by remote control, one click at a time.
+The bottleneck was therefore not geometric reasoning. Claude determined the required relationship quickly; most of the time was spent translating that relationship into a sequence of fragile interface actions.
 
-## Binding every Onshape shortcut helped the routine steps, but not the expensive one
+## Keyboard shortcuts reduced interface overhead but did not remove the bottleneck
 
-Before I changed the mate's structure, I tried the cheaper fix. A lot of Take 2's overhead was the agent pointing at the screen. When the recorded window was a different size than the one the skill's coordinates were measured in, every click target had to be re-derived from a fresh screenshot. Unlabeled toolbar icons had to be identified by hovering and reading the tooltip. And a screenshot went out before almost every click just to find the target. A keyboard shortcut sidesteps all three: the key fires the command no matter the window size, it needs no tooltip check, and it needs no screenshot to locate. So I had Claude set up Onshape's shortcuts and rewrite the workflow to press keys before it clicks.
+Before redesigning the mate, I tested a lower-cost improvement: replacing mouse-driven commands with keyboard shortcuts. Much of Take 2's routine overhead came from locating controls on screen. If the recorded window size differed from the window used to establish the skill's coordinates, Claude had to recalculate each click location from a new screenshot. Unlabeled toolbar icons also required hover actions to reveal their tooltips. A shortcut avoids these steps because it invokes the command directly, independent of window geometry. I therefore had Claude configure Onshape's shortcuts and revise the workflow to prefer keyboard input over mouse clicks.
 
-Onshape's shortcut map is per-account and lives on the settings page, so Claude configured it through the browser. It went in two passes: a curated set of 36 mnemonic bindings for the tools this work actually uses, then a full-coverage pass that assigned the remaining commands, reaching every command in all six tabs, 259 in total, with no conflicts.
+Onshape stores shortcut assignments at the account level, so Claude configured them through the browser settings page. The work proceeded in two passes. The first assigned 36 mnemonic shortcuts to commands used frequently in this workflow. The second assigned the remaining commands for complete coverage. In total, Claude configured 259 commands across six tabs without conflicts.
 
 <video controls preload="metadata" style="width:100%;border-radius:8px" src="/videos/part2b-keyboard-shortcuts.mp4"></video>
 
-*Claude assigning Onshape keyboard shortcuts through the settings page. The map is per-account, so it has to be read and written live.*
+*Claude assigns Onshape keyboard shortcuts through the account settings page. Because the shortcut map is account-specific, it must be read and updated in the active browser session.*
 
-In Take 3 the routine steps did get leaner. Group is `shift+g`, the mate dialog opens with `m`, the bottom view is `shift+6`, and expanding an instance to its named connector is `alt+]`, each printed in the terminal first so the otherwise invisible keypress shows up on the recording. The part of the run that was not the mate dropped from a bit over twenty minutes to about nine.
+Take 3 confirmed that shortcuts improved routine operations. `shift+g` creates a Group, `m` opens the Mate dialog, `shift+6` selects the bottom view, and `alt+]` expands an instance to expose its named connector. Each shortcut was printed in the terminal before execution so the otherwise invisible keystroke would be visible in the recording. Excluding the mate, execution time fell from slightly more than twenty minutes to approximately nine.
 
-But I cannot hand all of that to the shortcuts, and this is the part I want to be fair about. Two other things changed in the same take: the click coordinates were correct this time, and the agent took far fewer screenshots. The beats log credits those two as the larger share of the routine overhead, so the keys were one contributor among three, not the whole win. And the shortcuts could not touch the mate itself. That beat was slow because of geometric work, picking an obscured hole and getting an offset sign right, and a shortcut only speeds up issuing a command, not deciding where to click. Binding all 259 commands was thorough, but this workflow presses about twenty of them. Full coverage was tidy, not the lever.
+The shortcuts were only one contributor to that improvement. Two other conditions also changed in Take 3: the click coordinates were correct, and Claude captured far fewer screenshots. The execution log indicates that those changes accounted for a larger share of the reduced routine overhead. More importantly, shortcuts did not simplify the mate itself. They could open the command faster, but they could not identify an obscured hole or determine the correct offset direction. Configuring all 259 commands provided a complete shortcut map, but this workflow uses only about twenty of them. Full coverage improved consistency; it was not the primary performance lever.
 
-The mate needed a different kind of change.
+The mate required a structural change rather than a faster method of issuing the same commands.
 
-## Moving the mate connectors into FeatureScript turned the forty-five-minute mate into one dialog
+## Defining mate connectors in FeatureScript reduced the assembly work to one dialog
 
-The idea for the fix is simple. A Fastened mate needs two mate connectors, one on each part. Take 2 built both of those connectors inside the assembly, by hand, which is where all the hiding, hunting, and offset-solving happened. But a mate connector is just a coordinate frame on a body, and FeatureScript can place one with `opMateConnector`. So I moved both connectors upstream into the Part Studios.
+A Fastened mate requires one mate connector on each component. In Take 2, both connectors were created manually in the assembly, which introduced the view manipulation, feature selection, and offset correction described above. Fundamentally, however, a mate connector is a coordinate frame attached to a body. FeatureScript can define that frame directly with `opMateConnector`. I therefore moved connector creation from the assembly into the two Part Studios.
 
-The vise gets its connector from a small feature that calls `opMateConnector` on the base casting at the mounting hole. The plate gets its connector from the same custom feature that already builds the plate, at the same hole, on an identical frame: origin at the hole center, Z up, X along +X. Because both frames are identical, the two parts already coincide the moment they are inserted into the assembly. There is no offset to solve, no flip to check, and no bottom-view hunt. The entire assembly step becomes one Mate dialog plus a Fix.
+For the vise, a small custom feature calls `opMateConnector` on the base casting at the mounting hole. For the plate, the existing plate-generation feature creates a connector at the corresponding hole. Both connectors use the same frame convention: the origin is at the hole center, the Z-axis points upward, and the X-axis follows the global +X direction. Because the frames are defined consistently, the components align as soon as they are inserted into the assembly. No offset calculation, orientation flip, or bottom-view selection is required. The remaining assembly work is reduced to one Mate dialog and one Fix operation.
 
-I recorded that version too. Take 3 is the video at the top of this post.
+I recorded this revised workflow as Take 3, shown in the video at the beginning of the article.
 
 <svg viewBox="0 0 640 322" role="img" aria-label="Flowchart comparing the Take 2 mate pipeline built in the assembly against the Take 3 pipeline with connectors authored in the Part Studios" style="width:100%;height:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
   <defs><marker id="arw" markerWidth="9" markerHeight="9" refX="4.5" refY="4.5" orient="auto"><path d="M1,1 L8,4.5 L1,8 Z" fill="#a1a1aa"/></marker></defs>
@@ -119,17 +119,17 @@ I recorded that version too. Take 3 is the video at the top of this post.
   </g>
 </svg>
 
-*Take 2 does all the connector work in the assembly, with two redos. Take 3 authors both connectors in the Part Studios on one shared frame, so the assembly shrinks to insert, mate, fix.*
+*Take 2 creates both connectors in the assembly and requires two corrections. Take 3 defines the connectors in the Part Studios using a common frame convention, reducing the assembly sequence to insert, mate, and fix.*
 
-The assembly stops being the place where a hard geometric decision gets made. Whatever the parts need to line up gets decided in FeatureScript, where it can be tested before it ships, and the assembly just consumes the result. The mate's UI surface shrinks from "build two connectors and solve the offsets" down to "pick two named connectors," and the only assembly-UI actions left are Group, Fix, and one Mate.
+This change removes geometric definition from the assembly workflow. Alignment is specified and tested in FeatureScript, while the assembly consumes two predefined coordinate frames. Instead of constructing two connectors and resolving their offsets through the interface, Claude only selects two named connectors. The remaining assembly-interface operations are Group, Fix, and a single Mate.
 
-One honest caveat: creating the mate itself through REST is still untested. The likely shape is a `BTMMate-64` feature with a `mateConnectorsQuery` over the two connectors, and if it works the mate leaves the UI entirely. Until I have tried it on a scratch assembly, Mate and Fix stay as the one remaining UI step.
+One limitation remains: I have not yet tested mate creation through the REST API. The expected implementation is a `BTMMate-64` feature containing a `mateConnectorsQuery` that references the two predefined connectors. If that approach works, mate creation can also be removed from the interface. Until it is validated in a scratch assembly, Mate and Fix remain the final UI-dependent operations.
 
-I also hit one real bug while wiring the connector feature through REST. Inserting a custom feature with an empty `parameters` array does not apply the feature's default values, so the length preconditions fail and the feature lands in an error state with no message. The fix is to pass every parameter explicitly in the insert. It cost one failed insert before I found it, and it is now written down in the skill.
+The REST implementation also exposed a specific failure mode. Inserting a custom feature with an empty `parameters` array does not apply the feature's default values. As a result, the length preconditions fail and the feature enters an error state without a useful message. The solution is to include every parameter explicitly in the insert request. This issue caused one failed insertion and is now documented in the skill.
 
-## The fix was structural, not a smarter agent
+## The improvement came from workflow design, not a more capable model
 
-Here are the three runs side by side. Part 2A was never instrumented for time or tokens, so those cells are honest blanks; 2A measured human interventions, not minutes.
+The three runs are compared below. Part 2A tracked human intervention but was not instrumented for execution time or token usage, so those values are unavailable.
 
 | Metric | Part 2A | Take 2 (2B) | Take 3 (2B) |
 |---|---|---|---|
@@ -144,13 +144,13 @@ Here are the three runs side by side. Part 2A was never instrumented for time or
 | Joint | assembly mate, at the origin | Fastened, hole-to-hole (UI-built connectors) | Fastened, hole-to-hole (**FeatureScript connectors**) |
 | Assembly-UI actions | n/a | Group, Fix, connectors, offset, sign, flip, Fasten | **Group, Fix, one Mate** |
 
-Going from 2A to 2B closed the correctness gaps the recipe was missing: the right document, tapped holes, real variables, a real mate. Going from Take 2 to Take 3 closed the efficiency gap, and that one was not a smarter agent solving the mate faster. It deleted the expensive step by moving it.
+The transition from Part 2A to Part 2B corrected the specification: separate documents, tapped holes, exposed variables, and a true assembly mate. The transition from Take 2 to Take 3 improved efficiency. Claude did not become better at constructing the mate through the interface; the workflow eliminated most of that interface work by moving connector definition into code.
 
-## Tuning Claude for CAD is a local optimization: send each step to its strongest channel
+## Effective CAD automation assigns each operation to the right interface
 
-Neither change made the model smarter. Both took the slowest step in the run and moved it to the channel where Claude Code is strongest. That is the whole tuning loop: record the run, find the step that dominates it, ask which channel suits that step, move it there, and measure again. Local optimization, one bottleneck at a time.
+Neither improvement depended on a more capable model. The optimization came from identifying the dominant operation and moving it to the interface best suited to execute it. The method is straightforward: record the workflow, measure where time is spent, identify the primary bottleneck, assign that work to the most deterministic automation channel available, and repeat the measurement. This is conventional process optimization applied to agent-driven CAD.
 
-The rule that falls out of it is a short decision tree.
+The resulting interface-selection rule can be summarized as a short decision tree.
 
 <svg viewBox="0 0 640 288" role="img" aria-label="Decision tree: if a step can be a part feature, author it in FeatureScript through the MCP; else if an API endpoint exists use REST; else it is an assembly feature, so drive the UI by keyboard shortcut" style="width:100%;height:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
   <defs><marker id="dtarw" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M1,1 L7,4 L1,7 Z" fill="#a1a1aa"/></marker></defs>
@@ -179,11 +179,11 @@ The rule that falls out of it is a short decision tree.
   <text x="32" y="258" font-size="11.5" fill="#7c2d12">Press the keyboard shortcut. Do not read the screen and click like a human.</text>
 </svg>
 
-*Where each step goes: part geometry to FeatureScript, documents to REST, and the assembly features that are left to the keyboard rather than the mouse.*
+*Interface selection by task: Part Studio geometry goes to FeatureScript, document operations go to REST, and any remaining assembly commands use keyboard shortcuts before mouse input.*
 
-Part features are Claude Code's best game. Geometry that can live in a Part Studio, the plate, the tapped holes, both mate connectors, gets authored in FeatureScript through the MCP, where the agent writes the code, tests it in a sandbox, and only then ships it. Documents, versions, variables, and metadata have no FeatureScript, so they go through REST calls from the browser tab. What is left is the assembly features, and a mate is the clearest case: FeatureScript cannot create one, so the agent has to drive the UI. The move there is not to make it click more like a human. It is to press the key. A shortcut fires the command no matter the window size and needs no screenshot to locate, so the agent stops reading the screen the way a person does and just issues the command.
+Claude Code is most effective when CAD operations can be expressed as deterministic Part Studio features. The plate, tapped holes, and mate connectors therefore belong in FeatureScript, where Claude can write the implementation, test it in a sandbox, and deploy it only after validation. Document-level operations, including imports, versions, variables, and metadata, are not available through FeatureScript and instead use REST. Assembly features remain the least automated category. When an operation such as a mate must still be performed through the interface, keyboard shortcuts should be preferred because they are independent of window size and do not require visual search. Mouse input should be reserved for selections that cannot be addressed through code, an API, or a command shortcut.
 
-Both moves are now written into the two files the next carrier starts from, so the tuning carries forward instead of living in one good run:
+Both improvements are now documented in the two files used to initialize the next carrier workflow. This converts the lessons from a single successful run into repeatable process knowledge:
 
 | In the workflow | Before (Take 2) | After (Take 3) |
 |---|---|---|
@@ -192,7 +192,7 @@ Both moves are now written into the two files the next carrier starts from, so t
 | UI steps in the skill | click coordinates for a fixed window | keyboard shortcuts first, a verified click only as fallback |
 | Finding a hidden tool | search-tools route (`alt+c`) | the direct shortcut |
 
-The one step still in the UI is the mate itself. The open experiment is to build it through REST, over the connectors' deterministic IDs, and get it out of the UI too. If that lands, the assembly is fully scripted and the UI is only there to watch.
+Mate creation is now the only substantive operation that still depends on the interface. The next experiment is to create the mate through REST using the connectors' deterministic IDs. If successful, the assembly process will become fully scripted and the interface will serve only for visual verification.
 
 ---
 
