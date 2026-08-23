@@ -38,7 +38,7 @@ The number that surprised me was the clock: 45 minutes and 37 seconds, and about
     <rect x="308" y="52" width="312" height="46" fill="#f59e0b"/>
   </g>
   <text x="164" y="80" font-size="12" fill="#52525b" text-anchor="middle">Everything else · 48%</text>
-  <text x="464" y="76" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">The mate — 52%</text>
+  <text x="464" y="76" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">The mate, 52%</text>
   <text x="464" y="92" font-size="11" fill="#fff7ed" text-anchor="middle">2 corrections, built by clicking</text>
   <text x="20" y="121" font-size="12" fill="#71717a">One assembly mate was more than half the run.</text>
 </svg>
@@ -131,21 +131,6 @@ I also hit one real bug while wiring the connector feature through REST. Inserti
 
 Here are the three runs side by side. Part 2A was never instrumented for time or tokens, so those cells are honest blanks; 2A measured human interventions, not minutes.
 
-<svg viewBox="0 0 640 172" role="img" aria-label="Two bars to the same time scale: Take 2 is 45:37 with the mate 52 percent; Take 3 is 10:32 with the mate 9 percent" style="width:100%;height:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
-  <text x="20" y="30" font-size="15" font-weight="700" fill="#18181b">The same build, same time scale</text>
-  <clipPath id="c2bar"><rect x="118" y="48" width="502" height="34" rx="8"/></clipPath>
-  <g clip-path="url(#c2bar)"><rect x="118" y="48" width="241" height="34" fill="#e4e4e7"/><rect x="359" y="48" width="261" height="34" fill="#f59e0b"/></g>
-  <text x="20" y="66" font-size="13" font-weight="700" fill="#18181b">Take 2</text><text x="20" y="82" font-size="11" fill="#71717a">45:37</text>
-  <clipPath id="c3bar"><rect x="118" y="100" width="116" height="34" rx="8"/></clipPath>
-  <g clip-path="url(#c3bar)"><rect x="118" y="100" width="106" height="34" fill="#e4e4e7"/><rect x="224" y="100" width="10" height="34" fill="#f59e0b"/></g>
-  <text x="20" y="118" font-size="13" font-weight="700" fill="#18181b">Take 3</text><text x="20" y="134" font-size="11" fill="#71717a">10:32</text>
-  <rect x="118" y="150" width="12" height="12" rx="2" fill="#e4e4e7"/><text x="136" y="160" font-size="11" fill="#52525b">everything else</text>
-  <rect x="250" y="150" width="12" height="12" rx="2" fill="#f59e0b"/><text x="268" y="160" font-size="11" fill="#52525b">the mate</text>
-  <text x="360" y="160" font-size="11" fill="#a1a1aa">Take 3 is ~4× shorter; the mate nearly disappears.</text>
-</svg>
-
-*Both runs to the same time scale. The amber block is the mate.*
-
 | Metric | Part 2A | Take 2 (2B) | Take 3 (2B) |
 |---|---|---|---|
 | Human interventions after the STEP handoff | 0 | 0 | 0 |
@@ -159,38 +144,55 @@ Here are the three runs side by side. Part 2A was never instrumented for time or
 | Joint | assembly mate, at the origin | Fastened, hole-to-hole (UI-built connectors) | Fastened, hole-to-hole (**FeatureScript connectors**) |
 | Assembly-UI actions | n/a | Group, Fix, connectors, offset, sign, flip, Fasten | **Group, Fix, one Mate** |
 
-The table has two halves. Going from 2A to 2B closed the correctness gaps that the recipe was missing: right document, tapped holes, real variables, real mate. Going from Take 2 to Take 3 closed the efficiency gap, and that one was not a smarter agent solving the mate faster. It was a structural move that deleted the expensive step. The connectors went upstream, the parts arrived already aligned, and the four-minute clicking sequence collapsed into one dialog.
+Going from 2A to 2B closed the correctness gaps the recipe was missing: the right document, tapped holes, real variables, a real mate. Going from Take 2 to Take 3 closed the efficiency gap, and that one was not a smarter agent solving the mate faster. It deleted the expensive step by moving it.
 
-## The recipe and the skill changed with it: connectors moved up, clicks became keys
+## Tuning Claude for CAD is a local optimization: send each step to its strongest channel
 
-Two files encode this workflow. `instrument_carrier.md` is the use-case recipe for this specific vise, and `onshape-cad-workflow` is a reusable skill that holds the general method behind it. Both changed between Take 2 and Take 3, and those changes are the real output of the experiment. The video is nice to watch, but the next instrument carrier starts from these two files.
+Neither change made the model smarter. Both took the slowest step in the run and moved it to the channel where Claude Code is strongest. That is the whole tuning loop: record the run, find the step that dominates it, ask which channel suits that step, move it there, and measure again. Local optimization, one bottleneck at a time.
 
-The skill, `onshape-cad-workflow`:
+The rule that falls out of it is a short decision tree.
 
-| Area | Before | After |
+<svg viewBox="0 0 640 288" role="img" aria-label="Decision tree: if a step can be a part feature, author it in FeatureScript through the MCP; else if an API endpoint exists use REST; else it is an assembly feature, so drive the UI by keyboard shortcut" style="width:100%;height:auto;background:#fff;border:1px solid #e4e4e7;border-radius:12px;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
+  <defs><marker id="dtarw" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M1,1 L7,4 L1,7 Z" fill="#a1a1aa"/></marker></defs>
+  <rect x="16" y="30" width="250" height="52" rx="8" fill="#ffffff" stroke="#a1a1aa"/>
+  <text x="30" y="54" font-size="12.5" font-weight="600" fill="#18181b">Can the step be a part feature?</text>
+  <text x="30" y="71" font-size="11" fill="#71717a">geometry that lives in a Part Studio</text>
+  <rect x="330" y="28" width="294" height="56" rx="8" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="344" y="50" font-size="12.5" font-weight="700" fill="#b45309">FeatureScript, through the MCP</text>
+  <text x="344" y="68" font-size="11" fill="#7c2d12">Write it, test it in a sandbox, then ship it.</text>
+  <line x1="266" y1="55" x2="326" y2="55" stroke="#a1a1aa" stroke-width="2" marker-end="url(#dtarw)"/>
+  <text x="288" y="48" font-size="10" font-weight="700" fill="#16a34a">yes</text>
+  <line x1="141" y1="82" x2="141" y2="120" stroke="#a1a1aa" stroke-width="2" marker-end="url(#dtarw)"/>
+  <text x="148" y="105" font-size="10" font-weight="700" fill="#b91c1c">no</text>
+  <rect x="16" y="122" width="250" height="52" rx="8" fill="#ffffff" stroke="#a1a1aa"/>
+  <text x="30" y="146" font-size="12.5" font-weight="600" fill="#18181b">Is there an API endpoint for it?</text>
+  <text x="30" y="163" font-size="11" fill="#71717a">documents, versions, variables, metadata</text>
+  <rect x="330" y="124" width="294" height="48" rx="8" fill="#f4f4f5" stroke="#d4d4d8"/>
+  <text x="344" y="145" font-size="12" font-weight="600" fill="#3f3f46">REST, from the browser tab</text>
+  <text x="344" y="162" font-size="10.5" fill="#71717a">no FeatureScript for these, but an API exists</text>
+  <line x1="266" y1="148" x2="326" y2="148" stroke="#a1a1aa" stroke-width="2" marker-end="url(#dtarw)"/>
+  <text x="288" y="141" font-size="10" font-weight="700" fill="#16a34a">yes</text>
+  <line x1="141" y1="174" x2="141" y2="212" stroke="#a1a1aa" stroke-width="2" marker-end="url(#dtarw)"/>
+  <text x="148" y="197" font-size="10" font-weight="700" fill="#b91c1c">no</text>
+  <rect x="16" y="214" width="608" height="60" rx="10" fill="#fffbeb" stroke="#f59e0b"/>
+  <text x="32" y="238" font-size="12.5" font-weight="700" fill="#b45309">Assembly feature, like a mate: drive the UI</text>
+  <text x="32" y="258" font-size="11.5" fill="#7c2d12">Press the keyboard shortcut. Do not read the screen and click like a human.</text>
+</svg>
+
+*Where each step goes: part geometry to FeatureScript, documents to REST, and the assembly features that are left to the keyboard rather than the mouse.*
+
+Part features are Claude Code's best game. Geometry that can live in a Part Studio, the plate, the tapped holes, both mate connectors, gets authored in FeatureScript through the MCP, where the agent writes the code, tests it in a sandbox, and only then ships it. Documents, versions, variables, and metadata have no FeatureScript, so they go through REST calls from the browser tab. What is left is the assembly features, and a mate is the clearest case: FeatureScript cannot create one, so the agent has to drive the UI. The move there is not to make it click more like a human. It is to press the key. A shortcut fires the command no matter the window size and needs no screenshot to locate, so the agent stops reading the screen the way a person does and just issues the command.
+
+Both moves are now written into the two files the next carrier starts from, so the tuning carries forward instead of living in one good run:
+
+| In the workflow | Before (Take 2) | After (Take 3) |
 |---|---|---|
-| UI steps | click coordinates tied to one window size | key sequences, with a hover-verified click only as fallback |
-| Finding a hidden tool | search-tools route (`alt+c`, then type the name) | the direct shortcut (`shift+g`, `m`, `shift+6`) |
-| Keyboard map | none | `keyboard-map.md`, the verified per-account keys the workflow uses |
-| Recording a keypress | invisible | print the key on the narration line first (`shift+g → Group`) |
-| Mate connectors | built in the assembly UI | the `opMateConnector` pattern in `featurescript-patterns.md` |
+| Mate connectors | picked on holes in the assembly | `opMateConnector` in the Part Studios (recipe §3.1.5, §3.4.2) |
+| The mate | hide/show, bottom-view hunt, offset sign, flip | `alt+]`, `m → Mate`, two named connectors (§3.5.2) |
+| UI steps in the skill | click coordinates for a fixed window | keyboard shortcuts first, a verified click only as fallback |
+| Finding a hidden tool | search-tools route (`alt+c`) | the direct shortcut |
 
-The recipe, `instrument_carrier.md`:
-
-| Step | Before (Take 2) | After (Take 3) |
-|---|---|---|
-| Vise connector | picked on a hole in the assembly | an `opMateConnector` feature in the vendor Part Studio (§3.1.5) |
-| Plate connector | picked on a hole in the assembly | built inside the plate feature on the identical frame (§3.4.2) |
-| The mate | hide and show, bottom-view hunt, offset sign, flip | `alt+]`, `m → Mate`, pick two named connectors, Enter (§3.5.2) |
-| First variable | Variable dialog reached through the search-tools route | `shift+alt+v` |
-
-This is the series thesis again. The durable value of an agentic workflow is not one good run; it is the principle the run leaves behind, written somewhere the next run inherits it. Here two principles got written down: author the connector geometry instead of picking it, and press the key instead of hunting for the button.
-
-## When an agent is slow at a GUI, move the work into a channel it can script
-
-The lesson I am taking from Take 3 is about where to put the work, not how to make the agent click faster. When an agent is slow and error-prone at a graphical task, the reflex is to teach it to drive the UI better: steadier clicks, better view control, a smarter picking routine. That is optimizing the wrong thing. The mate was slow because it was a hand operation in a channel with no test loop and no undo worth trusting. Moving the decision into FeatureScript, where geometry is authored and tested instead of clicked, is what removed the cost.
-
-The principle that did the work here was "author the geometry, not the gestures," and it turned a forty-five-minute mate into a one-minute one. Going forward, the open experiment is to build the mate itself through REST and get the last manual step out of the loop. If that lands, the whole assembly is scripted, and the UI is only there to watch.
+The one step still in the UI is the mate itself. The open experiment is to build it through REST, over the connectors' deterministic IDs, and get it out of the UI too. If that lands, the assembly is fully scripted and the UI is only there to watch.
 
 ---
 
