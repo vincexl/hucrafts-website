@@ -116,6 +116,42 @@ h3 {
   border-radius: 1rem;
   max-width: 100%;
 }
+/* Tables: render as a distinct white card so they read as data, not prose */
+.post-body table {
+  margin-top: 1.5rem;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 0.75rem;
+  overflow: hidden; /* clip cell backgrounds to the rounded corners */
+}
+.post-body thead th {
+  background: #f4f4f5; /* zinc-100 */
+  color: #18181b;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid #d4d4d8;
+}
+.post-body th,
+.post-body td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #ececee;
+  vertical-align: top;
+}
+.post-body tbody td:first-child {
+  font-weight: 500;
+  color: #27272a; /* zinc-800 — the label column reads as a row heading */
+}
+.post-body tbody tr:nth-child(even) td {
+  background: #fafafa; /* zinc-50 zebra */
+}
+.post-body tbody tr:last-child td {
+  border-bottom: none;
+}
 .post-body hr {
   margin-top: 2.5rem;
   border-color: #e4e4e7;
