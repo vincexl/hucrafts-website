@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, ChevronRight, Menu, X } from 'lucide-react';
+import { ChevronRight, Menu, X } from 'lucide-react';
 
 const LINKS = [
   { href: '/#projects', label: 'Projects' },
@@ -21,16 +21,14 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          <motion.span
-            initial={{ scale: 0.8, opacity: 0 }}
+          <motion.img
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-amber-300 text-zinc-900"
-            aria-hidden
-          >
-            <Sparkles className="h-4 w-4" />
-          </motion.span>
-          <span className="font-semibold tracking-tight text-lg">HuCrafts</span>
+            src="/images/hucrafts-logo.png"
+            alt="hucrafts"
+            className="h-8 w-auto"
+          />
         </a>
 
         <div className="hidden md:flex items-center gap-6 text-sm">
