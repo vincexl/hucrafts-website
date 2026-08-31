@@ -159,9 +159,9 @@ The comparison is not perfectly controlled: Take 6 benefited from code written d
 
 ## The rule survives the run
 
-The durable value of an agentic workflow is not the successful run itself. It is the engineering principle the run leaves behind, written where the next attempt can inherit it. This chapter's principle: a stop is a pair of contacting faces, never a bounding box.
+The enduring value of the agentic workflow is not the successful run. It is the understanding of the design intent of the drawer slide mechanism. The agent now understands the physical implications of tabs, stoppers, and locks on the rails, and can carry the insight to all future drawer slide modeling tasks.
 
-That rule now lives in `slide-stop-connectors.fs`, the recipe's import section, and the mechanism pattern in the `onshape-cad-workflow` skill, alongside the smaller lessons paid for by both takes. The next vendor mechanism through this pipeline—whether a rail, hinge, or gas strut—starts with those lessons already in place.
+That understanding now lives in `slide-stop-connectors.fs`, the recipe's import section, and the mechanism pattern in the `onshape-cad-workflow` skill, alongside the smaller lessons paid for by both takes. The next vendor mechanism through this pipeline—whether a rail, hinge, or gas strut—starts with those lessons already in place.
 
 Part 3B places three of these slide pairs into the cabinet shown at the beginning of the video: an 80/20 frame with equal-height pull-out tiers and a 3D printer on the top tray.
 
