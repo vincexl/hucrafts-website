@@ -1,5 +1,5 @@
 ---
-title: "A Stop Is a Pair of Faces, Never a Bounding Box"
+title: "Using Claude Code to Turn a Vendor STEP File into a Working Drawer Slide Assembly"
 series: "CAD × Claude Code"
 part: "3A"
 date: "2026-08-31"
@@ -14,7 +14,7 @@ This slide is one building block in a larger project: a multi-tier cabinet that 
 
 This chapter starts with a McMaster-Carr 15765A28 full-extension slide and uses Claude Code to turn the vendor STEP file into a working left-and-right pair with defined travel. It took two recorded attempts. The first ran for 38 minutes and failed my review: the model looked convincing, but each stage over-travelled by roughly five millimetres. I wrote every failure back into the workflow files and replayed the build. The second take finished in 16 minutes 26 seconds with no feature errors, no mate errors, and only two Onshape MCP API calls instead of 33. The video above shows that second take.
 
-The difference between the two takes comes down to one rule—the title of this article.
+The difference between the two takes comes down to one rule: a stop is a pair of faces, never a bounding box.
 
 ## Everything used in this run
 
@@ -159,7 +159,7 @@ The comparison is not perfectly controlled: Take 6 benefited from code written d
 
 ## The rule survives the run
 
-The durable value of an agentic workflow is not the successful run itself. It is the engineering principle the run leaves behind, written where the next attempt can inherit it. This chapter's principle is the title: a stop is a pair of contacting faces, never a bounding box.
+The durable value of an agentic workflow is not the successful run itself. It is the engineering principle the run leaves behind, written where the next attempt can inherit it. This chapter's principle: a stop is a pair of contacting faces, never a bounding box.
 
 That rule now lives in `slide-stop-connectors.fs`, the recipe's import section, and the mechanism pattern in the `onshape-cad-workflow` skill, alongside the smaller lessons paid for by both takes. The next vendor mechanism through this pipeline—whether a rail, hinge, or gas strut—starts with those lessons already in place.
 
