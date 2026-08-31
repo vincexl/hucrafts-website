@@ -23,7 +23,7 @@ The rule that separates the two takes fits in one sentence, and it is the title 
 | [Onshape](https://www.onshape.com/) (Student) | The CAD system; one document per vendor item |
 | [Onshape FeatureScript MCP](https://labs.onshape.com/) | PTC's labs app: author, sandbox-test, and ship FeatureScript. Nothing else — no imports, assemblies, or metadata |
 | Vendor model | [McMaster-Carr 15765A28](https://www.mcmaster.com/15765A28/) hold-closed base-mount slide, 660 mm, STEP |
-| Workflow recipe | `part_3/sliding_drawer_cabinet_workflow.md` in my project repo: use-case rules and step order |
+| Workflow recipe | [`sliding_drawer_cabinet_workflow.md`](/files/sliding_drawer_cabinet_workflow.md): the use-case rules and step order this run replayed |
 | Skill | `onshape-cad-workflow`: the REST payloads, FeatureScript patterns, and UI pitfalls every run inherits |
 | Feature code | `part_3/features/orient-import.fs`, `slide-members.fs`, `slide-connectors.fs`, `slide-stop-connectors.fs` |
 
