@@ -5,6 +5,7 @@ part: "3A"
 date: "2026-08-31"
 author: "Vincent (Xiaolei) Hu"
 description: "A vendor STEP file reduced a drawer slide to fifteen frozen bodies. Claude Code rebuilt it as a working pair with five members, four Slider mates, and eight end stops. The successful take ran in less than half the time because the failures from the first attempt had become written rules."
+thumbnail: "/images/blog/thumbs/cad-claude-code-03a-drawer-slide-pair.jpg"
 video: "/videos/part3a-drawer-slide-pair.mp4"
 ---
 

@@ -14,6 +14,7 @@ export type PostMeta = {
     part?: number | string;
     youtube?: string; // YouTube video ID
     video?: string; // local video path, e.g. /videos/foo.mp4
+    thumbnail?: string; // listing image, e.g. /images/blog/thumbs/foo.jpg
     readingMinutes: number;
 };
 
@@ -23,6 +24,11 @@ export const SERIES_BLURBS: Record<string, string> = {
     'CAD × Claude Code':
         'A video and article series on pairing Claude Code with mechanical engineering tools — CAD, PLM, and the scriptable seams between them.',
 };
+
+/** First markdown image in the body, used when a post sets no explicit thumbnail. */
+function firstBodyImage(content: string): string | undefined {
+    return content.match(/!\[[^\]]*\]\((\/[^)\s]+)\)/)?.[1];
+}
 
 function parseFile(filename: string): { meta: PostMeta; content: string; draft: boolean } {
     const raw = fs.readFileSync(path.join(BLOG_DIR, filename), 'utf-8');
@@ -40,6 +46,7 @@ function parseFile(filename: string): { meta: PostMeta; content: string; draft: 
             part: typeof data.part === 'number' || typeof data.part === 'string' ? data.part : undefined,
             youtube: data.youtube ? String(data.youtube) : undefined,
             video: data.video ? String(data.video) : undefined,
+            thumbnail: data.thumbnail ? String(data.thumbnail) : firstBodyImage(content),
             readingMinutes: Math.max(1, Math.round(words / 200)),
         },
     };

@@ -5,6 +5,7 @@ part: "2B"
 date: "2026-08-23"
 author: "Vincent (Xiaolei) Hu"
 description: "Applying the lessons from Part 2A produced the correct model, but the build still took forty-five minutes. More than half of that time was spent creating a single assembly mate through the Onshape interface. By defining the mate connectors in FeatureScript instead, I reduced the same build to ten and a half minutes."
+thumbnail: "/images/blog/thumbs/cad-claude-code-02b-instrument-carrier.jpg"
 video: "/videos/part2b-take3-instrument-carrier.mp4"
 ---
 

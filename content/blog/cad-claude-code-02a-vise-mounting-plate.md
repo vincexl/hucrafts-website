@@ -5,6 +5,7 @@ part: "2A"
 date: "2026-08-19"
 author: "Vincent (Xiaolei) Hu"
 description: "I wrote a one-page workflow recipe and let Claude run it end to end in Onshape: import a vendor table vise, measure its mounting holes, build a custom aluminum plate in FeatureScript, assemble, assign properties, and verify hole strength."
+thumbnail: "/images/blog/thumbs/cad-claude-code-02a-vise-mounting-plate.jpg"
 video: "/videos/part2a-mounting-hardware-replay.mp4"
 ---
 

@@ -2,12 +2,48 @@ import Link from 'next/link';
 import { ArrowRight, Youtube } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { getAllPosts, SERIES_BLURBS, formatPostDate } from '@/lib/blog';
+import { getAllPosts, SERIES_BLURBS, formatPostDate, type PostMeta } from '@/lib/blog';
 
 export const metadata = {
     title: 'Blog',
     description: 'Writing and videos on CAD, automation, and Claude Code workflows.',
 };
+
+/**
+ * Listing thumbnail. The image is decorative — the post title sits right next to
+ * it in the same link — so alt is empty to avoid announcing it twice. Posts with
+ * no artwork yet (a text-only intro, say) get a tinted tile instead of a gap.
+ */
+function Thumbnail({ post }: { post: PostMeta }) {
+    // Pad numeric parts to two digits ("1" -> "01"); alphanumerics ("2A") pass through.
+    const part = post.part !== undefined ? String(post.part).padStart(2, '0') : null;
+    return (
+        <span className="relative block w-full sm:w-36 shrink-0 overflow-hidden rounded-xl bg-zinc-100 ring-1 ring-zinc-200/70">
+            <span className="block aspect-[3/2]">
+                {post.thumbnail ? (
+                    <img
+                        src={post.thumbnail}
+                        alt=""
+                        width={600}
+                        height={400}
+                        className="h-full w-full object-cover"
+                    />
+                ) : (
+                    <span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-100 to-white">
+                        <span className="text-xl sm:text-2xl font-extrabold tabular-nums text-amber-500/80">
+                            {part ?? 'HC'}
+                        </span>
+                    </span>
+                )}
+            </span>
+            {part && post.thumbnail && (
+                <span className="absolute left-1.5 top-1.5 rounded-md bg-white/90 px-1.5 py-0.5 text-[11px] font-extrabold tabular-nums leading-none text-amber-600 shadow-sm">
+                    {part}
+                </span>
+            )}
+        </span>
+    );
+}
 
 export default function BlogIndex() {
     const posts = getAllPosts();
@@ -52,13 +88,9 @@ export default function BlogIndex() {
                                     <li key={p.slug}>
                                         <Link
                                             href={`/blog/${p.slug}`}
-                                            className="group flex items-baseline gap-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                                            className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                                         >
-                                            {p.part !== undefined && (
-                                                <span className="text-2xl font-extrabold tabular-nums text-amber-500 shrink-0" aria-label={`Part ${p.part}`}>
-                                                    {String(p.part).padStart(2, '0')}
-                                                </span>
-                                            )}
+                                            <Thumbnail post={p} />
                                             <span className="flex-1 min-w-0">
                                                 <span className="block font-semibold tracking-tight group-hover:text-amber-700 transition-colors">
                                                     {p.title}
@@ -69,7 +101,7 @@ export default function BlogIndex() {
                                                 </span>
                                             </span>
                                             <ArrowRight
-                                                className="h-4 w-4 shrink-0 self-center text-zinc-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition"
+                                                className="hidden sm:block h-4 w-4 shrink-0 self-center text-zinc-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition"
                                                 aria-hidden
                                             />
                                         </Link>
@@ -88,12 +120,15 @@ export default function BlogIndex() {
                                 <li key={p.slug}>
                                     <Link
                                         href={`/blog/${p.slug}`}
-                                        className="group block rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                                        className="group flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                                     >
-                                        <span className="block font-semibold tracking-tight group-hover:text-amber-700 transition-colors">{p.title}</span>
-                                        <span className="mt-1 block text-sm text-zinc-600">{p.description}</span>
-                                        <span className="mt-2 block text-xs text-zinc-500">
-                                            {formatPostDate(p.date)} · {p.readingMinutes} min read
+                                        <Thumbnail post={p} />
+                                        <span className="flex-1 min-w-0">
+                                            <span className="block font-semibold tracking-tight group-hover:text-amber-700 transition-colors">{p.title}</span>
+                                            <span className="mt-1 block text-sm text-zinc-600">{p.description}</span>
+                                            <span className="mt-2 block text-xs text-zinc-500">
+                                                {formatPostDate(p.date)} · {p.readingMinutes} min read
+                                            </span>
                                         </span>
                                     </Link>
                                 </li>
