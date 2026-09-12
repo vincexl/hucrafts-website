@@ -2,6 +2,7 @@
 import { useMemo, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
+import CompanyLogos from '@/components/CompanyLogos';
 import ProjectsGrid from '@/components/ProjectsGrid';
 import KnowledgeSharing from '@/components/KnowledgeSharing';
 import About from '@/components/About';
@@ -31,6 +32,7 @@ export default function Page() {
       <Navbar />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Hero />
+        <CompanyLogos />
         <section id="projects" className="py-10 sm:py-16">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
