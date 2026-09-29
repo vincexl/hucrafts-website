@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { getProjectBySlug } from '@/lib/projects';
 
-export const metadata = { title: 'Wine Tasting Wristband' };
+export const metadata = { title: 'Model-Based Gesture Detection for a Wine Tasting Wristband' };
 
 function Figure({
   src,
@@ -39,11 +39,11 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 const HARDWARE = [
   { part: 'MPU6050 6-axis IMU', where: 'Wristband', link: 'I²C0 (GP8 / GP9)', rate: '50 Hz' },
-  { part: 'NTC thermistor, 10 kΩ', where: 'Wristband, against the skin', link: 'ADC0 (GP26)', rate: '10 Hz' },
+  { part: 'NTC thermistor, 10 kΩ', where: 'Wristband, against the skin (filter board in hub)', link: 'ADC0 (GP26)', rate: '10 Hz' },
   { part: 'Capacitive touch pad', where: 'Wristband, top face', link: 'Digital in (GP16)', rate: 'Event' },
   { part: 'Vibration motor', where: 'Wristband', link: 'PWM (GP15)', rate: 'Output' },
   { part: 'MAX4466 microphone', where: 'Hub', link: 'ADC1 (GP27)', rate: '16 kHz' },
-  { part: 'PPG pulse sensor', where: 'Hub', link: 'ADC2 (GP28)', rate: '100 Hz' },
+  { part: 'PPG pulse sensor', where: 'Hub, outside the case (fingertip)', link: 'ADC2 (GP28)', rate: '100 Hz' },
   { part: 'PN532 NFC reader', where: 'Hub, under the glass pocket', link: 'I²C1 (GP2 / GP3)', rate: 'Event' },
 ];
 
@@ -86,18 +86,12 @@ export default function WineTastingWristband() {
           Final project, EN.665.681 Application of Sensing Systems, Johns Hopkins University, Summer 2026
         </p>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
-          <Figure
-            src="/images/wine-tasting/wristband.jpg"
-            alt="Blue 3D-printed wristband housing strapped to a forearm with a velcro band, a capacitive touch module on top, and a tether cable leaving the end"
-            caption="The wristband: a 3D-printed housing on a velcro strap, touch pad on top, one tether cable out the end."
-          />
-          <Figure
-            src="/images/wine-tasting/hub-glass.jpg"
-            alt="Wine glass seated in a circular pocket on the lid of a white 3D-printed hub, with the red NFC reader board visible beneath the glass"
-            caption="The hub: a 3D-printed enclosure around the Pico 2 W. The glass sits in a pocket directly over the NFC reader."
-          />
-        </div>
+        <Figure
+          className="mt-8"
+          src="/images/wine-tasting/wristband-cad.jpg"
+          alt="Exploded Onshape assembly of the wristband with labeled parts: capacitive touch pad, printed housing, vibration motor, MPU6050 IMU, printed base, RJ45 tether socket, and thermistor on the skin side"
+          caption="The wristband, exploded from its Onshape assembly. The IMU is fastened flat to the printed base, which fixes its axes to the wrist."
+        />
 
         <Section title="The problem">
           <p>
@@ -134,6 +128,30 @@ export default function WineTastingWristband() {
             it can never be confused with the gestures the classifier is watching for.
           </p>
           <p>
+            The pulse sensor is the one part left outside the case, so a taster can hold it against a fingertip
+            without opening anything. Its cable runs in through the ventilation holes in the enclosure wall.
+          </p>
+        </Section>
+        <Figure
+          className="mt-6"
+          src="/images/wine-tasting/hub-cad.jpg"
+          alt="Exploded Onshape assembly of the hub with labeled parts: printed lid with glass pocket, PN532 NFC reader, thermistor RC filter board, RJ45 breakout, pulse sensor outside the case, Pico 2 W breakout, printed base, screw-terminal board, and MAX4466 microphone"
+          caption="The hub, exploded. The NFC reader sits directly under the glass pocket in the lid; a screw-terminal board lands every line from the tether."
+        />
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          <Figure
+            src="/images/wine-tasting/wristband.jpg"
+            alt="Blue 3D-printed wristband housing strapped to a forearm with a velcro band, a capacitive touch module on top, and a tether cable leaving the end"
+            caption="As built: the wristband on a velcro strap, touch pad on top, tether out the end."
+          />
+          <Figure
+            src="/images/wine-tasting/hub-glass.jpg"
+            alt="Wine glass seated in a circular pocket on the lid of a white 3D-printed hub, with the red NFC reader board visible beneath the glass"
+            caption="As built: a tagged glass seated in the hub's pocket, over the NFC reader."
+          />
+        </div>
+        <div className="mt-6 space-y-4 text-zinc-700 leading-relaxed max-w-prose">
+          <p>
             The housing design fed straight back into the software. Midway through the project I remounted the
             IMU while fitting it into the enclosure, and the trained model stopped confirming gestures
             immediately. The features that separate a sip from a sniff depend on how the sensor sits on the
@@ -163,7 +181,7 @@ export default function WineTastingWristband() {
               </tbody>
             </table>
           </div>
-        </Section>
+        </div>
 
         <Section title="Four sample rates on one small chip">
           <p>

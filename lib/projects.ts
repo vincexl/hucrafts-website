@@ -38,11 +38,11 @@ export const PROJECTS: Project[] = [
     {
         id: 'eng-4',
         slug: 'wine-tasting-wristband',
-        title: 'Wine Tasting Wristband',
-        blurb: 'Six-sensor wearable and 3D-printed hub that verifies each tasting gesture from wrist motion and timestamps every channel.',
+        title: 'Model-Based Gesture Detection for a Wine Tasting Wristband',
+        blurb: 'A random-forest model verifies swirl, sniff, and sip from a wrist IMU, anchoring every sensor channel to the moment each gesture happened.',
         category: 'Engineering',
         tags: ['Sensors', 'DSP', 'Embedded', 'Machine Learning'],
-        image: '/images/wine-tasting/hub-glass.jpg',
+        image: '/images/wine-tasting/wristband-cad.jpg',
         link: '/projects/wine-tasting-wristband'
     },
     {
