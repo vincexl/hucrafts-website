@@ -36,6 +36,16 @@ export const PROJECTS: Project[] = [
         link: '/projects/odtc-thermal-cycler-ui'
     },
     {
+        id: 'eng-4',
+        slug: 'wine-tasting-wristband',
+        title: 'Wine Tasting Wristband',
+        blurb: 'Six-sensor wearable and 3D-printed hub that verifies each tasting gesture from wrist motion and timestamps every channel.',
+        category: 'Engineering',
+        tags: ['Sensors', 'DSP', 'Embedded', 'Machine Learning'],
+        image: '/images/wine-tasting/hub-glass.jpg',
+        link: '/projects/wine-tasting-wristband'
+    },
+    {
         id: 'des-1',
         slug: 'fortune-cookie-render',
         title: 'Fortune Cookie Render',
