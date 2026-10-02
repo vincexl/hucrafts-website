@@ -17,6 +17,17 @@ export const PROJECTS: Project[] = [
         frame: 'skyslide'
     },
     {
+        id: 'eng-5',
+        slug: 'robots-play-catch',
+        title: 'Robots Play Catch — Throwing and Catching Between Two Arms',
+        blurb: 'Two six-axis arms in CoppeliaSim throw a ball back and forth, planned with projectile math and solved with inverse kinematics.',
+        category: 'Engineering',
+        tags: ['Inverse Kinematics', 'CoppeliaSim', 'Lua', 'Python'],
+        image: '/images/robots-catch/cover.jpg',
+        link: '/projects/robots-play-catch',
+        frame: 'play_catch'
+    },
+    {
         id: 'eng-2',
         slug: 'arena-plm-implementation',
         title: 'Design Metadata Migration & PLM Implementation',
