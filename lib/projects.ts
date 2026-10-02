@@ -12,7 +12,7 @@ export const PROJECTS: Project[] = [
         blurb: 'Vertical lift + overhead shuttle system integrating PLC and Mechanical Design.',
         category: 'Engineering',
         tags: ['PLC', 'GD&T', 'Facility'],
-        image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/skyslide-poster.jpg',
         link: '/projects/skyslide-automated-dna-sample-shuttle'
     },
     {
