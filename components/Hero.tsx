@@ -2,7 +2,7 @@ import Triad from '@/components/frames/Triad';
 import { RESUME_HREF } from '@/lib/site';
 
 // Set to the portrait's public path (e.g. '/images/portrait.jpg') once it exists.
-const PORTRAIT_SRC: string | null = null;
+const PORTRAIT_SRC: string | null = '/images/portrait.jpg';
 
 export default function Hero() {
   return (
@@ -13,8 +13,8 @@ export default function Hero() {
             {PORTRAIT_SRC ? (
               <img
                 src={PORTRAIT_SRC}
-                alt="Vincent Hu"
-                className="absolute inset-0 h-full w-full object-cover"
+                alt="Vincent Hu seated in a cockpit-style workstation at the Tecan booth of a trade show"
+                className="absolute inset-0 h-full w-full object-cover object-[68%_55%]"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
