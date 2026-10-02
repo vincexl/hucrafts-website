@@ -1,61 +1,73 @@
-import { Check, Download, FileText } from 'lucide-react';
+import { RESUME_HREF } from '@/lib/site';
 
 const SKILLS = [
-  'SolidWorks/Onshape and Product Lifecycle Management Administration, GD&T, FEA basics',
-  'PLC & motion control (Beckhoff TwinCAT)',
-  'Python (PySide6), SiLA SOAP drivers',
-  'Immersive game & event design',
+  { area: 'Controls & HMI', items: 'TwinCAT 3, IEC 61131-3 Structured Text, Ignition Vision, OPC UA, ADS, EtherCAT, Modbus TCP' },
+  { area: 'Robotics & simulation', items: 'ROS 2, RViz, Gazebo, CoppeliaSim, motion control, state machines' },
+  { area: 'Mechanical & PLM', items: 'SOLIDWORKS, Onshape, GD&T, DFM/DFA, electromechanical design, Arena PLM' },
+  { area: 'Programming & data', items: 'Python, FastAPI, NumPy, Pandas, C#, Django, REST APIs, Git' },
+];
+
+const EDUCATION = [
+  { school: 'Johns Hopkins University', degree: 'M.S. Robotics & Autonomous Systems', years: '2024 – present' },
+  { school: 'The Cooper Union', degree: 'B.E. Mechanical Engineering', years: '2016 – 2020' },
 ];
 
 export default function About() {
   return (
-    <section id="about" className="py-16 border-t border-zinc-200">
-      <div className="grid lg:grid-cols-3 gap-10 items-start">
-        <div className="lg:col-span-2">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">About HuCrafts</h2>
-          <p className="mt-4 text-zinc-700 max-w-prose">
-            I’m Vincent (Xiaolei) Hu—automation engineer, designer, and event planner. My work spans robotics systems, GUI development, 3D Modeling and Additive Manufacturing, and social experiences.
+    <section id="about" className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 py-24 border-t border-rule">
+      <div className="grid gap-12 lg:grid-cols-[14rem_1fr]">
+        <h2 className="font-display font-wide text-2xl sm:text-[1.75rem] font-extrabold leading-tight tracking-[-0.025em]">About</h2>
+        <div>
+          <p className="max-w-[44rem] text-2xl sm:text-[1.75rem] leading-snug font-medium text-ink">
+            I&rsquo;m a mechanical engineer who crossed into controls and kept going. I design the hardware, write the
+            PLC code that moves it, and build the software people use to run it, so a machine can be trusted to work
+            unattended.
           </p>
-          <ul className="mt-6 grid sm:grid-cols-2 gap-3 text-sm">
-            {SKILLS.map((skill) => (
-              <li key={skill} className="flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-4">
-                <Check className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" aria-hidden />
-                <span>{skill}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <aside className="space-y-3">
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-            <h3 className="font-semibold">Resume</h3>
-            <p className="text-sm text-zinc-600 mt-1">Automation, controls &amp; robotics engineering experience.</p>
-            <div className="mt-3 flex flex-wrap gap-2 text-sm">
-              <a
-                href="/files/Xiaolei_Hu_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl px-3 py-2 font-medium bg-zinc-900 text-white hover:bg-zinc-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
-              >
-                <FileText className="h-4 w-4" aria-hidden /> View
-              </a>
-              <a
-                href="/files/Xiaolei_Hu_Resume.pdf"
-                download
-                className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white border border-zinc-300 hover:border-zinc-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
-              >
-                <Download className="h-4 w-4" aria-hidden /> Download
-              </a>
+          <p className="mt-6 max-w-[44rem] text-lg leading-relaxed text-ink-soft">
+            HuCrafts is the name I build under. Besides engineering, it covers the events I host and the notes I share
+            on product management.
+          </p>
+
+          <div className="mt-14 grid gap-12 md:grid-cols-2">
+            <div>
+              <h3 className="text-sm font-semibold text-ink-mute">Education</h3>
+              <ul className="mt-4 divide-y divide-rule border-y border-rule">
+                {EDUCATION.map((e) => (
+                  <li key={e.school} className="py-4">
+                    <p className="font-semibold">{e.school}</p>
+                    <p className="mt-1 flex justify-between gap-4 text-ink-soft">
+                      <span>{e.degree}</span>
+                      <span className="shrink-0 text-sm tabular-nums">{e.years}</span>
+                    </p>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-ink-soft">
+                Certified SOLIDWORKS Expert (CSWE). Fluent in English and Mandarin.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-ink-mute">Tools</h3>
+              <dl className="mt-4 divide-y divide-rule border-y border-rule">
+                {SKILLS.map((s) => (
+                  <div key={s.area} className="py-4">
+                    <dt className="font-semibold">{s.area}</dt>
+                    <dd className="mt-1 text-ink-soft">{s.items}</dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
-          <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-amber-50 to-white p-5">
-            <h3 className="font-semibold">Capabilities</h3>
-            <p className="text-sm text-zinc-600 mt-1">Prototyping • Automation • PDM & PLM Admin • Production</p>
-          </div>
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-            <h3 className="font-semibold">Selected Industries/Contexts</h3>
-            <p className="text-sm text-zinc-600 mt-1">Biotechnology • Personal/Academic Projects • Team Bonding • Community Events</p>
-          </div>
-        </aside>
+
+          <a
+            href={RESUME_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-12 inline-flex h-12 items-center border border-ink px-6 text-[15px] font-semibold text-ink hover:bg-ink hover:text-paper transition-colors"
+          >
+            Full resume (PDF)
+          </a>
+        </div>
       </div>
     </section>
   );

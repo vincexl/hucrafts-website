@@ -1,41 +1,9 @@
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import type { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { getProjectBySlug } from '@/lib/projects';
+import { Figure, ProjectBody, ProjectFacts, ProjectHero, ProjectTitle, Section } from '@/components/project/ProjectPage';
 
 export const metadata = { title: 'Model-Based Gesture Detection for a Wine Tasting Wristband' };
-
-function Figure({
-  src,
-  alt,
-  caption,
-  className = '',
-}: {
-  src: string;
-  alt: string;
-  caption: ReactNode;
-  className?: string;
-}) {
-  return (
-    <figure className={className}>
-      <div className="rounded-2xl overflow-hidden bg-white shadow-sm ring-1 ring-black/5">
-        <img src={src} alt={alt} className="w-full object-contain" loading="lazy" />
-      </div>
-      <figcaption className="mt-2 text-sm text-zinc-600">{caption}</figcaption>
-    </figure>
-  );
-}
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="mt-14">
-      <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-      <div className="mt-4 space-y-4 text-zinc-700 leading-relaxed max-w-prose">{children}</div>
-    </section>
-  );
-}
 
 const HARDWARE = [
   { part: 'MPU6050 6-axis IMU', where: 'Wristband', link: 'I²C0 (GP8 / GP9)', rate: '50 Hz' },
@@ -62,36 +30,31 @@ export default function WineTastingWristband() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-12 flex-1">
-        <Link
-          href="/#projects"
-          className="inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 mb-6 group rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-        >
-          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" aria-hidden />
-          All projects
-        </Link>
-
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-zinc-600">{project.category}</span>
-          {project.tags.map((t) => (
-            <span key={t} className="inline-flex items-center rounded-full bg-amber-100 text-amber-900 px-2 py-1">{t}</span>
-          ))}
-        </div>
-        <h1 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">{project.title}</h1>
-        <p className="mt-3 text-lg text-zinc-600 max-w-prose">
-          A wristband that talks you through a wine tasting, checks from your wrist motion that you actually
-          swirled, sniffed, and sipped, and stamps every sensor reading with the moment each step happened.
-        </p>
-        <p className="mt-2 text-sm text-zinc-500">
-          Final project, EN.665.681 Application of Sensing Systems, Johns Hopkins University, Summer 2026
-        </p>
-
-        <Figure
-          className="mt-8"
+      <main className="flex-1">
+        <ProjectHero
           src="/images/wine-tasting/wristband-cad.jpg"
+          fit="contain"
           alt="Exploded Onshape assembly of the wristband with labeled parts: capacitive touch pad, printed housing, vibration motor, MPU6050 IMU, printed base, RJ45 tether socket, and thermistor on the skin side"
-          caption="The wristband, exploded from its Onshape assembly. The IMU is fastened flat to the printed base, which fixes its axes to the wrist."
         />
+        <ProjectBody>
+        <ProjectTitle
+          project={project}
+          lead={<p>A wristband that talks you through a wine tasting, checks from your wrist motion that you actually swirled, sniffed, and sipped, and stamps every sensor reading with the moment each step happened.</p>}
+        />
+        <ProjectFacts
+          facts={[
+            { label: 'Context', value: 'Final project, Application of Sensing Systems (EN.665.681), Johns Hopkins' },
+            { label: 'Timeline', value: 'Summer 2026' },
+            { label: 'Data', value: '1,026 labeled windows from 122 gestures' },
+          ]}
+          tools={[
+            { area: 'Embedded', items: 'Raspberry Pi Pico 2 W, dual-core firmware, Wi-Fi dashboard' },
+            { area: 'Sensing', items: 'MPU6050 IMU, NTC thermistor, PPG pulse sensor, MAX4466 microphone, PN532 NFC' },
+            { area: 'Models', items: 'Random forest, on-device rule-based detector, Whisper speech recognition' },
+            { area: 'Mechanical', items: 'Onshape, 3D-printed wristband and hub housings' },
+          ]}
+        />
+
 
         <Section title="The problem">
           <p>
@@ -150,7 +113,7 @@ export default function WineTastingWristband() {
             caption="As built: a tagged glass seated in the hub's pocket, over the NFC reader."
           />
         </div>
-        <div className="mt-6 space-y-4 text-zinc-700 leading-relaxed max-w-prose">
+        <div className="mt-6 space-y-4 text-ink-soft leading-relaxed max-w-prose">
           <p>
             The housing design fed straight back into the software. Midway through the project I remounted the
             IMU while fitting it into the enclosure, and the trained model stopped confirming gestures
@@ -159,9 +122,9 @@ export default function WineTastingWristband() {
             mounting orientation, and every result below comes from that orientation.
           </p>
 
-          <div className="not-prose overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
+          <div className="not-prose overflow-x-auto ring-1 ring-rule bg-white">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-50 text-left text-zinc-600">
+              <thead className="bg-well text-left text-ink-mute">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Sensor / actuator</th>
                   <th className="px-4 py-2 font-semibold">Location</th>
@@ -169,10 +132,10 @@ export default function WineTastingWristband() {
                   <th className="px-4 py-2 font-semibold">Rate</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100">
+              <tbody className="divide-y divide-rule">
                 {HARDWARE.map((h) => (
                   <tr key={h.part}>
-                    <td className="px-4 py-2 font-medium text-zinc-900">{h.part}</td>
+                    <td className="px-4 py-2 font-medium text-ink">{h.part}</td>
                     <td className="px-4 py-2">{h.where}</td>
                     <td className="px-4 py-2 font-mono text-xs">{h.link}</td>
                     <td className="px-4 py-2">{h.rate}</td>
@@ -210,7 +173,7 @@ export default function WineTastingWristband() {
             count meant.
           </p>
           <p>
-            <strong className="text-zinc-900">Pulse to beats per minute.</strong> The pulse sensor is an optical
+            <strong className="text-ink">Pulse to beats per minute.</strong> The pulse sensor is an optical
             sensor (a photoplethysmograph): its output is a wavy ADC signal whose peaks are heartbeats, riding on
             a slowly drifting baseline. Two moving averages pull them apart. A fast one (α = 0.3) follows the
             waveform, a slow one (α = 0.01) follows the drift, and their difference is the pulse alone. A beat
@@ -221,13 +184,13 @@ export default function WineTastingWristband() {
             intervals, and an interval roughly double the median (a missed beat) is kept out of it.
           </p>
           <p>
-            <strong className="text-zinc-900">Thermistor to degrees.</strong> The thermistor sits in a voltage
+            <strong className="text-ink">Thermistor to degrees.</strong> The thermistor sits in a voltage
             divider. The firmware converts the ADC reading to resistance and then to temperature with the
             β-form of the Steinhart–Hart equation (β = 3950). The cable adds brief contact-resistance spikes, so
             a five-sample median filter removes them at the cost of about 0.2 s of lag.
           </p>
           <p>
-            <strong className="text-zinc-900">Motion to features.</strong> The IMU stream is cut into one-second
+            <strong className="text-ink">Motion to features.</strong> The IMU stream is cut into one-second
             windows that overlap by half. A ten-second still period at the start of each session measures the
             gyroscope&apos;s zero offset and the direction of gravity. From each window the model gets 24
             features: how often the gyroscope crosses zero (a swirl is periodic), peak acceleration (a sip has a
@@ -275,15 +238,15 @@ export default function WineTastingWristband() {
           </p>
         </Section>
 
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <dl className="mt-8 grid border-t border-ink sm:grid-cols-2 sm:gap-x-12">
           {RESULTS.map((r) => (
-            <div key={r.label} className="rounded-2xl bg-white p-4 ring-1 ring-black/5 shadow-sm">
-              <div className="text-2xl font-extrabold tracking-tight text-zinc-900">{r.value}</div>
-              <div className="mt-1 text-sm text-zinc-600">{r.label}</div>
+            <div key={r.label} className="grid grid-cols-[minmax(6rem,9rem)_1fr] items-baseline gap-6 border-b border-rule py-4">
+              <dt className="font-display font-wide text-2xl font-extrabold tabular-nums tracking-[-0.02em] text-ink">{r.value}</dt>
+              <dd className="text-ink-soft">{r.label}</dd>
             </div>
           ))}
-        </div>
-        <p className="mt-3 text-sm text-zinc-600 max-w-prose">
+        </dl>
+        <p className="mt-3 text-sm text-ink-mute max-w-prose">
           Prompted detection, measured on held-out gestures with the same two-window rule the device uses. Every
           confirmation falls inside the 2–3 s windows the physiology methods need.
         </p>
@@ -295,7 +258,7 @@ export default function WineTastingWristband() {
           caption="The random forest (right) reaches 0.66 accuracy and 0.69 macro F1, against 0.42 / 0.35 for the on-device rules (left). Sniff and sip reach 93 % recall; rest holds only 49 %."
         />
 
-        <div className="mt-6 space-y-4 text-zinc-700 leading-relaxed max-w-prose">
+        <div className="mt-6 space-y-4 text-ink-soft leading-relaxed max-w-prose">
           <p>
             That rest row shaped the whole design. The model is good at telling you which gesture a window looks
             most like, and poor at telling you nothing is happening. When I replayed a full recording through
@@ -317,7 +280,7 @@ export default function WineTastingWristband() {
           </p>
         </Section>
         <figure className="mt-6">
-          <div className="rounded-2xl overflow-hidden bg-zinc-950 shadow-xl ring-1 ring-black/5">
+          <div className="overflow-hidden bg-ink">
             <video
               src="/videos/wine-tasting-demo.mp4"
               poster="/images/wine-tasting/demo-poster.jpg"
@@ -327,7 +290,7 @@ export default function WineTastingWristband() {
               className="w-full max-h-[80vh] object-contain"
             />
           </div>
-          <figcaption className="mt-2 text-sm text-zinc-600">
+          <figcaption className="mt-3 text-[15px] text-ink-mute">
             One complete tasting, about five minutes. Turn the sound on to hear the prompts.
           </figcaption>
         </figure>
@@ -347,6 +310,7 @@ export default function WineTastingWristband() {
             a real preference study would need many more tasters.
           </p>
         </Section>
+        </ProjectBody>
       </main>
       <Footer />
     </div>

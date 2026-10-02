@@ -3,25 +3,91 @@
 @tailwind utilities;
 
 body {
-  background: #fafafa; /* zinc-50 — gives white cards and surfaces separation */
-  color: #18181b; /* zinc-900 */
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background: #f7f7f5; /* paper */
+  color: #111315; /* ink */
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  caret-color: #111315;
 }
 
 ::placeholder {
-  color: #71717a; /* zinc-500 — keeps placeholder text ≥4.5:1 on white */
+  color: #5d6167; /* ink-mute, 5.9:1 on white */
 }
 
 ::selection {
-  background: #fde68a; /* amber-200 */
-  color: #18181b;
+  background: #2f6bff; /* axis z */
+  color: #ffffff;
+}
+
+:focus-visible {
+  outline: 2px solid #2f6bff;
+  outline-offset: 3px;
+}
+
+html {
+  scrollbar-color: #9a9d98 #f7f7f5;
 }
 
 h1,
 h2,
 h3 {
   text-wrap: balance;
+}
+
+/* Expanded display cut of Archivo for headlines. */
+.font-wide {
+  font-stretch: 118%;
+}
+
+/* Coordinate grid, the floor every frame sits on. */
+.frame-grid {
+  background-color: #ecedea;
+  background-image: linear-gradient(#d9dad6 1px, transparent 1px),
+    linear-gradient(90deg, #d9dad6 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+
+/* Triad draw: X, then Y, then Z, from the frame origin. */
+.triad-axis {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.triad-draw .triad-axis {
+  animation: triad-draw 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.triad-draw .triad-axis.ay {
+  animation-delay: 140ms;
+}
+.triad-draw .triad-axis.az {
+  animation-delay: 280ms;
+}
+.triad-draw .triad-head {
+  animation: triad-head 160ms ease-out both;
+  animation-delay: 520ms;
+}
+.triad-draw .triad-head.ay {
+  animation-delay: 660ms;
+}
+.triad-draw .triad-head.az {
+  animation-delay: 800ms;
+}
+@keyframes triad-head {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes triad-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .triad-draw .triad-axis,
+  .triad-draw .triad-head {
+    animation: none;
+  }
 }
 
 /* Blog post prose (rendered from markdown in content/blog/) */
@@ -158,4 +224,13 @@ h3 {
 }
 .post-body > :first-child {
   margin-top: 0;
+}
+
+/* Ordered steps and bullets in project write-ups: quiet markers. */
+main ol > li::marker {
+  font-variant-numeric: tabular-nums;
+  color: #5d6167;
+}
+main ul.list-disc > li::marker {
+  color: #5d6167;
 }

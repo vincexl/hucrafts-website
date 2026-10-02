@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T07:44:13.482Z",
+  "title": "Design System: HuCrafts",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(97.6% 0.003 106.4)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#242423",
+          "#40403e",
+          "#5e5e5c",
+          "#80807e",
+          "#a5a5a3",
+          "#cacac9",
+          "#eeeeec"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Robot Ink",
+        "canonical": "oklch(18.5% 0.005 248.1)",
+        "tonalRamp": [
+          "#090b0d",
+          "#222426",
+          "#3e4042",
+          "#5b5e60",
+          "#7e8083",
+          "#a2a5a8",
+          "#c8cbce",
+          "#eceff2"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "oklch(36.6% 0.010 254.0)",
+        "tonalRamp": [
+          "#080b0f",
+          "#212429",
+          "#3c4045",
+          "#5a5e63",
+          "#7c8186",
+          "#a0a5ab",
+          "#c6cbd1",
+          "#eaeff5"
+        ]
+      },
+      "ink-mute": {
+        "role": "neutral",
+        "displayName": "Ink Mute",
+        "canonical": "oklch(49.1% 0.011 258.4)",
+        "tonalRamp": [
+          "#080b10",
+          "#212429",
+          "#3c4046",
+          "#5a5e64",
+          "#7c8087",
+          "#a0a5ab",
+          "#c6cbd2",
+          "#eaeff6"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline Rule",
+        "canonical": "oklch(88.6% 0.006 117.9)",
+        "tonalRamp": [
+          "#0b0b09",
+          "#242421",
+          "#3f403d",
+          "#5d5e5b",
+          "#80817d",
+          "#a4a5a1",
+          "#cacbc7",
+          "#eeefeb"
+        ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Well",
+        "canonical": "oklch(94.4% 0.004 121.6)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#242422",
+          "#3f403e",
+          "#5d5e5b",
+          "#80817e",
+          "#a4a5a2",
+          "#cacbc8",
+          "#eeefec"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "#262626",
+          "#3b3b3b",
+          "#525252",
+          "#6b6b6b",
+          "#8a8a8a",
+          "#adadad",
+          "#d4d4d4",
+          "#ffffff"
+        ]
+      },
+      "axis-x": {
+        "role": "secondary",
+        "displayName": "Frame Axis X Red",
+        "canonical": "oklch(60.2% 0.215 27.7)",
+        "tonalRamp": [
+          "#3d0000",
+          "#6a0000",
+          "#910000",
+          "#b90000",
+          "#e4312c",
+          "#ff5f53",
+          "#ff8878",
+          "#ffb7a5"
+        ]
+      },
+      "axis-y": {
+        "role": "secondary",
+        "displayName": "Frame Axis Y Green",
+        "canonical": "oklch(67.1% 0.182 147.1)",
+        "tonalRamp": [
+          "#001800",
+          "#003600",
+          "#005500",
+          "#007602",
+          "#009b35",
+          "#40c25b",
+          "#6dea81",
+          "#93ffa4"
+        ]
+      },
+      "axis-z": {
+        "role": "secondary",
+        "displayName": "Frame Axis Z Blue",
+        "canonical": "oklch(58.1% 0.229 263.9)",
+        "tonalRamp": [
+          "#0d005b",
+          "#08008f",
+          "#001db5",
+          "#1249db",
+          "#3571ff",
+          "#5799ff",
+          "#7cc2ff",
+          "#abeaff"
+        ]
+      },
+      "signal-error": {
+        "role": "tertiary",
+        "displayName": "Signal Error",
+        "canonical": "oklch(50.1% 0.178 28.7)",
+        "tonalRamp": [
+          "#3a0000",
+          "#600000",
+          "#860000",
+          "#ac1d17",
+          "#d64a3d",
+          "#ff7161",
+          "#ff9886",
+          "#ffbda8"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Homepage greeting only; expanded Archivo 800."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Project page titles and the contact pitch line."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings in the expanded display voice."
+      },
+      "subtitle": {
+        "displayName": "Subtitle",
+        "purpose": "Tile titles, list item titles, fact values."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraphs in ink-soft, max 68ch on project pages."
+      },
+      "body-lead": {
+        "displayName": "Body Lead",
+        "purpose": "Hero and About lead paragraphs."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels and small column headings; sentence case, never uppercase."
+      },
+      "frame-label": {
+        "displayName": "Frame Label",
+        "purpose": "Geist Mono, only for real frame names, frame/parent labels, coordinates, the frame count, axis letters, and code."
+      },
+      "ui": {
+        "displayName": "UI",
+        "purpose": "15px working size: nav and footer links, button text, inputs, captions, hover-band blurb."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-frame",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Triad draw and tile triad/band transitions."
+      },
+      {
+        "name": "triad-draw",
+        "value": "700ms per axis, staggered 140ms (X, Y, Z); arrowheads fade 160ms from 520ms",
+        "purpose": "Hero and project-hero triads drawing on load; disabled under reduced motion."
+      },
+      {
+        "name": "tile-hover",
+        "value": "500ms",
+        "purpose": "Tile triad growing from origin and the ink band rising; instant under reduced motion."
+      },
+      {
+        "name": "color-hover",
+        "value": "150ms",
+        "purpose": "Button and link color transitions."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink fill, square, 48px; the main action.",
+      "html": "<button class=\"ds-btn-primary\">See the work</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;height:48px;padding:0 24px;background:#111315;color:#f7f7f5;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:15px;font-weight:600;border:none;border-radius:0;cursor:pointer;transition:background-color 150ms}.ds-btn-primary:hover{background:#3b3f44}.ds-btn-primary:focus-visible{outline:2px solid #2f6bff;outline-offset:3px}.ds-btn-primary:disabled{opacity:.6;cursor:not-allowed}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "1px ink border that inverts to ink on hover; resume links.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\">Resume (PDF)</a>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;height:48px;padding:0 24px;border:1px solid #111315;color:#111315;background:transparent;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:15px;font-weight:600;text-decoration:none;border-radius:0;transition:background-color 150ms,color 150ms}.ds-btn-outline:hover{background:#111315;color:#f7f7f5}.ds-btn-outline:focus-visible{outline:2px solid #2f6bff;outline-offset:3px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "White square field with a hairline border; axis blue on focus.",
+      "html": "<label class=\"ds-field\"><span>Email</span><input type=\"email\" placeholder=\"you@company.com\"></label>",
+      "css": ".ds-field{display:block;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;color:#111315}.ds-field span{font-size:14px;font-weight:600}.ds-field input{display:block;margin-top:8px;width:100%;height:44px;padding:0 12px;border:1px solid #d9dad6;background:#fff;font-size:15px;border-radius:0;outline:none;caret-color:#111315}.ds-field input::placeholder{color:#5d6167}.ds-field input:focus{border-color:#2f6bff;box-shadow:0 0 0 1px #2f6bff}"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky paper bar with text links in ink-soft and a hairline bottom border.",
+      "html": "<nav class=\"ds-nav\"><strong class=\"ds-nav-mark\">hucrafts</strong><a href=\"#\">Work</a><a href=\"#\">Writing</a><a href=\"#\">About</a><a href=\"#\">Resume</a><a href=\"#\">Contact</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:28px;height:64px;padding:0 32px;background:rgba(247,247,245,.9);backdrop-filter:blur(4px);border-bottom:1px solid #d9dad6;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;font-size:15px}.ds-nav-mark{margin-right:12px;color:#111315;font-weight:800;font-stretch:118%}.ds-nav a{color:#3b3f44;text-decoration:none;text-underline-offset:6px;text-decoration-thickness:2px}.ds-nav a:hover{color:#111315;text-decoration:underline;text-decoration-color:#111315}.ds-nav a:focus-visible{outline:2px solid #2f6bff;outline-offset:3px}"
+    },
+    {
+      "name": "Coordinate-Frame Triad",
+      "kind": "custom",
+      "refersTo": "axis-x",
+      "description": "RViz-style X/Y/Z triad pinned at a bottom-left origin with a paper halo; the system's only ornament.",
+      "html": "<div class=\"ds-triad-wrap\"><svg width=\"84\" height=\"84\" viewBox=\"0 0 84 84\" overflow=\"visible\" aria-hidden=\"true\"><g stroke=\"#f7f7f5\" stroke-width=\"6\" stroke-linecap=\"square\" fill=\"none\"><path d=\"M6,78 L68.4,78\"/><path d=\"M6,78 L42,47.8\"/><path d=\"M6,78 L6,15.6\"/></g><path d=\"M6,78 L68.4,78\" stroke=\"#e5322d\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M6,78 L42,47.8\" stroke=\"#2bb24c\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M6,78 L6,15.6\" stroke=\"#2f6bff\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M72,78 L64,81.5 L64,74.5 Z\" fill=\"#e5322d\"/><path d=\"M45,45.2 L41.5,52.4 L37.2,47.3 Z\" fill=\"#2bb24c\"/><path d=\"M6,12 L9.5,20 L2.5,20 Z\" fill=\"#2f6bff\"/><circle cx=\"6\" cy=\"78\" r=\"4.2\" fill=\"#111315\" stroke=\"#f7f7f5\" stroke-width=\"2\"/></svg></div>",
+      "css": ".ds-triad-wrap{display:inline-block;padding:16px;background:#f7f7f5}"
+    },
+    {
+      "name": "Project Tile",
+      "kind": "card",
+      "refersTo": "tile-band",
+      "description": "4:3 frame with a resting triad that grows on hover/focus while an ink band rises with the summary; title and /frame stay visible below.",
+      "html": "<a class=\"ds-tile\" href=\"#\"><div class=\"ds-tile-media\"><div class=\"ds-tile-img\"></div><div class=\"ds-tile-band\"><p>Overhead shuttle that moves DNA sample plates between lab instruments.</p><p class=\"ds-tile-tags\">TwinCAT 3 · Structured Text · Onshape</p></div><div class=\"ds-tile-triad\"><svg width=\"84\" height=\"84\" viewBox=\"0 0 84 84\" overflow=\"visible\" aria-hidden=\"true\"><g stroke=\"#f7f7f5\" stroke-width=\"6\" stroke-linecap=\"square\" fill=\"none\"><path d=\"M6,78 L68.4,78\"/><path d=\"M6,78 L42,47.8\"/><path d=\"M6,78 L6,15.6\"/></g><path d=\"M6,78 L68.4,78\" stroke=\"#e5322d\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M6,78 L42,47.8\" stroke=\"#2bb24c\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M6,78 L6,15.6\" stroke=\"#2f6bff\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M72,78 L64,81.5 L64,74.5 Z\" fill=\"#e5322d\"/><path d=\"M45,45.2 L41.5,52.4 L37.2,47.3 Z\" fill=\"#2bb24c\"/><path d=\"M6,12 L9.5,20 L2.5,20 Z\" fill=\"#2f6bff\"/><circle cx=\"6\" cy=\"78\" r=\"4.2\" fill=\"#111315\" stroke=\"#f7f7f5\" stroke-width=\"2\"/></svg></div></div><div class=\"ds-tile-cap\"><h3>SkySlide</h3><span>/skyslide</span></div></a>",
+      "css": ".ds-tile{display:block;width:360px;color:#111315;text-decoration:none;font-family:Archivo,ui-sans-serif,system-ui,sans-serif}.ds-tile:focus-visible{outline:none}.ds-tile-media{position:relative;aspect-ratio:4/3;overflow:hidden;background:#ecedea}.ds-tile:focus-visible .ds-tile-media{outline:2px solid #2f6bff;outline-offset:4px}.ds-tile-img{position:absolute;inset:0;background:#d9dad6}.ds-tile-band{position:absolute;left:0;right:0;bottom:0;padding:16px 20px 16px 112px;background:rgba(17,19,21,.9);color:#fff;transform:translateY(100%);transition:transform 500ms cubic-bezier(.16,1,.3,1)}.ds-tile-band p{margin:0;font-size:15px;line-height:1.375}.ds-tile-band .ds-tile-tags{margin-top:8px;font-size:13px;color:rgba(255,255,255,.75)}.ds-tile-triad{position:absolute;left:0;bottom:0;line-height:0;transform-origin:bottom left;transform:scale(.42);transition:transform 500ms cubic-bezier(.16,1,.3,1)}.ds-tile:hover .ds-tile-band,.ds-tile:focus-visible .ds-tile-band{transform:translateY(0)}.ds-tile:hover .ds-tile-triad,.ds-tile:focus-visible .ds-tile-triad{transform:scale(1)}.ds-tile-cap{margin-top:12px;display:flex;justify-content:space-between;align-items:baseline;gap:16px}.ds-tile-cap h3{margin:0;font-size:17px;font-weight:600}.ds-tile-cap span{font-family:\"Geist Mono\",ui-monospace,monospace;font-size:12px;color:#5d6167}@media (prefers-reduced-motion:reduce){.ds-tile-band,.ds-tile-triad{transition:none}}"
+    },
+    {
+      "name": "Pending Tile",
+      "kind": "card",
+      "refersTo": "well",
+      "description": "An open frame: grid ground plane, small triad, \"write-up in progress\", no link.",
+      "html": "<div class=\"ds-pending\"><div class=\"ds-pending-media\"><div class=\"ds-pending-triad\"><svg width=\"84\" height=\"84\" viewBox=\"0 0 84 84\" overflow=\"visible\" aria-hidden=\"true\"><g stroke=\"#f7f7f5\" stroke-width=\"6\" stroke-linecap=\"square\" fill=\"none\"><path d=\"M6,78 L68.4,78\"/><path d=\"M6,78 L42,47.8\"/><path d=\"M6,78 L6,15.6\"/></g><path d=\"M6,78 L68.4,78\" stroke=\"#e5322d\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M6,78 L42,47.8\" stroke=\"#2bb24c\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M6,78 L6,15.6\" stroke=\"#2f6bff\" stroke-width=\"3\" stroke-linecap=\"square\"/><path d=\"M72,78 L64,81.5 L64,74.5 Z\" fill=\"#e5322d\"/><path d=\"M45,45.2 L41.5,52.4 L37.2,47.3 Z\" fill=\"#2bb24c\"/><path d=\"M6,12 L9.5,20 L2.5,20 Z\" fill=\"#2f6bff\"/><circle cx=\"6\" cy=\"78\" r=\"4.2\" fill=\"#111315\" stroke=\"#f7f7f5\" stroke-width=\"2\"/></svg></div><p>write-up in progress</p></div><div class=\"ds-pending-cap\"><h3>Arena PLM rollout</h3><span>/arena_plm</span></div></div>",
+      "css": ".ds-pending{width:360px;font-family:Archivo,ui-sans-serif,system-ui,sans-serif;color:#111315}.ds-pending-media{position:relative;aspect-ratio:4/3;background-color:#ecedea;background-image:linear-gradient(#d9dad6 1px,transparent 1px),linear-gradient(90deg,#d9dad6 1px,transparent 1px);background-size:32px 32px;background-position:-1px -1px}.ds-pending-media p{position:absolute;inset:0;margin:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#5d6167}.ds-pending-triad{position:absolute;left:0;bottom:0;line-height:0;transform-origin:bottom left;transform:scale(.667)}.ds-pending-cap{margin-top:12px;display:flex;justify-content:space-between;align-items:baseline;gap:16px}.ds-pending-cap h3{margin:0;font-size:17px;font-weight:600}.ds-pending-cap span{font-family:\"Geist Mono\",ui-monospace,monospace;font-size:12px;color:#5d6167}"
+    },
+    {
+      "name": "Project Facts",
+      "kind": "custom",
+      "refersTo": "ink",
+      "description": "Ink-ruled block of label/value pairs closed by hairlines.",
+      "html": "<dl class=\"ds-facts\"><div><dt>Role</dt><dd>Controls and mechanical lead</dd></div><div><dt>Timeline</dt><dd>2022 – 2023</dd></div><div><dt>Team</dt><dd>3 engineers</dd></div></dl>",
+      "css": ".ds-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:48px;margin:0;border-top:1px solid #111315;font-family:Archivo,ui-sans-serif,system-ui,sans-serif}.ds-facts div{padding:20px 0;border-bottom:1px solid #d9dad6}.ds-facts dt{font-size:14px;color:#5d6167}.ds-facts dd{margin:8px 0 0;font-size:18px;font-weight:600;line-height:1.375;color:#111315}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Robot Frames",
+    "overview": "The site is drawn the way a robot sees its world. Every subject owns a coordinate frame: a red X, green Y, blue Z triad pinned to its bottom-left origin, named in monospace the way ROS names a TF frame (`frame: vincent`, `/skyslide`, `parent: world`). Everything else stays out of the way: a near-white neutral ground, near-black ink, 1px hairline rules, square corners. The triads are the only ornament, so they read as instrumentation rather than decoration.\n\nThe density is calm and editorial: wide gutters on a 1440px frame, a heavy expanded Archivo for headings against plain Archivo body text, and large real images of machines. Depth comes from the frame metaphor (a grid ground plane, triads that grow from their origin) instead of shadows or gradients. The world rejects the generic white image-grid portfolio and the dark neon \"tech\" page.\n\nMotion is short and purposeful. The hero and project-hero triads draw X, then Y, then Z on load. Project tiles grow their triads from origin and raise an ink band on hover or focus. Reduced motion shows everything already drawn.",
+    "keyCharacteristics": [
+      "Neutral paper ground, ink text, hairline rules; no tinted surfaces beyond the well grey.",
+      "Three axis colors that appear only as coordinate-frame triads, plus axis blue as the selection/focus state.",
+      "Heavy expanded Archivo display; Archivo text; Geist Mono only for real frame names and coordinates.",
+      "Square corners everywhere; 1px rules and 1px borders carry all structure.",
+      "The 32px coordinate grid is the ground plane, reserved for empty or contain-fit frames."
+    ],
+    "rules": [
+      {
+        "name": "The Axis Reservation Rule",
+        "body": "Red, green, and blue appear only as coordinate-frame triads. Blue alone also signals frame selection (focus and text selection). No axis color is ever used for hover, links, fills, icons, or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Hover Rule",
+        "body": "Every hover state moves between ink, ink-soft, and ink-mute: text darkens to ink, buttons lighten to ink-soft or invert to ink, underlines go from rule to ink, icons fade to ink-mute.",
+        "section": "colors"
+      },
+      {
+        "name": "The Real Frame Rule",
+        "body": "Geist Mono is used only for real frame names (`/skyslide`, `frame: vincent`), frame/parent labels, coordinates, the frame count on the Work header, triad axis letters, and code blocks. Everything else, including small labels, is Archivo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Wide Voice Rule",
+        "body": "Expanded width is for headings at title size and above (and the mobile menu links). Body copy never runs expanded.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ground Plane Rule",
+        "body": "The 32px coordinate grid (rule-colored lines on well) is the floor a frame sits on. It appears only behind the portrait placeholder, pending project tiles, and contain-fit project heroes where a drawing must stay whole. It is never a page or section background.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** pin a triad to the bottom-left origin of every finished subject (portrait, project hero, project tile), with the paper halo intact.",
+      "**Do** keep the three axis colors together and in their fixed directions: X red right, Y green receding, Z blue up.",
+      "**Do** use axis blue (#2f6bff) for focus outlines, input focus rings, and text selection, and nowhere else outside a triad.",
+      "**Do** give every project a real frame name in Geist Mono (`/skyslide`) shown beside its title on the tile and the project page.",
+      "**Do** keep tile titles visible below the image at all times; the hover band adds the summary, it never hides the title.",
+      "**Do** separate content with 1px rules and keep every corner square.",
+      "**Do** honor reduced motion: triads drawn and tiles static."
+    ],
+    "donts": [
+      "**Don't** use red, green, or blue for hover states, links, buttons, icons, badges, or decoration; hovers move between ink, ink-soft, and ink-mute.",
+      "**Don't** set ordinary labels, captions, dates, or UI text in Geist Mono; mono is for frame names, coordinates, and code only.",
+      "**Don't** add drop shadows, rounded corners, gradients, or tinted card surfaces.",
+      "**Don't** use the coordinate grid as a page or section background; it is the ground plane under empty or contain-fit frames only.",
+      "**Don't** add uppercase tracked labels above headings; section headings stand alone in the expanded display voice.",
+      "**Don't** add a triad to something that is not a subject with its own frame; triads are the only ornament because they are rare."
+    ]
+  }
+}

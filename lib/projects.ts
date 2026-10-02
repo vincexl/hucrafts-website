@@ -9,11 +9,12 @@ export const PROJECTS: Project[] = [
         id: 'eng-1',
         slug: 'skyslide-automated-dna-sample-shuttle',
         title: 'SkySlide — Automated DNA Sample Shuttle',
-        blurb: 'Vertical lift + overhead shuttle system integrating PLC and Mechanical Design.',
+        blurb: 'Two vertical lifts and an overhead carrier that move DNA sample plates between labs, with nobody carrying them.',
         category: 'Engineering',
         tags: ['PLC', 'GD&T', 'Facility'],
         image: '/images/skyslide/cover.jpg',
-        link: '/projects/skyslide-automated-dna-sample-shuttle'
+        link: '/projects/skyslide-automated-dna-sample-shuttle',
+        frame: 'skyslide'
     },
     {
         id: 'eng-2',
@@ -23,7 +24,9 @@ export const PROJECTS: Project[] = [
         category: 'Engineering',
         tags: ['PLM', 'Jupyter Notebook', 'Naive Bayes'],
         image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80',
-        link: '/projects/arena-plm-implementation'
+        link: '/projects/arena-plm-implementation',
+        frame: 'plm_migration',
+        pending: true
     },
     {
         id: 'eng-3',
@@ -33,7 +36,9 @@ export const PROJECTS: Project[] = [
         category: 'Engineering',
         tags: ['Python', 'SiLA', 'GUI'],
         image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80',
-        link: '/projects/odtc-thermal-cycler-ui'
+        link: '/projects/odtc-thermal-cycler-ui',
+        frame: 'odtc_ui',
+        pending: true
     },
     {
         id: 'eng-4',
@@ -43,7 +48,8 @@ export const PROJECTS: Project[] = [
         category: 'Engineering',
         tags: ['Sensors', 'DSP', 'Embedded', 'Machine Learning'],
         image: '/images/wine-tasting/wristband-cad.jpg',
-        link: '/projects/wine-tasting-wristband'
+        link: '/projects/wine-tasting-wristband',
+        frame: 'wristband'
     },
     {
         id: 'des-1',
@@ -53,7 +59,8 @@ export const PROJECTS: Project[] = [
         category: 'Design',
         tags: ['Rendering', '3D Modeling'],
         image: '/images/proj-fortunecookie.png',
-        link: '/projects/fortune-cookie-render'
+        link: '/projects/fortune-cookie-render',
+        frame: 'fortune_cookie'
     },
     {
         id: 'evt-1',
@@ -63,7 +70,8 @@ export const PROJECTS: Project[] = [
         category: 'Events',
         tags: ['Creativity', 'Experiential Design'],
         image: '/images/bakeoff/apple-crumble-pie.jpg',
-        link: '/projects/mini-bake-off-summer-2025/polls'
+        link: '/projects/mini-bake-off-summer-2025/polls',
+        frame: 'bake_off'
     },
     // {
     // id: 'des-2',

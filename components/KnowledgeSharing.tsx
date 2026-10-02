@@ -1,60 +1,50 @@
-'use client';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { GraduationCap } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
+
+const ITEMS = [
+  {
+    href: '/blog',
+    title: 'CAD × Claude Code',
+    note: 'A build log: driving Onshape with an AI agent, one part at a time.',
+    frame: 'blog',
+  },
+  {
+    href: '/projects/product-management-course',
+    title: 'Product management knowledge share',
+    note: 'SMART goals, elevator pitches, and influence without authority.',
+    frame: 'pm_course',
+  },
+  {
+    href: '/projects/mini-bake-off-summer-2025/polls',
+    title: 'Mini Bake Off 2025',
+    note: 'A HuCrafts baking competition with live voting.',
+    frame: 'bake_off',
+  },
+];
 
 export default function KnowledgeSharing() {
   return (
-    <section id="knowledge" className="py-16 border-t border-zinc-200">
-      <div className="mb-10">
-        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Knowledge Sharing</h2>
-        <p className="text-zinc-600 mt-2">
-          Product management frameworks, tools, and insights from continuous learning.
-        </p>
-      </div>
-
-      <div className="max-w-2xl">
-        <motion.article
-          initial={{ y: 10, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-          className="group rounded-2xl overflow-hidden bg-white border border-zinc-200 shadow-sm hover:shadow-md focus-within:shadow-md transition-shadow"
-        >
-          <Link
-            href="/projects/product-management-course"
-            className="block p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-2xl"
-          >
-            <div className="flex items-start gap-4">
-              <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-amber-100 text-amber-900 flex-shrink-0">
-                <GraduationCap className="h-7 w-7" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold tracking-tight mb-2 group-hover:text-amber-600 transition-colors">
-                  Product Management
-                </h3>
-                <p className="text-sm text-zinc-600 mb-4 leading-relaxed">
-                  Explore curated frameworks, interactive tools, and knowledge shares covering goal-setting methodologies, 
-                  influence strategies, and effective communication techniques for product managers.
-                </p>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600">
-                    SMART Goals
-                  </span>
-                  <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600">
-                    Elevator Pitch
-                  </span>
-                  <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600">
-                    Influence
-                  </span>
-                  <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-1 text-xs text-amber-900 font-medium">
-                    3 Resources
-                  </span>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </motion.article>
+    <section id="writing" className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 pb-24">
+      <div className="grid gap-8 lg:grid-cols-[14rem_1fr]">
+        <h2 className="font-display font-wide text-2xl sm:text-[1.75rem] font-extrabold leading-tight tracking-[-0.025em]">Writing &amp; other things</h2>
+        <ul className="border-t border-rule">
+          {ITEMS.map((item) => (
+            <li key={item.href} className="border-b border-rule">
+              <a
+                href={item.href}
+                className="group grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 py-5 sm:grid-cols-[minmax(0,20rem)_1fr_auto]"
+              >
+                <span className="text-lg font-semibold text-ink group-hover:underline decoration-ink decoration-2 underline-offset-[5px]">
+                  {item.title}
+                </span>
+                <span className="col-span-2 row-start-2 text-ink-soft sm:col-span-1 sm:row-start-auto">{item.note}</span>
+                <span className="col-start-2 row-start-1 flex items-center gap-2 font-mono text-xs text-ink-mute sm:col-start-auto sm:row-start-auto">
+                  /{item.frame}
+                  <ArrowUpRight className="h-4 w-4 text-ink transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

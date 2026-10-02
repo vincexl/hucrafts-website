@@ -12,15 +12,12 @@ const COMPANIES = [
 
 export default function CompanyLogos() {
   return (
-    <section aria-labelledby="experience-heading" className="pb-4 sm:pb-8">
-      <div className="rounded-2xl border border-zinc-200 bg-white px-6 py-8 sm:px-10">
-        <h2
-          id="experience-heading"
-          className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500"
-        >
+    <section aria-labelledby="experience-heading" className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 py-20 sm:py-24">
+      <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between border-y border-rule py-10">
+        <h2 id="experience-heading" className="font-display font-wide text-2xl sm:text-[1.75rem] font-extrabold leading-tight tracking-[-0.025em] text-ink lg:w-56 shrink-0">
           Where I&rsquo;ve worked
         </h2>
-        <ul className="mt-7 flex flex-wrap items-center justify-center gap-x-12 gap-y-8 sm:gap-x-16">
+        <ul className="flex flex-1 flex-wrap items-center gap-x-14 gap-y-8 lg:justify-around">
           {COMPANIES.map((company) => (
             <li key={company.name}>
               <img
@@ -28,7 +25,7 @@ export default function CompanyLogos() {
                 alt={company.name}
                 width={company.width}
                 height={company.height}
-                className={`${company.className} w-auto opacity-80 transition-opacity duration-200 hover:opacity-100 motion-reduce:transition-none`}
+                className={`${company.className} w-auto grayscale contrast-125 opacity-80 transition-[filter,opacity] duration-200 hover:grayscale-0 hover:opacity-100 motion-reduce:transition-none`}
               />
             </li>
           ))}

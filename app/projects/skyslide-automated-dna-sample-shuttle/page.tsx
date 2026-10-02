@@ -1,42 +1,10 @@
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
-import type { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import RenderVideo from '@/components/RenderVideo';
 import { getProjectBySlug } from '@/lib/projects';
+import { Figure, ProjectBody, ProjectFacts, ProjectHero, ProjectTitle, Section } from '@/components/project/ProjectPage';
 
 export const metadata = { title: 'SkySlide — Automated DNA Sample Shuttle' };
-
-function Figure({
-  src,
-  alt,
-  caption,
-  className = '',
-}: {
-  src: string;
-  alt: string;
-  caption: ReactNode;
-  className?: string;
-}) {
-  return (
-    <figure className={className}>
-      <div className="rounded-2xl overflow-hidden bg-white shadow-sm ring-1 ring-black/5">
-        <img src={src} alt={alt} className="w-full object-contain" loading="lazy" />
-      </div>
-      <figcaption className="mt-2 text-sm text-zinc-600">{caption}</figcaption>
-    </figure>
-  );
-}
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="mt-14">
-      <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-      <div className="mt-4 space-y-4 text-zinc-700 leading-relaxed max-w-prose">{children}</div>
-    </section>
-  );
-}
 
 const HANDOFF = [
   'The pre-amp cell’s slide carries the plate out to the handoff point under the first lift.',
@@ -60,27 +28,34 @@ export default function SkySlide() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8 py-12 flex-1">
-        <Link
-          href="/#projects"
-          className="inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 mb-6 group rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-        >
-          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" aria-hidden />
-          All projects
-        </Link>
-
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="inline-flex items-center rounded-full bg-zinc-100 px-2 py-1 text-zinc-600">{project.category}</span>
-          {project.tags.map((t) => (
-            <span key={t} className="inline-flex items-center rounded-full bg-amber-100 text-amber-900 px-2 py-1">{t}</span>
-          ))}
-        </div>
-        <h1 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">{project.title}</h1>
-        <p className="mt-3 text-lg text-zinc-600 max-w-prose">
-          Two vertical lifts and an overhead carrier that move DNA sample plates from one lab&apos;s workcells to
-          another&apos;s, up near the ceiling and out of everyone&apos;s way, with nobody carrying them.
-        </p>
-        <p className="mt-2 text-sm text-zinc-500">Role: project lead and technical lead</p>
+      <main className="flex-1">
+        <ProjectHero
+          src="/images/skyslide/tower-up.jpg"
+          alt="View from inside a SkySlide lift tower looking straight up, with aluminum framing rising toward the ceiling and the overhead passthrough above"
+        />
+        <ProjectBody>
+        <ProjectTitle
+          project={project}
+          lead={
+            <p>
+              Two vertical lifts and an overhead carrier that move DNA sample plates from one lab&apos;s workcells to
+              another&apos;s, up near the ceiling and out of everyone&apos;s way, with nobody carrying them.
+            </p>
+          }
+        />
+        <ProjectFacts
+          facts={[
+            { label: 'Role', value: 'Project lead and technical lead' },
+            { label: 'Scope', value: 'Mechanical design, PLC motion control, power, optical sensing, site infrastructure' },
+            { label: 'Axes', value: '7 linear axes, 2 lift towers, 1 overhead carrier' },
+          ]}
+          tools={[
+            { area: 'Controls', items: 'PLC state machines in Structured Text, collision interlocks, sensor checkpoints' },
+            { area: 'Software', items: 'Python server talking to the PLC, Django web app' },
+            { area: 'Mechanical', items: 'Onshape assembly, T-slot framing, seismic wall plates' },
+            { area: 'Validation', items: 'FMEA, operational qualification, burn-in, integration testing' },
+          ]}
+        />
 
         <Figure
           className="mt-8"
@@ -166,13 +141,6 @@ export default function SkySlide() {
           </p>
         </Section>
 
-        <Figure
-          className="mt-8"
-          src="/images/skyslide/tower-up.jpg"
-          alt="View from inside a SkySlide lift tower looking straight up, with aluminum framing rising toward the ceiling and the overhead passthrough above"
-          caption="Looking up the inside of a lift tower toward the overhead passthrough."
-        />
-
         <Section title="Keeping seven axes from colliding">
           <p>
             The riskiest moment is a reset. After a fault, axes can be stopped anywhere, and sending all seven
@@ -190,7 +158,7 @@ export default function SkySlide() {
             Sensors check the plate at every handoff point. Each check returns the same small record, so every
             step of the sequence can tell whether a plate is there, whether it is seated square, and if not, why:
           </p>
-          <pre className="mt-2 overflow-x-auto rounded-2xl bg-zinc-900 p-4 text-sm text-zinc-100">
+          <pre className="mt-2 overflow-x-auto bg-ink p-5 font-mono text-sm leading-relaxed text-paper">
             <code>{`TYPE ST_PlateCheckResult :
 STRUCT
     Present : BOOL;
@@ -219,28 +187,29 @@ END_TYPE`}</code>
           </p>
         </Section>
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
+        <dl className="mt-10 border-t border-ink">
           {RESULTS.map((r) => (
-            <div key={r.label} className="rounded-2xl bg-white p-4 ring-1 ring-black/5 shadow-sm">
-              <div className="text-2xl font-extrabold tracking-tight text-zinc-900">{r.value}</div>
-              <div className="mt-1 text-sm text-zinc-600">{r.label}</div>
+            <div key={r.label} className="grid grid-cols-[minmax(7rem,12rem)_1fr] items-baseline gap-6 border-b border-rule py-4">
+              <dt className="font-display font-wide text-2xl font-extrabold tabular-nums tracking-[-0.02em] text-ink">{r.value}</dt>
+              <dd className="text-ink-soft">{r.label}</dd>
             </div>
           ))}
-        </div>
+        </dl>
 
         <Section title="Demo">
           <p>A camera rides along with a plate: up the first lift, across the passthrough, and down the far side.</p>
         </Section>
         <figure className="mt-6">
-          <div className="rounded-2xl overflow-hidden bg-zinc-950 shadow-xl ring-1 ring-black/5">
+          <div className="overflow-hidden bg-ink">
             <RenderVideo
               src="/videos/skyslide-demo.mp4"
               poster="/images/skyslide-poster.jpg"
               className="w-full aspect-video object-contain"
             />
           </div>
-          <figcaption className="mt-2 text-sm text-zinc-600">Autoplays muted; unmute for sound.</figcaption>
+          <figcaption className="mt-3 text-[15px] text-ink-mute">Autoplays muted; unmute for sound.</figcaption>
         </figure>
+        </ProjectBody>
       </main>
       <Footer />
     </div>

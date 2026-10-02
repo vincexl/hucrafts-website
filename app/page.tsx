@@ -1,5 +1,3 @@
-'use client';
-import { useMemo, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import CompanyLogos from '@/components/CompanyLogos';
@@ -8,62 +6,30 @@ import KnowledgeSharing from '@/components/KnowledgeSharing';
 import About from '@/components/About';
 import ContactForm from '@/components/ContactForm';
 import Footer from '@/components/Footer';
-import Filters from '@/components/Filters';
-import { CATEGORIES, PROJECTS, type Category } from '@/lib/projects';
+import { PROJECTS } from '@/lib/projects';
+
+// The homepage grid is the engineering and design work; events live under "Writing & other things".
+const WORK = PROJECTS.filter((p) => p.category !== 'Events');
 
 export default function Page() {
-  const [query, setQuery] = useState('');
-  const [cat, setCat] = useState<Category>(CATEGORIES[0]); // 'All'
-
-  const filtered = useMemo(() => {
-    const q = query.toLowerCase();
-    const isAll = cat === CATEGORIES[0];
-    return PROJECTS.filter(
-      (p) =>
-        (isAll || p.category === cat) &&
-        (p.title.toLowerCase().includes(q) ||
-          p.blurb.toLowerCase().includes(q) ||
-          p.tags.join(' ').toLowerCase().includes(q))
-    );
-  }, [query, cat]);
-
   return (
     <div className="min-h-screen">
       <Navbar />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <main>
         <Hero />
-        <CompanyLogos />
-        <section id="projects" className="py-10 sm:py-16">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Projects</h2>
-              <p className="text-zinc-600 mt-2">
-                Browse engineering builds, design studies, and event productions.
-              </p>
-            </div>
-            <Filters categories={CATEGORIES} selected={cat} onSelect={setCat} />
+        <section id="work" aria-labelledby="work-heading" className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 scroll-mt-20">
+          <div className="mb-8 flex items-baseline justify-between gap-6 border-b border-rule pb-4">
+            <h2 id="work-heading" className="font-display font-wide text-2xl sm:text-[1.75rem] font-extrabold leading-tight tracking-[-0.025em]">
+              Work
+            </h2>
+            <p className="font-mono text-xs text-ink-mute">{WORK.length} frames</p>
           </div>
-
-          <div className="mt-6">
-            <label className="sr-only" htmlFor="search">
-              Search projects
-            </label>
-            <input
-              id="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by keyword, tech, or tag…"
-              className="w-full rounded-xl border border-zinc-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white"
-            />
-          </div>
-
-          <ProjectsGrid projects={filtered} />
+          <ProjectsGrid projects={WORK} />
         </section>
-
+        <CompanyLogos />
         <KnowledgeSharing />
-
         <About />
-        <section id="contact" className="py-16 border-t border-zinc-200">
+        <section id="contact" className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-12 py-24 border-t border-rule scroll-mt-20">
           <ContactForm />
         </section>
       </main>
