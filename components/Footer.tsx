@@ -8,6 +8,7 @@ export default function Footer() {
           <a href="/blog" className="text-zinc-600 hover:text-zinc-900 transition-colors">Blog</a>
           <a href="/#knowledge" className="text-zinc-600 hover:text-zinc-900 transition-colors">Knowledge</a>
           <a href="/#about" className="text-zinc-600 hover:text-zinc-900 transition-colors">About</a>
+          <a href="/files/Xiaolei_Hu_Resume.pdf" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-zinc-900 transition-colors">Resume</a>
           <a href="/#contact" className="text-zinc-600 hover:text-zinc-900 transition-colors">Contact</a>
         </nav>
       </div>

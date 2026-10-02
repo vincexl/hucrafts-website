@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight, Menu, X } from 'lucide-react';
 
-const LINKS = [
+const LINKS: { href: string; label: string; newTab?: boolean }[] = [
   { href: '/#projects', label: 'Projects' },
   { href: '/blog', label: 'Blog' },
   { href: '/#knowledge', label: 'Knowledge' },
   { href: '/#about', label: 'About' },
+  { href: '/files/Xiaolei_Hu_Resume.pdf', label: 'Resume', newTab: true },
   { href: '/#contact', label: 'Contact' },
 ];
 
@@ -36,6 +37,7 @@ export default function Navbar() {
             <a
               key={l.href}
               href={l.href}
+              {...(l.newTab && { target: '_blank', rel: 'noopener noreferrer' })}
               className="text-zinc-600 hover:text-zinc-900 transition-colors rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
             >
               {l.label}
@@ -69,6 +71,7 @@ export default function Navbar() {
               <a
                 key={l.href}
                 href={l.href}
+                {...(l.newTab && { target: '_blank', rel: 'noopener noreferrer' })}
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-2 py-2.5 text-sm text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
               >

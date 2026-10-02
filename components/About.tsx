@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react';
+import { Check, Download, FileText } from 'lucide-react';
 
 const SKILLS = [
   'SolidWorks/Onshape and Product Lifecycle Management Administration, GD&T, FEA basics',
@@ -26,6 +26,27 @@ export default function About() {
           </ul>
         </div>
         <aside className="space-y-3">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+            <h3 className="font-semibold">Resume</h3>
+            <p className="text-sm text-zinc-600 mt-1">Automation, controls &amp; robotics engineering experience.</p>
+            <div className="mt-3 flex flex-wrap gap-2 text-sm">
+              <a
+                href="/files/Xiaolei_Hu_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl px-3 py-2 font-medium bg-zinc-900 text-white hover:bg-zinc-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
+              >
+                <FileText className="h-4 w-4" aria-hidden /> View
+              </a>
+              <a
+                href="/files/Xiaolei_Hu_Resume.pdf"
+                download
+                className="inline-flex items-center gap-2 rounded-xl px-3 py-2 bg-white border border-zinc-300 hover:border-zinc-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2"
+              >
+                <Download className="h-4 w-4" aria-hidden /> Download
+              </a>
+            </div>
+          </div>
           <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-amber-50 to-white p-5">
             <h3 className="font-semibold">Capabilities</h3>
             <p className="text-sm text-zinc-600 mt-1">Prototyping • Automation • PDM & PLM Admin • Production</p>
