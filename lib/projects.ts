@@ -41,14 +41,13 @@ export const PROJECTS: Project[] = [
     {
         id: 'eng-2',
         slug: 'arena-plm-implementation',
-        title: 'Design Metadata Migration & PLM Implementation',
-        blurb: 'Migrated 2k+ CAD files with metadata to Arena PLM, established workflows and user training.',
+        title: 'Engineering Database Modernization & Arena PLM Rollout',
+        blurb: 'Cleaned 3,856 rows of SharePoint part data down to 1,577 real parts with Jupyter and Naive Bayes, then moved them into Arena PLM.',
         category: 'Engineering',
-        tags: ['PLM', 'Jupyter Notebook', 'Naive Bayes'],
-        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80',
+        tags: ['Arena PLM', 'Pandas', 'Naive Bayes', 'ECO'],
+        image: '/images/arena-plm/cover.svg',
         link: '/projects/arena-plm-implementation',
-        frame: 'plm_migration',
-        pending: true
+        frame: 'plm_migration'
     },
     {
         id: 'eng-3',

@@ -32,7 +32,7 @@ Six-plus years of shipped, physical automation: PLC-controlled machines, precisi
 - Next.js 14 App Router, TypeScript, Tailwind; deployed on Vercel from `main`.
 - Project data lives in `lib/projects.ts`; blog posts are markdown in `content/blog/`.
 - Redesign scope (confirmed): homepage plus a shared template for every project page. Blog, bake-off polls, and PM course pages keep working and stay reachable but are out of scope for this redesign.
-- Undecided: what happens to projects that have no page and only stock images (Arena PLM migration, ODTC thermal cycler UI).
+- Undecided: what happens to projects that have no page and only stock images (ODTC thermal cycler UI). The Arena PLM migration now has a page with a diagram cover instead of a stock image.
 
 ## Brand Commitments
 
