@@ -28,6 +28,17 @@ export const PROJECTS: Project[] = [
         frame: 'play_catch'
     },
     {
+        id: 'eng-6',
+        slug: 'reconfigurable-automation-tower',
+        title: 'Reconfigurable Automation Tower',
+        blurb: 'A tower of lab instruments on slides: pulled out for people, pushed in for robot arms, and swapped in minutes when one needs service.',
+        category: 'Engineering',
+        tags: ['Lab Automation', 'Mechanism Design', 'Onshape'],
+        image: '/images/reconfigurable-automation-tower/cover.jpg',
+        link: '/projects/reconfigurable-automation-tower',
+        frame: 'aux_tower'
+    },
+    {
         id: 'eng-2',
         slug: 'arena-plm-implementation',
         title: 'Design Metadata Migration & PLM Implementation',
