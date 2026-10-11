@@ -43,7 +43,7 @@ Six-plus years of shipped, physical automation: PLC-controlled machines, precisi
 ## Evidence on Hand
 
 - Resume: `public/files/Xiaolei_Hu_Resume.pdf` (experience at Mainspring Energy, Myriad Genetics, Kinnos; JHU M.S. Robotics, GPA 4.0; Cooper Union B.E. Mechanical; CSWE certification).
-- Employer logos: `public/images/logos/` (Myriad Genetics, Mainspring Energy, Kinnos).
+- Employer logos: `public/images/logos/` (Myriad Genetics, Mainspring Energy, Kinnos) and school logos (Johns Hopkins, Cooper Union).
 - SkySlide: annotated CAD cover, carrier CAD, tower photo, demo video (`public/images/skyslide/`, `public/videos/skyslide-demo.mp4`).
 - Wine Tasting Wristband: CAD renders, photos, plots, demo video (`public/images/wine-tasting/`).
 - Fortune Cookie Render: render image and video.

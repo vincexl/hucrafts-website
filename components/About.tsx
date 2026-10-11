@@ -8,8 +8,8 @@ const SKILLS = [
 ];
 
 const EDUCATION = [
-  { school: 'Johns Hopkins University', degree: 'M.S. Robotics & Autonomous Systems', years: '2024 – present' },
-  { school: 'The Cooper Union', degree: 'B.E. Mechanical Engineering', years: '2016 – 2020' },
+  { school: 'Johns Hopkins University', degree: 'M.S. Robotics & Autonomous Systems', years: '2024 – present', logo: '/images/logos/johns-hopkins-shield.svg' },
+  { school: 'The Cooper Union', degree: 'B.E. Mechanical Engineering', years: '2016 – 2020', logo: '/images/logos/cooper-union-mark.svg' },
 ];
 
 export default function About() {
@@ -33,12 +33,16 @@ export default function About() {
               <h3 className="text-sm font-semibold text-ink-mute">Education</h3>
               <ul className="mt-4 divide-y divide-rule border-y border-rule">
                 {EDUCATION.map((e) => (
-                  <li key={e.school} className="py-4">
-                    <p className="font-semibold">{e.school}</p>
-                    <p className="mt-1 flex justify-between gap-4 text-ink-soft">
-                      <span>{e.degree}</span>
-                      <span className="shrink-0 text-sm tabular-nums">{e.years}</span>
-                    </p>
+                  <li key={e.school} className="flex items-center gap-5 py-4">
+                    {/* Fixed box so a wide wordmark and a tall stacked mark line up in one column. */}
+                    <img src={e.logo} alt="" aria-hidden className="h-12 w-12 shrink-0 object-contain" />
+                    <div className="flex-1">
+                      <p className="font-semibold">{e.school}</p>
+                      <p className="mt-1 flex justify-between gap-4 text-ink-soft">
+                        <span>{e.degree}</span>
+                        <span className="shrink-0 text-sm tabular-nums">{e.years}</span>
+                      </p>
+                    </div>
                   </li>
                 ))}
               </ul>

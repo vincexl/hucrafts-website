@@ -6,6 +6,17 @@ export type Category = typeof CATEGORIES[number];
 
 export const PROJECTS: Project[] = [
     {
+        id: 'eng-7',
+        slug: 'linear-generator-alignment',
+        title: 'Linear Generator Alignment Platform',
+        blurb: 'A TwinCAT-controlled rig that lines up a linear generator core to within 5 microns, cutting alignment from 8 hours to 2.',
+        category: 'Engineering',
+        tags: ['TwinCAT 3', 'Motion Control', 'Ignition', 'Metrology'],
+        image: '/images/mainspring-alignment/cover.jpg',
+        link: '/projects/linear-generator-alignment',
+        frame: 'coax_align'
+    },
+    {
         id: 'eng-1',
         slug: 'skyslide-automated-dna-sample-shuttle',
         title: 'SkySlide — Automated DNA Sample Shuttle',
